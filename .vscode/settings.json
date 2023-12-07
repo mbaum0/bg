@@ -1,0 +1,15 @@
+{
+    "C_Cpp.formatting": "vcFormat",
+    "C_Cpp.vcFormat.space.pointerReferenceAlignment": "left",
+    "cmake.configureOnOpen": false,
+    "files.associations": {
+        "*.h": "c",
+        "*.c": "c"
+    },
+    "doxdocgen.generic.authorName": "Michael Baumgarten",
+    "doxdocgen.file.fileOrder": [
+        "file",
+        "author",
+        "brief"
+    ]
+}

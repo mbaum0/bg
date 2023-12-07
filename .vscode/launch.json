@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "(gdb) Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bg",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "build"
+        },
+        
+    ],
+    "version": "2.0.0"
+}
