@@ -1,25 +1,25 @@
 #include "media.h"
 
-bool initSDL(MediaManager *mediaManager);
-bool loadFonts(MediaManager *mediaManager);
-void initColors(MediaManager *mediaManager);
-bool loadTexture(SDL_Texture **dst, MediaManager *mediaManager, char *filename);
-bool loadTextures(MediaManager *mediaManager);
-void destroyTextures(MediaManager *mediaManager);
-void destroyFonts(MediaManager *mediaManager);
-void destroySDL(MediaManager *mediaManager);
+bool initSDL(MediaManager *mm);
+bool loadFonts(MediaManager *mm);
+void initColors(MediaManager *mm);
+bool loadTexture(SDL_Texture **dst, MediaManager *mm, char *filename);
+bool loadTextures(MediaManager *mm);
+void destroyTextures(MediaManager *mm);
+void destroyFonts(MediaManager *mm);
+void destroySDL(MediaManager *mm);
 
-bool initSDL(MediaManager *mediaManager) {
+bool initSDL(MediaManager *mm) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         log_error("Couldn't initialize SDL: %s", SDL_GetError());
         return false;
     }
 
-    mediaManager->window = SDL_CreateWindow("Backgammon!", SDL_WINDOWPOS_UNDEFINED,
+    mm->window = SDL_CreateWindow("Backgammon!", SDL_WINDOWPOS_UNDEFINED,
                                          SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH,
                                          WINDOW_HEIGHT, 0);
 
-    if (!mediaManager->window) {
+    if (!mm->window) {
         log_error("Failed to open %d x %d window: %s", WINDOW_WIDTH,
                   WINDOW_HEIGHT, SDL_GetError());
         return false;
@@ -27,10 +27,10 @@ bool initSDL(MediaManager *mediaManager) {
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
-    mediaManager->renderer =
-        SDL_CreateRenderer(mediaManager->window, -1, 0);
+    mm->renderer =
+        SDL_CreateRenderer(mm->window, -1, 0);
 
-    if (!mediaManager->renderer) {
+    if (!mm->renderer) {
         log_error("Failed to create renderer: %s", SDL_GetError());
         return false;
     }
@@ -48,24 +48,24 @@ bool initSDL(MediaManager *mediaManager) {
     return true;
 }
 
-bool loadFonts(MediaManager *mediaManager) {
-    mediaManager->fonts.gameFont =
+bool loadFonts(MediaManager *mm) {
+    mm->fonts.gameFont =
         TTF_OpenFont("assets/Commodore Rounded v1.2.ttf", 15);
-    if (!mediaManager->fonts.gameFont) {
+    if (!mm->fonts.gameFont) {
         log_error("Failed to open font: %s\n", TTF_GetError());
         return false;
     }
     return true;
 }
 
-void initColors(MediaManager *mediaManager) {
-    mediaManager->colors.white = (SDL_Color){255, 255, 255, 255};
+void initColors(MediaManager *mm) {
+    mm->colors.white = (SDL_Color){255, 255, 255, 255};
 }
 
-bool loadTexture(SDL_Texture **dst, MediaManager *mediaManager, char *filename) {
+bool loadTexture(SDL_Texture **dst, MediaManager *mm, char *filename) {
     log_debug("Loading texture: %s", filename);
     SDL_Texture *texture;
-    texture = IMG_LoadTexture(mediaManager->renderer, filename);
+    texture = IMG_LoadTexture(mm->renderer, filename);
 
     *dst = texture;
     if (texture == NULL) {
@@ -75,48 +75,48 @@ bool loadTexture(SDL_Texture **dst, MediaManager *mediaManager, char *filename) 
     return true;
 }
 
-bool loadTextures(MediaManager *mediaManager) {
+bool loadTextures(MediaManager *mm) {
     return (
-        loadTexture(&(mediaManager->textures.board), mediaManager, "assets/bck.png") &&
-        loadTexture(&(mediaManager->textures.checker), mediaManager, "assets/checker.png") &&
-        loadTexture(&(mediaManager->textures.dice), mediaManager, "assets/dice.png") &&
-        loadTexture(&(mediaManager->textures.rollBtn), mediaManager, "assets/rollBtn.png")
+        loadTexture(&(mm->textures.board), mm, "assets/bck.png") &&
+        loadTexture(&(mm->textures.checker), mm, "assets/checker.png") &&
+        loadTexture(&(mm->textures.dice), mm, "assets/dice.png") &&
+        loadTexture(&(mm->textures.rollBtn), mm, "assets/rollBtn.png")
         );
 }
 
-void destroyTextures(MediaManager *mediaManager) {
-    SDL_DestroyTexture(mediaManager->textures.board);
-    SDL_DestroyTexture(mediaManager->textures.checker);
-    SDL_DestroyTexture(mediaManager->textures.dice);
-    SDL_DestroyTexture(mediaManager->textures.rollBtn);
+void destroyTextures(MediaManager *mm) {
+    SDL_DestroyTexture(mm->textures.board);
+    SDL_DestroyTexture(mm->textures.checker);
+    SDL_DestroyTexture(mm->textures.dice);
+    SDL_DestroyTexture(mm->textures.rollBtn);
     IMG_Quit();
 }
 
-void destroyFonts(MediaManager *mediaManager) {
-    TTF_CloseFont(mediaManager->fonts.gameFont);
+void destroyFonts(MediaManager *mm) {
+    TTF_CloseFont(mm->fonts.gameFont);
     TTF_Quit();
 }
 
-void destroySDL(MediaManager *mediaManager) {
-    SDL_DestroyRenderer(mediaManager->renderer);
-    SDL_DestroyWindow(mediaManager->window);
+void destroySDL(MediaManager *mm) {
+    SDL_DestroyRenderer(mm->renderer);
+    SDL_DestroyWindow(mm->window);
     SDL_Quit();
 }
 
 MediaManager* MM_init(void) {
-    MediaManager *mediaManager = calloc(1, sizeof(MediaManager));
+    MediaManager *mm = calloc(1, sizeof(MediaManager));
     bool res =
-        (initSDL(mediaManager) && loadTextures(mediaManager) && loadFonts(mediaManager));
-    initColors(mediaManager);
+        (initSDL(mm) && loadTextures(mm) && loadFonts(mm));
+    initColors(mm);
     if (!res) {
-        MM_free(mediaManager);
+        MM_free(mm);
         return NULL;
     }
-    return mediaManager;
+    return mm;
 }
 
-void MM_free(MediaManager *mediaManager) {
-    destroyTextures(mediaManager);
-    destroyFonts(mediaManager);
-    destroySDL(mediaManager);
+void MM_free(MediaManager *mm) {
+    destroyTextures(mm);
+    destroyFonts(mm);
+    destroySDL(mm);
 }

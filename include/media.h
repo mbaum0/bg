@@ -45,6 +45,6 @@ MediaManager* MM_init(void);
 /**
  * @brief Cleans up all initialized game media
  *
- * @param mediaManager MediaManager instance to destroy
+ * @param mm MediaManager instance to destroy
  */
-void MM_free(MediaManager *mediaManager);
+void MM_free(MediaManager *mm);
