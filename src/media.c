@@ -103,19 +103,19 @@ void destroySDL(MediaManager *mediaManager) {
     SDL_Quit();
 }
 
-MediaManager* media_init(void) {
+MediaManager* MM_init(void) {
     MediaManager *mediaManager = calloc(1, sizeof(MediaManager));
     bool res =
         (initSDL(mediaManager) && loadTextures(mediaManager) && loadFonts(mediaManager));
     initColors(mediaManager);
     if (!res) {
-        media_free(mediaManager);
+        MM_free(mediaManager);
         return NULL;
     }
     return mediaManager;
 }
 
-void media_free(MediaManager *mediaManager) {
+void MM_free(MediaManager *mediaManager) {
     destroyTextures(mediaManager);
     destroyFonts(mediaManager);
     destroySDL(mediaManager);

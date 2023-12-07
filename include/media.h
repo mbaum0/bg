@@ -40,11 +40,11 @@ struct MediaManager {
 /**
  * @brief Initializes the renderer, window, fonts and textures
  */
-MediaManager* media_init(void);
+MediaManager* MM_init(void);
 
 /**
  * @brief Cleans up all initialized game media
  *
  * @param mediaManager MediaManager instance to destroy
  */
-void media_free(MediaManager *mediaManager);
+void MM_free(MediaManager *mediaManager);

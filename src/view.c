@@ -90,6 +90,14 @@ void Sprite_setLocation(Sprite* sprite, uint32_t x, uint32_t y) {
     sprite->dst_rect.y = y;
 }
 
+uint32_t Sprite_getX(Sprite* sprite){
+    return sprite->dst_rect.x;
+}
+
+uint32_t Sprite_getY(Sprite* sprite){
+    return sprite->dst_rect.y;
+}
+
 void Sprite_setVisible(Sprite* sprite, bool visible) {
     sprite->visible = visible;
 }

@@ -70,6 +70,16 @@ uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, ui
 void Sprite_setLocation(Sprite* sprite, uint32_t x, uint32_t y);
 
 /**
+ * @brief Get the x coordinate of the sprite
+ */
+uint32_t Sprite_getX(Sprite* sprite);
+
+/**
+ * @brief Get the y coordinate of the sprite
+ */
+uint32_t Sprite_getY(Sprite* sprite);
+
+/**
  * @brief Set the visibility of the sprite. Only used in SpriteUpdate_fn callbacks
  */
 void Sprite_setVisible(Sprite* sprite, bool visible);
