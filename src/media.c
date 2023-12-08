@@ -119,4 +119,5 @@ void MM_free(MediaManager *mm) {
     destroyTextures(mm);
     destroyFonts(mm);
     destroySDL(mm);
+    free(mm);
 }

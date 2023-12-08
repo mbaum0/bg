@@ -1,7 +1,6 @@
 {
    sdl_malloc_suppress
    Memcheck:Leak
-   match-leak-kinds: reachable
    fun:malloc
    ...
    obj:/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so.0.2600.5
@@ -65,5 +64,27 @@
    fun:realloc
    ...
    obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.32.4
+   ...
+}
+{
+   libllvm_leak_suppress
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libLLVM-15.so.1
+   ...
+}
+{
+   fillin_leak_suppress
+   Memcheck:Addr8
+   ...
+   fun:fillin_rpath.isra.0
+   ...
+}
+{
+   libz3_leak_suppress
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libz3.so.4
    ...
 }

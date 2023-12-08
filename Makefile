@@ -19,11 +19,12 @@ clean:
 	rm -rf $(BUILD_DIR)
 
 suppress: $(BUILD_TARGET)
-	valgrind --leak-check=full --show-reachable=yes --error-limit=no --gen-suppressions=all --suppressions=sdl.supp --log-file=memcheck.log ./$(BUILD_TARGET)
+	rm memcheck.log
+	valgrind --leak-check=full --show-reachable=yes --error-limit=no --gen-suppressions=all --suppressions=sdl.supp -v --log-file=memcheck.log ./$(BUILD_TARGET)
 
 leaks: $(BUILD_TARGET)
-	valgrind --leak-check=full --show-leak-kinds=all --suppressions=sdl.supp ./$(BUILD_TARGET)
+	valgrind --leak-check=full --show-reachable=yes --show-leak-kinds=all --suppressions=sdl.supp ./$(BUILD_TARGET)
 
 docker:
 	docker build -t valgrind .
-	docker run -it -v .:/valgrind -e DISPLAY=host.docker.internal:0 valgrind:latest -- valgrind --leak-check=full --show-reachable=yes --show-leak-kinds=all --suppressions=sdl.supp ./$(BUILD_TARGET)
+	docker run -it -v .:/valgrind -e DISPLAY=host.docker.internal:0 valgrind:latest make leaks

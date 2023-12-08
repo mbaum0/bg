@@ -50,3 +50,13 @@ int main(int argc, char** argv)
     VM_free(viewManager);
     MM_free(mediaManager);
 }
+
+// int main(int argc, char** argv){
+//     (void)argc;
+//     (void)argv;
+
+//   SDL_Init(SDL_INIT_VIDEO);
+//   SDL_Quit();
+//   return 0;
+
+// }
