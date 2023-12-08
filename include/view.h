@@ -14,23 +14,31 @@
 
 #define BOARD_HEIGHT 1080
 #define BOARD_WIDTH 1560
-#define SIDE_GAP_WIDTH ((WINDOW_WIDTH - BOARD_WIDTH) / 2)
-#define TOP_GAP_HEIGHT ((WINDOW_HEIGHT - BOARD_HEIGHT) / 2)
+#define WINDOW_SIDE_OFFSET ((WINDOW_WIDTH - BOARD_WIDTH) / 2)
+#define WINDOW_TOP_OFFSET ((WINDOW_HEIGHT - BOARD_HEIGHT) / 2)
+#define PLAY_AREA_TOP_OFFSET (WINDOW_TOP_OFFSET + 40)
 #define CENTER_GAP_WIDTH 90
 #define PIP_WIDTH 90
 #define PIP_Y_GAP 100
 #define PIP_HEIGHT (PIP_WIDTH * 5)
 #define CHECKER_SIZE 80
+#define PIP_CHECKER_OFFSET ((PIP_WIDTH - CHECKER_SIZE) / 2)
+#define PLAY_AREA_LEFT_SIDE_X_OFFSET (WINDOW_SIDE_OFFSET + 195)
+#define PLAY_AREA_RIGHT_SIDE_X_OFFSET (PLAY_AREA_LEFT_SIDE_X_OFFSET + CENTER_GAP_WIDTH + (6 * PIP_WIDTH))
 #define GET_CHECKER_X(pip) \
     ((pip < 1 || pip > 24) ? 0 : \
-    ((pip >= 7 && pip <= 12) ? (SIDE_GAP_WIDTH + PIP_WIDTH * (12 - pip)) : \
-    ((pip >= 13 && pip <= 18) ? (SIDE_GAP_WIDTH + PIP_WIDTH * (pip - 13)) : \
-    (SIDE_GAP_WIDTH + PIP_WIDTH * (pip - 13) + CENTER_GAP_WIDTH))))
-
+        ((pip >= 1 && pip <= 6) ? (PLAY_AREA_RIGHT_SIDE_X_OFFSET + PIP_CHECKER_OFFSET + ((6 - pip) * PIP_WIDTH)) : \
+        ((pip >= 7 && pip <= 12) ? (PLAY_AREA_LEFT_SIDE_X_OFFSET + PIP_CHECKER_OFFSET + ((12 - pip) * PIP_WIDTH)) : \
+        ((pip >= 13 && pip <= 18) ? (PLAY_AREA_LEFT_SIDE_X_OFFSET + PIP_CHECKER_OFFSET + ((pip - 13) * PIP_WIDTH)) : \
+        (PLAY_AREA_RIGHT_SIDE_X_OFFSET + PIP_CHECKER_OFFSET + ((pip - 19) * PIP_WIDTH))))))
 #define GET_CHECKER_Y(pip, index) \
     ((pip < 1 || pip > 24) ? 0 : \
-    ((pip >= 1 && pip <= 12) ? (TOP_GAP_HEIGHT + PIP_HEIGHT + PIP_Y_GAP + ((4 - index) * CHECKER_SIZE))) : \
-    (TOP_GAP_HEIGHT + (index * CHECKER_SIZE)))
+    ((pip >= 1 && pip <= 12) ? (PLAY_AREA_TOP_OFFSET + BOARD_HEIGHT - ((2 +  index) * CHECKER_SIZE)) : \
+    (PLAY_AREA_TOP_OFFSET + ((index) * CHECKER_SIZE))))
+
+#define Z_BOARD 0
+#define Z_CHECKER 1
+
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
   * the various Sprite_* functions.
@@ -77,7 +85,7 @@ void VM_draw(ViewManager* vm);
  *
  * @return The ID of the new Sprite
  */
-uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, SpriteUpdate_fn update_fn, void* update_data);
+uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, SpriteUpdate_fn update_fn, void* update_data);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks

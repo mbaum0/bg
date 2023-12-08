@@ -6,8 +6,8 @@
 #pragma once
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
-typedef struct Player Player;
 typedef struct Checker Checker;
 typedef struct Dice Dice;
 typedef struct GameBoard GameBoard;

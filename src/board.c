@@ -6,7 +6,8 @@
 
 #include "board.h"
 
-void Board_init(GameBoard* board) {
+GameBoard* Board_init(void) {
+    GameBoard* board = malloc(sizeof(GameBoard));
     // Initialize the checkers
     for (uint32_t i = 0; i < 30; i++) {
         board->checkers[i].player = P_None;
@@ -30,7 +31,6 @@ void Board_init(GameBoard* board) {
         board->checkers[checkerIndex].location = 24;
         board->checkers[checkerIndex].index = i;
         checkerIndex++;
-        
     }
 
     for (uint32_t i = 0; i< 5; i++){
@@ -68,7 +68,7 @@ void Board_init(GameBoard* board) {
         board->checkers[checkerIndex].index = i;
         checkerIndex++;
     }
-
+    return board;
 }
 
 uint32_t Board_getNumCheckersAtLocation(GameBoard* board, uint32_t location) {
@@ -118,7 +118,7 @@ bool Board_canMoveChecker(GameBoard* board, Checker* checker, uint32_t toLocatio
     uint32_t numLocationCheckers = Board_getNumCheckersAtLocation(board, toLocation);
 
     // Check if the checker is in the home location
-    if (checker->location == LOC_HOME_LIGHT && owner == P_Light || checker->location == LOC_HOME_DARK && owner == P_Dark) {
+    if ((checker->location == LOC_HOME_LIGHT && owner == P_Light) || (checker->location == LOC_HOME_DARK && owner == P_Dark)) {
         return false;
     }
 

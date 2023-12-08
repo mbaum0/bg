@@ -34,4 +34,3 @@ void GM_free(GameManager* gm);
  * @brief Run the game loop. This will block until the game is over.
  */
 void GM_run(GameManager* gm);
-

@@ -52,14 +52,31 @@ bool processInput(void) {
     return false;
 }
 
+void updateCheckerSprite(Sprite* sprite, void* data){
+    Checker* checker = (Checker*)data;
+    uint32_t x = GET_CHECKER_X(checker->location);
+    uint32_t y = GET_CHECKER_Y(checker->location, checker->index);
+    Sprite_setLocation(sprite, x, y);
+}
+
 void createSprites(GameManager* gm){
     SDL_Rect src;
     uint32_t x, y;
     // Create the board
     src = (SDL_Rect){0, 0, 1560, 1080};
-    x = SIDE_GAP_WIDTH
-    y = TOP_GAP_HEIGHT
-    VM_createSprite(gm->vm, gm->mm->textures.board, src, x, y, NULL, NULL);
+    x = WINDOW_SIDE_OFFSET;
+    y = WINDOW_TOP_OFFSET;
+    VM_createSprite(gm->vm, gm->mm->textures.board, src, x, y, Z_BOARD, NULL, NULL);
+
+    // Create the checkers
+    for (int i = 0; i < 30; i++){
+        Checker* checker = &gm->board->checkers[i];
+        uint32_t colorOffset = (checker->player == P_Light) ? 0 : CHECKER_SIZE;
+        src = (SDL_Rect){colorOffset, 0, CHECKER_SIZE, CHECKER_SIZE};
+        x = GET_CHECKER_X(checker->location);
+        y = GET_CHECKER_Y(checker->location, checker->index);
+        VM_createSprite(gm->vm, gm->mm->textures.checker, src, x, y, Z_CHECKER, updateCheckerSprite, checker);
+    }
 }
 
 void delayFrame(uint32_t frameStart) {
