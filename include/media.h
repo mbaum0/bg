@@ -15,14 +15,14 @@ typedef struct ColorPack ColorPack;
 typedef struct MediaManager MediaManager;
 
 struct TexturePack {
-    SDL_Texture *board;
-    SDL_Texture *checker;
-    SDL_Texture *dice;
-    SDL_Texture *rollBtn;
+    SDL_Texture* board;
+    SDL_Texture* checker;
+    SDL_Texture* dice;
+    SDL_Texture* rollBtn;
 };
 
 struct FontPack {
-    TTF_Font *gameFont;
+    TTF_Font* gameFont;
 };
 
 struct ColorPack {
@@ -30,8 +30,8 @@ struct ColorPack {
 };
 
 struct MediaManager {
-    SDL_Renderer *renderer;
-    SDL_Window *window;
+    SDL_Renderer* renderer;
+    SDL_Window* window;
     TexturePack textures;
     FontPack fonts;
     ColorPack colors;
@@ -47,4 +47,4 @@ MediaManager* MM_init(void);
  *
  * @param mm MediaManager instance to destroy
  */
-void MM_free(MediaManager *mm);
+void MM_free(MediaManager* mm);

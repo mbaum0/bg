@@ -12,8 +12,8 @@
 #include <stdbool.h>
 #include "events.h"
 
-#define WINDOW_HEIGHT 1080
-#define WINDOW_WIDTH 1920
+#define BOARD_HEIGHT 1080
+#define BOARD_WIDTH 1560
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
