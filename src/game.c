@@ -8,6 +8,7 @@
 struct GameManager {
     MediaManager* mm;
     ViewManager* vm;
+    GameBoard* board;
 };
 
 GameManager* GM_init(void) {
@@ -15,12 +16,14 @@ GameManager* GM_init(void) {
     init_events();
     gm->mm = MM_init();
     gm->vm = VM_init(gm->mm->renderer);
+    gm->board = Board_init();
     return gm;
 }
 
 void GM_free(GameManager* gm) {
     VM_free(gm->vm);
     MM_free(gm->mm);
+    Board_free(gm->board);
     free(gm);
 }
 
@@ -54,8 +57,8 @@ void createSprites(GameManager* gm){
     uint32_t x, y;
     // Create the board
     src = (SDL_Rect){0, 0, 1560, 1080};
-    x = (WINDOW_WIDTH - BOARD_WIDTH) / 2;
-    y = (WINDOW_HEIGHT - BOARD_HEIGHT) / 2;
+    x = SIDE_GAP_WIDTH
+    y = TOP_GAP_HEIGHT
     VM_createSprite(gm->vm, gm->mm->textures.board, src, x, y, NULL, NULL);
 }
 

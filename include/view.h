@@ -14,6 +14,17 @@
 
 #define BOARD_HEIGHT 1080
 #define BOARD_WIDTH 1560
+#define SIDE_GAP_WIDTH ((WINDOW_WIDTH - BOARD_WIDTH) / 2)
+#define TOP_GAP_HEIGHT ((WINDOW_HEIGHT - BOARD_HEIGHT) / 2)
+#define CENTER_GAP_WIDTH 90
+#define PIP_WIDTH 90
+#define PIP_HEIGHT (PIP_WIDTH * 5)
+#define CHECKER_SIZE 80
+#define GET_PIP_X(pip) \
+    ((pip < 1 || pip > 24) ? 0 : \
+    ((pip >= 7 && pip <= 12) ? (SIDE_GAP_WIDTH + PIP_WIDTH * (12 - pip)) : \
+    ((pip >= 13 && pip <= 18) ? (SIDE_GAP_WIDTH + PIP_WIDTH * (pip - 13)) : \
+    (SIDE_GAP_WIDTH + PIP_WIDTH * (pip - 13) + CENTER_GAP_WIDTH))))
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using

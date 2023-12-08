@@ -9,6 +9,7 @@
 #include "log.h"
 #include <SDL.h>
 #include <stdbool.h>
+#include "board.h"
 
 #define FPS 60
 #define MS_PER_FRAME (1000 / FPS)

@@ -156,3 +156,7 @@ void Board_swapDice(GameBoard* board) {
     board->dice.die_0 = board->dice.die_1;
     board->dice.die_1 = temp;
 }
+
+void Board_free(GameBoard* board) {
+    free(board);
+}
