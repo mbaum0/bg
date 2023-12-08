@@ -22,6 +22,7 @@ struct Sprite {
     SDL_Rect src_rect;
     SDL_Rect dst_rect;
     bool visible;
+    bool hovered;
     SpriteUpdate_fn update_fn;
     void* update_data;
 };
@@ -45,11 +46,72 @@ void freeSpriteArray(SpriteArray* spriteArray) {
     spriteArray->size = 0;
 }
 
+/**
+ * @brief Used to pickup on mouse clicks on sprites
+ *
+ * @param data sprite array
+ * @param event event that occured
+ * @return int always 1 (this value is ignored)
+ */
+int handle_event(void* data, SDL_Event* event) {
+    SpriteArray* spriteArray = (SpriteArray*)data;
+    switch (event->type) {
+    case SDL_MOUSEBUTTONUP:
+        for (size_t i = 0; i < spriteArray->size; i++) {
+            Sprite* sprite = spriteArray->sprites[i];
+            if (sprite->visible) {
+                SDL_Point p = { event->button.x, event->button.y };
+                if (SDL_PointInRect(&p, &sprite->dst_rect)) {
+                    SpriteClickEvent* spe = malloc(sizeof(SpriteClickEvent));
+                    spe->sprite_id = i;
+                    SDL_Event e;
+                    e.type = SPRITE_CLICK_EVENT;
+                    e.user.data1 = spe;
+                    SDL_PushEvent(&e);
+                }
+                else {
+                    sprite->hovered = false;
+                }
+            }
+        }
+        break;
+    case SDL_MOUSEMOTION:
+        for (size_t i = 0; i < spriteArray->size; i++) {
+            Sprite* sprite = spriteArray->sprites[i];
+            if (sprite->visible) {
+                SDL_Point p = { event->motion.x, event->motion.y };
+                bool was_hovered = sprite->hovered;
+                if (SDL_PointInRect(&p, &sprite->dst_rect)) {
+                    sprite->hovered = true;
+                }
+                else {
+                    sprite->hovered = false;
+                }
+                if (sprite->hovered != was_hovered) {
+                    SpriteHoverEvent* she = malloc(sizeof(SpriteHoverEvent));
+                    she->sprite_id = i;
+                    she->hovered = sprite->hovered;
+                    SDL_Event e;
+                    e.type = SPRITE_HOVER_EVENT;
+                    e.user.data1 = she;
+                    SDL_PushEvent(&e);
+                }
+
+            }
+        }
+        break;
+    default:
+        break;
+    }
+    return 1;
+}
+
 ViewManager* VM_init(SDL_Renderer* renderer) {
     ViewManager* vm = malloc(sizeof(ViewManager));
     vm->renderer = renderer;
     vm->sprites = malloc(sizeof(SpriteArray));
     initSpriteArray(vm->sprites);
+    SDL_AddEventWatch(handle_event, vm->sprites);
     return vm;
 }
 
@@ -73,11 +135,11 @@ void VM_draw(ViewManager* vm) {
     SDL_RenderPresent(vm->renderer);
 }
 
-uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, SpriteUpdate_fn update_fn, void* update_data){
+uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, SpriteUpdate_fn update_fn, void* update_data) {
     Sprite* sprite = malloc(sizeof(Sprite));
     sprite->texture = texture;
     sprite->src_rect = src;
-    sprite->dst_rect = (SDL_Rect){x, y, src.w, src.h};
+    sprite->dst_rect = (SDL_Rect){ x, y, src.w, src.h };
     sprite->visible = true;
     sprite->update_fn = update_fn;
     sprite->update_data = update_data;
@@ -90,11 +152,11 @@ void Sprite_setLocation(Sprite* sprite, uint32_t x, uint32_t y) {
     sprite->dst_rect.y = y;
 }
 
-uint32_t Sprite_getX(Sprite* sprite){
+uint32_t Sprite_getX(Sprite* sprite) {
     return sprite->dst_rect.x;
 }
 
-uint32_t Sprite_getY(Sprite* sprite){
+uint32_t Sprite_getY(Sprite* sprite) {
     return sprite->dst_rect.y;
 }
 

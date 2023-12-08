@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "media.h"
 #include "view.h"
+#include "events.h"
 
 #define FPS 50
 #define MS_PER_FRAME (1000 / FPS)
@@ -22,6 +23,15 @@ bool processInput(void) {
             log_debug("Received SDL_QUIT event");
             return true;
         default:
+            if (event.type == SPRITE_CLICK_EVENT) {
+                SpriteClickEvent* spe = (SpriteClickEvent*)event.user.data1;
+                log_debug("Sprite click! %d", spe->sprite_id);
+                free(spe);
+            } else if (event.type == SPRITE_HOVER_EVENT) {
+                SpriteHoverEvent* she = (SpriteHoverEvent*)event.user.data1;
+                log_debug("Sprite hover change! %d %d", she->sprite_id, she->hovered);
+                free(she);
+            }
             break;
         }
     }
@@ -32,8 +42,10 @@ int main(int argc, char** argv)
 {
     (void)argc;
     (void)argv;
+    init_events();
     MediaManager* mediaManager = MM_init();
     ViewManager* viewManager = VM_init(mediaManager->renderer);
+
 
     SDL_Rect src = {0, 0, 60, 60};
     VM_createSprite(viewManager, mediaManager->textures.dice, src, 0, 0, update_spr, NULL);

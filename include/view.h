@@ -10,6 +10,7 @@
 #include <SDL.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "events.h"
 
 #define WINDOW_HEIGHT 1080
 #define WINDOW_WIDTH 1920
@@ -19,8 +20,6 @@
   * the various Sprite_* functions.
   */
 typedef struct Sprite Sprite;
-
-
 
 /**
  * @brief Sprite update functions are called every frame to update the Sprite's state.
