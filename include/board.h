@@ -8,8 +8,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "checker.h"
+#include "dice.h"
 
-typedef struct Dice Dice;
 typedef struct GameBoard GameBoard;
 
 #define LOC_HOME_LIGHT 0
@@ -17,15 +17,10 @@ typedef struct GameBoard GameBoard;
 #define LOC_BAR_LIGHT LOC_HOME_DARK
 #define LOC_BAR_DARK LOC_HOME_LIGHT
 
-
-struct Dice {
-    int32_t die_0;
-    int32_t die_1;
-};
-
 struct GameBoard {
     Checker checkers[30];
-    Dice dice;
+    Die die0;
+    Die die1;
     int32_t clickedLocation;
     int32_t clickedSprite;
 };
@@ -61,19 +56,9 @@ void Board_moveChecker(GameBoard* board, Checker* checker, int32_t location);
 int32_t Board_getNumCheckersOnBar(GameBoard* board, Player player);
 
 /**
- * @brief Roll the dice
- */
-void Board_rollDice(GameBoard* board);
-
-/**
  * @brief Moves a checker if possible. Returns true if the move was successful
  */
 bool Board_moveIfPossible(GameBoard* board, int32_t fromLocation, int32_t amount);
-
-/**
- * @brief Swap the dice
- */
-void Board_swapDice(GameBoard* board);
 
 /**
  * @brief Initialize the game board to a new game state. Must be freed with Board_free

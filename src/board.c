@@ -15,8 +15,12 @@ GameBoard* Board_init(void) {
         board->checkers[i].index = 0;
     }
     // Initialize the dice
-    board->dice.die_0 = 1;
-    board->dice.die_1 = 1;
+    board->die0.value = 1;
+    board->die0.rollCount = 0;
+    board->die0.side = D_Left;
+    board->die1.value = 1;
+    board->die1.rollCount = 0;
+    board->die1.side = D_Right;
 
     board->clickedLocation = 0;
     board->clickedSprite = 0;
@@ -178,17 +182,6 @@ bool Board_moveIfPossible(GameBoard* board, int32_t fromLocation, int32_t amount
         return true;
     }
     return false;
-}
-
-void Board_rollDice(GameBoard* board) {
-    board->dice.die_0 = rand() % 6 + 1;
-    board->dice.die_1 = rand() % 6 + 1;
-}
-
-void Board_swapDice(GameBoard* board) {
-    int32_t temp = board->dice.die_0;
-    board->dice.die_0 = board->dice.die_1;
-    board->dice.die_1 = temp;
 }
 
 void Board_free(GameBoard* board) {

@@ -32,6 +32,7 @@ struct Sprite {
     void* click_data;
     int32_t z;
     bool flip;
+    uint32_t frame; // for storing arbitrary data;
 };
 
 struct Snippet {
@@ -189,6 +190,7 @@ int32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, int
     sprite->click_fn = click_fn;
     sprite->click_data = click_data;
     sprite->id = vm->sprites->size;
+    sprite->frame = 0;
     appendSprite(vm->sprites, sprite);
     return vm->sprites->size - 1;
 }
@@ -213,6 +215,16 @@ void Sprite_setVisible(Sprite* sprite, bool visible) {
 void Sprite_setSourceRect(Sprite* sprite, SDL_Rect src) {
     sprite->src_rect = src;
 }
+
+void Sprite_setFrame(Sprite* sprite, uint32_t frame){
+    sprite->frame = frame;
+}
+
+uint32_t Sprite_getFrame(Sprite* sprite){
+    return sprite->frame;
+}
+
+
 
 int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, SnippetUpdate_fn update_fn, void* update_data) {
     Snippet* snippet = malloc(sizeof(Snippet));

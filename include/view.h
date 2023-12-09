@@ -15,17 +15,21 @@
 
 #define BOARD_HEIGHT 1080
 #define BOARD_WIDTH 1560
+#define PLAY_AREA_WIDTH 540
+#define PLAY_AREA_HEIGHT 1000
+#define CENTER_GAP_WIDTH 90
+#define PIP_WIDTH 90
+#define CHECKER_SIZE 80
+#define PIP_HEIGHT (PIP_WIDTH * 5)
+
 #define WINDOW_SIDE_OFFSET ((WINDOW_WIDTH - BOARD_WIDTH) / 2)
 #define WINDOW_TOP_OFFSET ((WINDOW_HEIGHT - BOARD_HEIGHT) / 2)
 #define PLAY_AREA_TOP_OFFSET (WINDOW_TOP_OFFSET + 40)
-#define CENTER_GAP_WIDTH 90
-#define PIP_WIDTH 90
-#define PIP_Y_GAP 100
-#define PIP_HEIGHT (PIP_WIDTH * 5)
-#define CHECKER_SIZE 80
+
 #define PIP_CHECKER_OFFSET ((PIP_WIDTH - CHECKER_SIZE) / 2)
 #define PLAY_AREA_LEFT_SIDE_X_OFFSET (WINDOW_SIDE_OFFSET + 195)
 #define PLAY_AREA_RIGHT_SIDE_X_OFFSET (PLAY_AREA_LEFT_SIDE_X_OFFSET + CENTER_GAP_WIDTH + (6 * PIP_WIDTH))
+
 #define GET_CHECKER_X(pip) \
     ((pip < 1 || pip > 24) ? 0 : \
         ((pip >= 1 && pip <= 6) ? (PLAY_AREA_RIGHT_SIDE_X_OFFSET + PIP_CHECKER_OFFSET + ((6 - pip) * PIP_WIDTH)) : \
@@ -50,8 +54,9 @@
 #define MAX_TEXT_LENGTH 100
 #define Z_BOARD 1
 #define Z_PIP 2
-#define Z_CHECKER 3
-#define Z_DEBUGTEXT 4
+#define Z_DICE 3
+#define Z_CHECKER 4
+#define Z_DEBUGTEXT 5
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
@@ -145,6 +150,16 @@ void Sprite_setVisible(Sprite* sprite, bool visible);
  * @brief Set the source rectangle of the sprite. Only used in SpriteUpdate_fn callbacks
  */
 void Sprite_setSourceRect(Sprite* sprite, SDL_Rect src);
+
+/**
+ * @brief Set the frame of the sprite. Only used in SpriteUpdate_fn callbacks
+*/
+void Sprite_setFrame(Sprite* sprite, uint32_t frame);
+
+/**
+ * @brief Get the frame of the sprite
+*/
+uint32_t Sprite_getFrame(Sprite* sprite);
 
 /**
  * @brief Create a new managed Snippet instance. Do not free Snippets directly, as they are managed by the ViewManager.

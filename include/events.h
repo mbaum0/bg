@@ -12,6 +12,7 @@
 extern uint32_t SPRITE_CLICK_EVENT;
 extern uint32_t SPRITE_HOVER_EVENT;
 extern uint32_t LOCATION_CLICK_EVENT;
+extern uint32_t DIE_CLICK_EVENT;
 
 /**
  * @brief Event data for a sprite is clicked on
@@ -34,6 +35,13 @@ typedef struct SpriteHoverEvent {
 typedef struct LocationClickEvent {
     int32_t location;
 } LocationClickEvent;
+
+/**
+ * @brief Event data for a die being clicked on
+ */
+typedef struct DieClickEvent {
+    int32_t value;
+} DieClickEvent;
 
 /**
  * @brief Registers custom events with the SDL event system. This function must

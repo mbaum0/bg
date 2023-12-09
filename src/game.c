@@ -47,6 +47,12 @@ bool processInput(GameManager* gm) {
                 gm->board->clickedLocation = lce->location;
                 Board_moveIfPossible(gm->board, gm->board->clickedLocation, 2);
                 free(lce);
+            } else if(event.type == DIE_CLICK_EVENT) {
+                DieClickEvent* dce = (DieClickEvent*)event.user.data1;
+                log_debug("Die click! %d", dce->value);
+                Dice_roll(&gm->board->die0);
+                Dice_roll(&gm->board->die1);
+                free(dce);
             }
             break;
         }
@@ -79,6 +85,10 @@ void createSprites(GameManager* gm){
     for (int i = 0; i < 30; i++){
         Checker_createSprite(&gm->board->checkers[i], gm->mm, gm->vm);
     }
+
+    // Create dice sprites
+    Dice_createSprite(&gm->board->die0, gm->mm, gm->vm);
+    Dice_createSprite(&gm->board->die1, gm->mm, gm->vm);
 
     // Create debug stats
     DStats_createSnippet(gm->mm, gm->vm, gm->board);

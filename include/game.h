@@ -14,6 +14,7 @@
 #include "pip.h"
 #include "checker.h"
 #include "dstats.h"
+#include "dice.h"
 
 #define FPS 60
 #define MS_PER_FRAME (1000 / FPS)
