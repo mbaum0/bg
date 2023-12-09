@@ -11,6 +11,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "events.h"
+#include <SDL_ttf.h>
 
 #define BOARD_HEIGHT 1080
 #define BOARD_WIDTH 1560
@@ -36,8 +37,9 @@
     ((pip >= 1 && pip <= 12) ? (PLAY_AREA_TOP_OFFSET + BOARD_HEIGHT - ((2 +  index) * CHECKER_SIZE)) : \
     (PLAY_AREA_TOP_OFFSET + ((index) * CHECKER_SIZE))))
 
-#define Z_BOARD 0
-#define Z_CHECKER 1
+#define Z_BOARD 1
+#define Z_CHECKER 2
+#define Z_DEBUGTEXT 3
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
@@ -49,6 +51,17 @@ typedef struct Sprite Sprite;
  * @brief Sprite update functions are called every frame to update the Sprite's state.
  */
 typedef void (*SpriteUpdate_fn)(Sprite* sprite, void* data);
+
+/**
+ * @brief A Snippet is a bit of text that is drawn on the screen. It can be manipulated using
+ * the various Snippet_* functions.
+*/
+typedef struct Snippet Snippet;
+
+/**
+ * @brief Snippet update functions are called every frame to update the Snippet's state.
+ */
+typedef void (*SnippetUpdate_fn)(Snippet* snippet, void* data);
 
 /**
  * @brief ViewManager manages rendering Sprites to the screen.
@@ -80,6 +93,7 @@ void VM_draw(ViewManager* vm);
  * @param src The source rectangle to use for this Sprite
  * @param x The x coordinate of the Sprite
  * @param y The y coordinate of the Sprite
+ * @param z The z coordinate of the Sprite
  * @param update_fn The update function to call every frame
  * @param update_data The data to pass to the update function
  *
@@ -111,3 +125,28 @@ void Sprite_setVisible(Sprite* sprite, bool visible);
  * @brief Set the source rectangle of the sprite. Only used in SpriteUpdate_fn callbacks
  */
 void Sprite_setSourceRect(Sprite* sprite, SDL_Rect src);
+
+/**
+ * @brief Create a new managed Snippet instance. Do not free Snippets directly, as they are managed by the ViewManager.
+ * 
+ * @param vm The ViewManager instance
+ * @param font The SDL_Font to use for this Snippet
+ * @param color The color to use for this Snippet
+ * @param text The text to use for this Snippet. A copy will be created and freed when the Snippet is freed.
+ * @param x The x coordinate of the Snippet
+ * @param y The y coordinate of the Snippet
+ * @param z The z coordinate of the Snippet
+ * @param update_fn The update function to call every frame
+ * @param update_data The data to pass to the update function
+ */
+uint32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, uint32_t x, uint32_t y, uint32_t z, SnippetUpdate_fn update_fn, void* update_data);
+
+/**
+ * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks
+ */
+void Snippet_setLocation(Snippet* snippet, uint32_t x, uint32_t y);
+
+/**
+ * @brief Set the text of the Snippet. Only used in SnippetUpdate_fn callbacks
+ */
+void Snippet_setText(Snippet* snippet, char* text);

@@ -19,10 +19,11 @@ struct TexturePack {
     SDL_Texture* checker;
     SDL_Texture* dice;
     SDL_Texture* rollBtn;
+    SDL_Texture* pip;
 };
 
 struct FontPack {
-    TTF_Font* gameFont;
+    TTF_Font* debug;
 };
 
 struct ColorPack {

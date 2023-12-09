@@ -27,7 +27,7 @@ void GM_free(GameManager* gm) {
     free(gm);
 }
 
-bool processInput(void) {
+bool processInput(GameManager* gm) {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
@@ -39,12 +39,8 @@ bool processInput(void) {
             if (event.type == SPRITE_CLICK_EVENT) {
                 SpriteClickEvent* spe = (SpriteClickEvent*)event.user.data1;
                 log_debug("Sprite click! %d", spe->sprite_id);
+                gm->board->lastClickedChecker = spe->sprite_id;
                 free(spe);
-            }
-            else if (event.type == SPRITE_HOVER_EVENT) {
-                SpriteHoverEvent* she = (SpriteHoverEvent*)event.user.data1;
-                log_debug("Sprite hover change! %d %d", she->sprite_id, she->hovered);
-                free(she);
             }
             break;
         }
@@ -79,6 +75,20 @@ void createSprites(GameManager* gm){
     }
 }
 
+void updateDebugStats(Snippet* snippet, void* data){
+    GameManager* gm = (GameManager*)data;
+    char lastClickedText[100];
+    sprintf(lastClickedText, "Last clicked: %d", gm->board->lastClickedChecker);
+    Snippet_setText(snippet, lastClickedText);
+}
+
+void createDebugStats(GameManager* gm){
+    char lastClickedText[100];
+    sprintf(lastClickedText, "Last clicked: %d", 0);
+    SDL_Color color = {255, 0, 0, 255};
+    VM_createSnippet(gm->vm, gm->mm->fonts.debug, color, lastClickedText, 0, 0, Z_DEBUGTEXT, updateDebugStats, gm);
+}
+
 void delayFrame(uint32_t frameStart) {
     uint32_t frameTime = SDL_GetTicks() - frameStart;
     if (frameTime < MS_PER_FRAME) {
@@ -88,8 +98,9 @@ void delayFrame(uint32_t frameStart) {
 
 void GM_run(GameManager* gm) {
     createSprites(gm);
+    createDebugStats(gm);
 
-    while(!processInput()){
+    while(!processInput(gm)){
         uint32_t frameStart = SDL_GetTicks();
         VM_draw(gm->vm);
         delayFrame(frameStart);

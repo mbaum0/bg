@@ -6,10 +6,12 @@
 #include "view.h"
 
 typedef struct SpriteArray SpriteArray;
+typedef struct SnippetArray SnippetArray;
 
 struct ViewManager {
     SDL_Renderer* renderer;
     SpriteArray* sprites;
+    SnippetArray* snippets;
 };
 
 struct SpriteArray {
@@ -26,6 +28,25 @@ struct Sprite {
     SpriteUpdate_fn update_fn;
     void* update_data;
     int32_t z;
+};
+
+struct Snippet {
+    TTF_Font* font;
+    SDL_Color color;
+    uint32_t x;
+    uint32_t y;
+    uint32_t z;
+    char* text;
+    SDL_Rect dst_rect;
+    SDL_Texture* texture;
+    SnippetUpdate_fn update_fn;
+    void* update_data;
+    SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
+};
+
+struct SnippetArray {
+    Snippet** snippets;
+    uint32_t size;
 };
 
 void initSpriteArray(SpriteArray* spriteArray) {
@@ -45,6 +66,26 @@ void freeSpriteArray(SpriteArray* spriteArray) {
     }
     free(spriteArray->sprites);
     spriteArray->size = 0;
+}
+
+void initSnippetArray(SnippetArray* snippetArray) {
+    snippetArray->snippets = NULL;
+    snippetArray->size = 0;
+}
+
+void appendSnippet(SnippetArray* snippetArray, Snippet* snippet) {
+    snippetArray->size++;
+    snippetArray->snippets = realloc(snippetArray->snippets, snippetArray->size * sizeof(Snippet*));
+    snippetArray->snippets[snippetArray->size - 1] = snippet;
+}
+
+void freeSnippetArray(SnippetArray* snippetArray) {
+    for (size_t i = 0; i < snippetArray->size; i++) {
+        free(snippetArray->snippets[i]->text);
+        free(snippetArray->snippets[i]);
+    }
+    free(snippetArray->snippets);
+    snippetArray->size = 0;
 }
 
 /**
@@ -82,31 +123,6 @@ int handle_event(void* data, SDL_Event* event) {
             SDL_PushEvent(&e);
         }
         break;
-        // case SDL_MOUSEMOTION:
-        //     for (size_t i = 0; i < spriteArray->size; i++) {
-        //         Sprite* sprite = spriteArray->sprites[i];
-        //         if (sprite->visible) {
-        //             SDL_Point p = { event->motion.x, event->motion.y };
-        //             bool was_hovered = sprite->hovered;
-        //             if (SDL_PointInRect(&p, &sprite->dst_rect)) {
-        //                 sprite->hovered = true;
-        //             }
-        //             else {
-        //                 sprite->hovered = false;
-        //             }
-        //             if (sprite->hovered != was_hovered) {
-        //                 SpriteHoverEvent* she = malloc(sizeof(SpriteHoverEvent));
-        //                 she->sprite_id = i;
-        //                 she->hovered = sprite->hovered;
-        //                 SDL_Event e;
-        //                 e.type = SPRITE_HOVER_EVENT;
-        //                 e.user.data1 = she;
-        //                 SDL_PushEvent(&e);
-        //             }
-
-        //         }
-        //     }
-        //     break;
     default:
         break;
     }
@@ -118,6 +134,8 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
     vm->renderer = renderer;
     vm->sprites = malloc(sizeof(SpriteArray));
     initSpriteArray(vm->sprites);
+    vm->snippets = malloc(sizeof(SnippetArray));
+    initSnippetArray(vm->snippets);
     SDL_AddEventWatch(handle_event, vm->sprites);
     return vm;
 }
@@ -125,6 +143,8 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
 void VM_free(ViewManager* vm) {
     freeSpriteArray(vm->sprites);
     free(vm->sprites);
+    freeSnippetArray(vm->snippets);
+    free(vm->snippets);
     free(vm);
 }
 
@@ -138,6 +158,13 @@ void VM_draw(ViewManager* vm) {
         if (sprite->visible) {
             SDL_RenderCopy(vm->renderer, sprite->texture, &sprite->src_rect, &sprite->dst_rect);
         }
+    }
+    for (size_t i = 0; i < vm->snippets->size; i++) {
+        Snippet* snippet = vm->snippets->snippets[i];
+        if (snippet->update_fn != NULL) {
+            snippet->update_fn(snippet, snippet->update_data);
+        }
+        SDL_RenderCopy(vm->renderer, snippet->texture, NULL, &snippet->dst_rect);
     }
     SDL_RenderPresent(vm->renderer);
 }
@@ -174,4 +201,43 @@ void Sprite_setVisible(Sprite* sprite, bool visible) {
 
 void Sprite_setSourceRect(Sprite* sprite, SDL_Rect src) {
     sprite->src_rect = src;
+}
+
+uint32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, uint32_t x, uint32_t y, uint32_t z, SnippetUpdate_fn update_fn, void* update_data) {
+    Snippet* snippet = malloc(sizeof(Snippet));
+    snippet->font = font;
+    snippet->color = color;
+    snippet->x = x;
+    snippet->y = y;
+    snippet->z = z;
+    snippet->text = strdup(text);
+    snippet->update_fn = update_fn;
+    snippet->update_data = update_data;
+    snippet->renderer = vm->renderer;
+    SDL_Surface* surface = TTF_RenderText_Solid(snippet->font, snippet->text, snippet->color);
+    snippet->texture = SDL_CreateTextureFromSurface(vm->renderer, surface);
+    snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
+    SDL_FreeSurface(surface);
+    appendSnippet(vm->snippets, snippet);
+    return vm->snippets->size - 1;
+}
+
+void Snippet_setLocation(Snippet* snippet, uint32_t x, uint32_t y) {
+    SDL_DestroyTexture(snippet->texture);
+    snippet->x = x;
+    snippet->y = y;
+    SDL_Surface* surface = TTF_RenderText_Solid(snippet->font, snippet->text, snippet->color);
+    snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
+    snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
+    SDL_FreeSurface(surface);
+}
+
+void Snippet_setText(Snippet* snippet, char* text) {
+    free(snippet->text);
+    snippet->text = strdup(text);
+    SDL_DestroyTexture(snippet->texture);
+    SDL_Surface* surface = TTF_RenderText_Solid(snippet->font, snippet->text, snippet->color);
+    snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
+    snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
+    SDL_FreeSurface(surface);
 }

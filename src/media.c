@@ -49,9 +49,9 @@ bool initSDL(MediaManager *mm) {
 }
 
 bool loadFonts(MediaManager *mm) {
-    mm->fonts.gameFont =
-        TTF_OpenFont("assets/Commodore Rounded v1.2.ttf", 15);
-    if (!mm->fonts.gameFont) {
+    mm->fonts.debug =
+        TTF_OpenFont("assets/VeraMono.ttf", 16);
+    if (!mm->fonts.debug) {
         log_error("Failed to open font: %s\n", TTF_GetError());
         return false;
     }
@@ -77,10 +77,11 @@ bool loadTexture(SDL_Texture **dst, MediaManager *mm, char *filename) {
 
 bool loadTextures(MediaManager *mm) {
     return (
-        loadTexture(&(mm->textures.board), mm, "assets/bck.png") &&
+        loadTexture(&(mm->textures.board), mm, "assets/board.png") &&
         loadTexture(&(mm->textures.checker), mm, "assets/checker.png") &&
         loadTexture(&(mm->textures.dice), mm, "assets/dice.png") &&
-        loadTexture(&(mm->textures.rollBtn), mm, "assets/rollBtn.png")
+        loadTexture(&(mm->textures.rollBtn), mm, "assets/rollBtn.png") &&
+        loadTexture(&(mm->textures.pip), mm, "assets/pip.png")
         );
 }
 
@@ -93,7 +94,7 @@ void destroyTextures(MediaManager *mm) {
 }
 
 void destroyFonts(MediaManager *mm) {
-    TTF_CloseFont(mm->fonts.gameFont);
+    TTF_CloseFont(mm->fonts.debug);
     TTF_Quit();
 }
 
