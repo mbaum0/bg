@@ -38,6 +38,7 @@ struct GameBoard {
     Checker checkers[30];
     Dice dice;
     uint32_t lastClickedChecker;
+    uint32_t lastClickedLocation;
 };
 
 /**
