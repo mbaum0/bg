@@ -5,11 +5,9 @@ OBJ_NAME = bg
 BUILD_TARGET = $(BUILD_DIR)/$(OBJ_NAME)
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
-HEADER_FILES = $(wildcard $(HEADERS_DIR)/*.h)
+HEADER_FILES = $(wildcard $(INC_DIR)/*.h)
 
 build: $(BUILD_TARGET)
-
-
 
 $(BUILD_TARGET): $(SRC_FILES) $(HEADER_FILES)
 	mkdir -p $(BUILD_DIR)
@@ -30,5 +28,5 @@ docker:
 	docker build -t valgrind .
 	docker run -it -v .:/valgrind -e DISPLAY=host.docker.internal:0 valgrind:latest make leaks
 
-run:
+run: $(BUILD_TARGET)
 	./$(BUILD_TARGET)

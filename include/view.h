@@ -37,11 +37,21 @@
     ((pip >= 1 && pip <= 12) ? (PLAY_AREA_TOP_OFFSET + BOARD_HEIGHT - ((2 +  index) * CHECKER_SIZE)) : \
     (PLAY_AREA_TOP_OFFSET + ((index) * CHECKER_SIZE))))
 
+#define GET_PIP_X(pip) \
+    ((pip >= 0 && pip <= 5) ? (PLAY_AREA_RIGHT_SIDE_X_OFFSET + ((5 - pip) * PIP_WIDTH)) : \
+    ((pip >= 6 && pip <= 11) ? (PLAY_AREA_LEFT_SIDE_X_OFFSET + ((11 - pip) * PIP_WIDTH)) : \
+    ((pip >= 12 && pip <= 17) ? (PLAY_AREA_LEFT_SIDE_X_OFFSET + ((pip - 12) * PIP_WIDTH)) : \
+    (PLAY_AREA_RIGHT_SIDE_X_OFFSET + ((pip - 18) * PIP_WIDTH)))))
+
+#define GET_PIP_Y(pip) \
+    ((pip >= 0 && pip <= 11) ? (PLAY_AREA_TOP_OFFSET + BOARD_HEIGHT - PIP_HEIGHT - CHECKER_SIZE) : (PLAY_AREA_TOP_OFFSET))
+
 
 #define MAX_TEXT_LENGTH 100
 #define Z_BOARD 1
-#define Z_CHECKER 2
-#define Z_DEBUGTEXT 3
+#define Z_PIP 2
+#define Z_CHECKER 3
+#define Z_DEBUGTEXT 4
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
@@ -96,12 +106,13 @@ void VM_draw(ViewManager* vm);
  * @param x The x coordinate of the Sprite
  * @param y The y coordinate of the Sprite
  * @param z The z coordinate of the Sprite
+ * @param flip Flip the Texture for the Sprite
  * @param update_fn The update function to call every frame
  * @param update_data The data to pass to the update function
  *
  * @return The ID of the new Sprite
  */
-uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, SpriteUpdate_fn update_fn, void* update_data);
+uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks

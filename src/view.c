@@ -28,6 +28,7 @@ struct Sprite {
     SpriteUpdate_fn update_fn;
     void* update_data;
     int32_t z;
+    bool flip;
 };
 
 struct Snippet {
@@ -156,7 +157,7 @@ void VM_draw(ViewManager* vm) {
             sprite->update_fn(sprite, sprite->update_data);
         }
         if (sprite->visible) {
-            SDL_RenderCopy(vm->renderer, sprite->texture, &sprite->src_rect, &sprite->dst_rect);
+            SDL_RenderCopyEx(vm->renderer, sprite->texture, &sprite->src_rect, &sprite->dst_rect, 0, NULL, sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
         }
     }
     for (size_t i = 0; i < vm->snippets->size; i++) {
@@ -169,7 +170,7 @@ void VM_draw(ViewManager* vm) {
     SDL_RenderPresent(vm->renderer);
 }
 
-uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, SpriteUpdate_fn update_fn, void* update_data) {
+uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data) {
     Sprite* sprite = malloc(sizeof(Sprite));
     sprite->texture = texture;
     sprite->src_rect = src;
@@ -177,6 +178,7 @@ uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, ui
     sprite->visible = true;
     sprite->update_fn = update_fn;
     sprite->z = z;
+    sprite->flip = flip;
     sprite->update_data = update_data;
     appendSprite(vm->sprites, sprite);
     return vm->sprites->size - 1;

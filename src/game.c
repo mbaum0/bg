@@ -62,7 +62,17 @@ void createSprites(GameManager* gm){
     src = (SDL_Rect){0, 0, 1560, 1080};
     x = WINDOW_SIDE_OFFSET;
     y = WINDOW_TOP_OFFSET;
-    VM_createSprite(gm->vm, gm->mm->textures.board, src, x, y, Z_BOARD, NULL, NULL);
+    VM_createSprite(gm->vm, gm->mm->textures.board, src, x, y, Z_BOARD, false, NULL, NULL);
+
+    // Create the pips
+    for (int i = 0; i < 24; i++){
+        bool flip = (i < 12) ? true : false;
+        uint32_t color = (i % 2 == 0) ? 0 : PIP_WIDTH;
+        src = (SDL_Rect){color, 0, PIP_WIDTH, PIP_HEIGHT};
+        x = GET_PIP_X(i);
+        y = GET_PIP_Y(i);
+        VM_createSprite(gm->vm, gm->mm->textures.pip, src, x, y, Z_PIP, flip, NULL, NULL);
+    }
 
     // Create the checkers
     for (int i = 0; i < 30; i++){
@@ -71,7 +81,7 @@ void createSprites(GameManager* gm){
         src = (SDL_Rect){colorOffset, 0, CHECKER_SIZE, CHECKER_SIZE};
         x = GET_CHECKER_X(checker->location);
         y = GET_CHECKER_Y(checker->location, checker->index);
-        VM_createSprite(gm->vm, gm->mm->textures.checker, src, x, y, Z_CHECKER, updateCheckerSprite, checker);
+        VM_createSprite(gm->vm, gm->mm->textures.checker, src, x, y, Z_CHECKER, false, updateCheckerSprite, checker);
     }
 }
 
