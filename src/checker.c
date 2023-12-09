@@ -7,9 +7,42 @@
 
 void updateCheckerSprite(Sprite* sprite, void* data) {
     Checker* checker = (Checker*)data;
-    uint32_t x = GET_CHECKER_X(checker->location);
-    uint32_t y = GET_CHECKER_Y(checker->location, checker->index);
-    Sprite_setLocation(sprite, x, y);
+    uint32_t lastX = Sprite_getX(sprite);
+    uint32_t lastY = Sprite_getY(sprite);
+    uint32_t destX = GET_CHECKER_X(checker->location);
+    uint32_t destY = GET_CHECKER_Y(checker->location, checker->index);
+    uint32_t newX = lastX;
+    uint32_t newY = lastY;
+
+    // animate checker movement
+    uint32_t baseV = 10;
+    if (lastX != destX || lastY != destY) {
+        // if we're close to the destination, just snap to it
+        if (abs(lastX - destX) < baseV && abs(lastY - destY) < baseV) {
+            newX = destX;
+            newY = destY;
+        }
+        else {
+            float vRatio = (float)(destX - lastX) / (float)(destY - lastY);
+            int hRate = baseV * vRatio;
+            int vRate = baseV;
+            if (lastX < destX) {
+                newX = lastX + hRate;
+            }
+            else if (lastX > destX) {
+                newX = lastX - hRate;
+            }
+            if (lastY < destY) {
+                newY = lastY + vRate;
+            }
+            else if (lastY > destY) {
+                newY = lastY - vRate;
+            }
+        }
+    }
+
+
+    Sprite_setLocation(sprite, newX, newY);
 }
 
 void clickChecker(void* data) {
@@ -22,7 +55,7 @@ void clickChecker(void* data) {
     SDL_PushEvent(&e);
 }
 
-void Checker_createSprite(Checker* checker, MediaManager* mm, ViewManager* vm){
+void Checker_createSprite(Checker* checker, MediaManager* mm, ViewManager* vm) {
     SDL_Rect src;
     uint32_t x, y;
     uint32_t colorOffset = (checker->player == P_Light) ? 0 : CHECKER_SIZE;
