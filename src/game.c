@@ -45,6 +45,7 @@ bool processInput(GameManager* gm) {
                 LocationClickEvent* lce = (LocationClickEvent*)event.user.data1;
                 log_debug("Location click! %d", lce->location);
                 gm->board->clickedLocation = lce->location;
+                Board_moveIfPossible(gm->board, gm->board->clickedLocation, 1);
                 free(lce);
             }
             break;

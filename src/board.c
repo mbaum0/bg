@@ -100,7 +100,10 @@ Player Board_getPipOwner(GameBoard* board, uint32_t pip) {
     if (numCheckers == 0){
         return P_None;
     }
-    return board->checkers[pip].player;
+
+    Checker* checker = Board_getNextCheckerAtLocation(board, pip);
+
+    return checker->player;
 }
 
 uint32_t Board_getNumCheckersOnBar(GameBoard* board, Player player){
@@ -144,9 +147,9 @@ bool Board_canMoveChecker(GameBoard* board, Checker* checker, uint32_t toLocatio
 }
 
 void Board_moveChecker(GameBoard* board, Checker* checker, uint32_t toLocation) {
-    checker->location = toLocation;
     uint32_t numLocationCheckers = Board_getNumCheckersAtLocation(board, toLocation);
     checker->index = numLocationCheckers;
+    checker->location = toLocation;
 }
 
 Checker* Board_getNextCheckerAtLocation(GameBoard* board, uint32_t location){
@@ -154,13 +157,27 @@ Checker* Board_getNextCheckerAtLocation(GameBoard* board, uint32_t location){
     Checker* highestChecker = NULL;
     for (uint32_t i = 0; i < 30; i++) {
         if (board->checkers[i].location == location) {
-            if (board->checkers[i].index > highestIndex){
+            if (board->checkers[i].index >= highestIndex){
                 highestIndex = board->checkers[i].index;
                 highestChecker = &board->checkers[i];
             }
         }
     }
     return highestChecker;
+}
+
+bool Board_moveIfPossible(GameBoard* board, uint32_t fromLocation, uint32_t amount){
+    Checker* checker = Board_getNextCheckerAtLocation(board, fromLocation);
+    if (checker == NULL){
+        return false;
+    }
+
+    uint32_t toLocation = (checker->player == P_Dark) ? fromLocation + amount : fromLocation - amount;
+    if (Board_canMoveChecker(board, checker, toLocation)){
+        Board_moveChecker(board, checker, toLocation);
+        return true;
+    }
+    return false;
 }
 
 void Board_rollDice(GameBoard* board) {

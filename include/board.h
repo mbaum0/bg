@@ -66,6 +66,11 @@ uint32_t Board_getNumCheckersOnBar(GameBoard* board, Player player);
 void Board_rollDice(GameBoard* board);
 
 /**
+ * @brief Moves a checker if possible. Returns true if the move was successful
+ */
+bool Board_moveIfPossible(GameBoard* board, uint32_t fromLocation, uint32_t amount);
+
+/**
  * @brief Swap the dice
  */
 void Board_swapDice(GameBoard* board);
