@@ -12,4 +12,4 @@
 /**
  * @brief Create a sprite for a given pip
  */
-void Pip_createSprite(uint32_t pip, MediaManager* mm, ViewManager* vm);
+void Pip_createSprite(int32_t pip, MediaManager* mm, ViewManager* vm);

@@ -19,46 +19,46 @@ typedef struct GameBoard GameBoard;
 
 
 struct Dice {
-    uint32_t die_0;
-    uint32_t die_1;
+    int32_t die_0;
+    int32_t die_1;
 };
 
 struct GameBoard {
     Checker checkers[30];
     Dice dice;
-    uint32_t clickedLocation;
-    uint32_t clickedSprite;
+    int32_t clickedLocation;
+    int32_t clickedSprite;
 };
 
 /**
  * @brief Return the number of checkers at a given location
  */
-uint32_t Board_getNumCheckersAtLocation(GameBoard* board, uint32_t location);
+int32_t Board_getNumCheckersAtLocation(GameBoard* board, int32_t location);
 
 /**
  * @brief Return the checker at the highest index at a given location
 */
-Checker* Board_getNextCheckerAtLocation(GameBoard* board, uint32_t location);
+Checker* Board_getNextCheckerAtLocation(GameBoard* board, int32_t location);
 
 /**
  * @brief Return the owner of a given pip
  */
-Player Board_getPipOwner(GameBoard* board, uint32_t pip);
+Player Board_getPipOwner(GameBoard* board, int32_t pip);
 
 /**
  * @brief Returns true if a checker can move to a given location
  */
-bool Board_canMoveChecker(GameBoard* board, Checker* checker, uint32_t toLocation);
+bool Board_canMoveChecker(GameBoard* board, Checker* checker, int32_t toLocation);
 
 /**
  * @brief Move a checker to a given location
  */
-void Board_moveChecker(GameBoard* board, Checker* checker, uint32_t location);
+void Board_moveChecker(GameBoard* board, Checker* checker, int32_t location);
 
 /**
  * @brief Return the number of checkers a player has on the bar
  */
-uint32_t Board_getNumCheckersOnBar(GameBoard* board, Player player);
+int32_t Board_getNumCheckersOnBar(GameBoard* board, Player player);
 
 /**
  * @brief Roll the dice
@@ -68,7 +68,7 @@ void Board_rollDice(GameBoard* board);
 /**
  * @brief Moves a checker if possible. Returns true if the move was successful
  */
-bool Board_moveIfPossible(GameBoard* board, uint32_t fromLocation, uint32_t amount);
+bool Board_moveIfPossible(GameBoard* board, int32_t fromLocation, int32_t amount);
 
 /**
  * @brief Swap the dice

@@ -32,7 +32,7 @@ typedef struct SpriteHoverEvent {
  * @brief Event data for a location being clicked on
  */
 typedef struct LocationClickEvent {
-    uint32_t location;
+    int32_t location;
 } LocationClickEvent;
 
 /**

@@ -9,7 +9,7 @@
 GameBoard* Board_init(void) {
     GameBoard* board = malloc(sizeof(GameBoard));
     // Initialize the checkers
-    for (uint32_t i = 0; i < 30; i++) {
+    for (int32_t i = 0; i < 30; i++) {
         board->checkers[i].player = P_None;
         board->checkers[i].location = i;
         board->checkers[i].index = 0;
@@ -22,9 +22,9 @@ GameBoard* Board_init(void) {
     board->clickedSprite = 0;
 
 
-    uint32_t checkerIndex = 0;
+    int32_t checkerIndex = 0;
     // Set the initial checker locations
-    for (uint32_t i = 0; i < 2; i++) {
+    for (int32_t i = 0; i < 2; i++) {
         board->checkers[checkerIndex].player = P_Dark;
         board->checkers[checkerIndex].location = 1;
         board->checkers[checkerIndex].index = i;
@@ -36,7 +36,7 @@ GameBoard* Board_init(void) {
         checkerIndex++;
     }
 
-    for (uint32_t i = 0; i< 5; i++){
+    for (int32_t i = 0; i< 5; i++){
         board->checkers[checkerIndex].player = P_Dark;
         board->checkers[checkerIndex].location = 12;
         board->checkers[checkerIndex].index = i;
@@ -48,7 +48,7 @@ GameBoard* Board_init(void) {
         checkerIndex++;
     }
 
-    for (uint32_t i = 0; i< 3; i++){
+    for (int32_t i = 0; i< 3; i++){
         board->checkers[checkerIndex].player = P_Dark;
         board->checkers[checkerIndex].location = 17;
         board->checkers[checkerIndex].index = i;
@@ -60,7 +60,7 @@ GameBoard* Board_init(void) {
         checkerIndex++;
     }
 
-    for (uint32_t i = 0; i< 5; i++){
+    for (int32_t i = 0; i< 5; i++){
         board->checkers[checkerIndex].player = P_Dark;
         board->checkers[checkerIndex].location = 19;
         board->checkers[checkerIndex].index = i;
@@ -74,14 +74,14 @@ GameBoard* Board_init(void) {
     return board;
 }
 
-uint32_t Board_getNumCheckersAtLocation(GameBoard* board, uint32_t location) {
-    uint32_t numCheckers = 0;
+int32_t Board_getNumCheckersAtLocation(GameBoard* board, int32_t location) {
+    int32_t numCheckers = 0;
 
     if (location == LOC_HOME_LIGHT || location == LOC_HOME_DARK) {
         return 0;
     }
 
-    for (uint32_t i = 0; i < 30; i++) {
+    for (int32_t i = 0; i < 30; i++) {
         if (board->checkers[i].location == location) {
             numCheckers++;
         }
@@ -89,14 +89,14 @@ uint32_t Board_getNumCheckersAtLocation(GameBoard* board, uint32_t location) {
     return numCheckers;
 }
 
-Player Board_getPipOwner(GameBoard* board, uint32_t pip) {
+Player Board_getPipOwner(GameBoard* board, int32_t pip) {
     if (pip == 0) {
         return P_None;
     } else if (pip == 25) {
         return P_None;
     }
     
-    uint32_t numCheckers = Board_getNumCheckersAtLocation(board, pip);
+    int32_t numCheckers = Board_getNumCheckersAtLocation(board, pip);
     if (numCheckers == 0){
         return P_None;
     }
@@ -106,10 +106,10 @@ Player Board_getPipOwner(GameBoard* board, uint32_t pip) {
     return checker->player;
 }
 
-uint32_t Board_getNumCheckersOnBar(GameBoard* board, Player player){
-    uint32_t numCheckers = 0;
-    uint32_t barLocation = (player == P_Dark) ? LOC_BAR_DARK : LOC_BAR_LIGHT;
-    for (uint32_t i = 0; i < 30; i++) {
+int32_t Board_getNumCheckersOnBar(GameBoard* board, Player player){
+    int32_t numCheckers = 0;
+    int32_t barLocation = (player == P_Dark) ? LOC_BAR_DARK : LOC_BAR_LIGHT;
+    for (int32_t i = 0; i < 30; i++) {
         if (board->checkers[i].location == barLocation) {
             numCheckers++;
         }
@@ -118,10 +118,10 @@ uint32_t Board_getNumCheckersOnBar(GameBoard* board, Player player){
 
 }
 
-bool Board_canMoveChecker(GameBoard* board, Checker* checker, uint32_t toLocation) {
+bool Board_canMoveChecker(GameBoard* board, Checker* checker, int32_t toLocation) {
     Player owner = checker->player;
-    uint32_t barLocation = (owner == P_Dark) ? LOC_BAR_DARK : LOC_BAR_LIGHT;
-    uint32_t numLocationCheckers = Board_getNumCheckersAtLocation(board, toLocation);
+    int32_t barLocation = (owner == P_Dark) ? LOC_BAR_DARK : LOC_BAR_LIGHT;
+    int32_t numLocationCheckers = Board_getNumCheckersAtLocation(board, toLocation);
 
     // Check if the checker is in the home location
     if ((checker->location == LOC_HOME_LIGHT && owner == P_Light) || (checker->location == LOC_HOME_DARK && owner == P_Dark)) {
@@ -146,16 +146,16 @@ bool Board_canMoveChecker(GameBoard* board, Checker* checker, uint32_t toLocatio
     return true;
 }
 
-void Board_moveChecker(GameBoard* board, Checker* checker, uint32_t toLocation) {
-    uint32_t numLocationCheckers = Board_getNumCheckersAtLocation(board, toLocation);
+void Board_moveChecker(GameBoard* board, Checker* checker, int32_t toLocation) {
+    int32_t numLocationCheckers = Board_getNumCheckersAtLocation(board, toLocation);
     checker->index = numLocationCheckers;
     checker->location = toLocation;
 }
 
-Checker* Board_getNextCheckerAtLocation(GameBoard* board, uint32_t location){
-    uint32_t highestIndex = 0;
+Checker* Board_getNextCheckerAtLocation(GameBoard* board, int32_t location){
+    int32_t highestIndex = 0;
     Checker* highestChecker = NULL;
-    for (uint32_t i = 0; i < 30; i++) {
+    for (int32_t i = 0; i < 30; i++) {
         if (board->checkers[i].location == location) {
             if (board->checkers[i].index >= highestIndex){
                 highestIndex = board->checkers[i].index;
@@ -166,13 +166,13 @@ Checker* Board_getNextCheckerAtLocation(GameBoard* board, uint32_t location){
     return highestChecker;
 }
 
-bool Board_moveIfPossible(GameBoard* board, uint32_t fromLocation, uint32_t amount){
+bool Board_moveIfPossible(GameBoard* board, int32_t fromLocation, int32_t amount){
     Checker* checker = Board_getNextCheckerAtLocation(board, fromLocation);
     if (checker == NULL){
         return false;
     }
 
-    uint32_t toLocation = (checker->player == P_Dark) ? fromLocation + amount : fromLocation - amount;
+    int32_t toLocation = (checker->player == P_Dark) ? fromLocation + amount : fromLocation - amount;
     if (Board_canMoveChecker(board, checker, toLocation)){
         Board_moveChecker(board, checker, toLocation);
         return true;
@@ -186,7 +186,7 @@ void Board_rollDice(GameBoard* board) {
 }
 
 void Board_swapDice(GameBoard* board) {
-    uint32_t temp = board->dice.die_0;
+    int32_t temp = board->dice.die_0;
     board->dice.die_0 = board->dice.die_1;
     board->dice.die_1 = temp;
 }

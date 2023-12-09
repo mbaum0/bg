@@ -119,22 +119,22 @@ void VM_draw(ViewManager* vm);
  *
  * @return The ID of the new Sprite
  */
-uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data);
+int32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks
  */
-void Sprite_setLocation(Sprite* sprite, uint32_t x, uint32_t y);
+void Sprite_setLocation(Sprite* sprite, int32_t x, int32_t y);
 
 /**
  * @brief Get the x coordinate of the sprite
  */
-uint32_t Sprite_getX(Sprite* sprite);
+int32_t Sprite_getX(Sprite* sprite);
 
 /**
  * @brief Get the y coordinate of the sprite
  */
-uint32_t Sprite_getY(Sprite* sprite);
+int32_t Sprite_getY(Sprite* sprite);
 
 /**
  * @brief Set the visibility of the sprite. Only used in SpriteUpdate_fn callbacks
@@ -159,12 +159,12 @@ void Sprite_setSourceRect(Sprite* sprite, SDL_Rect src);
  * @param update_fn The update function to call every frame
  * @param update_data The data to pass to the update function
  */
-uint32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, uint32_t x, uint32_t y, uint32_t z, SnippetUpdate_fn update_fn, void* update_data);
+int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, SnippetUpdate_fn update_fn, void* update_data);
 
 /**
  * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks
  */
-void Snippet_setLocation(Snippet* snippet, uint32_t x, uint32_t y);
+void Snippet_setLocation(Snippet* snippet, int32_t x, int32_t y);
 
 /**
  * @brief Set the text of the Snippet. Only used in SnippetUpdate_fn callbacks

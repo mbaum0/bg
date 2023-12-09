@@ -45,7 +45,7 @@ bool processInput(GameManager* gm) {
                 LocationClickEvent* lce = (LocationClickEvent*)event.user.data1;
                 log_debug("Location click! %d", lce->location);
                 gm->board->clickedLocation = lce->location;
-                Board_moveIfPossible(gm->board, gm->board->clickedLocation, 1);
+                Board_moveIfPossible(gm->board, gm->board->clickedLocation, 2);
                 free(lce);
             }
             break;
@@ -54,8 +54,8 @@ bool processInput(GameManager* gm) {
     return false;
 }
 
-void delayFrame(uint32_t frameStart) {
-    uint32_t frameTime = SDL_GetTicks() - frameStart;
+void delayFrame(int32_t frameStart) {
+    int32_t frameTime = SDL_GetTicks() - frameStart;
     if (frameTime < MS_PER_FRAME) {
         SDL_Delay(MS_PER_FRAME - frameTime);
     }
@@ -64,7 +64,7 @@ void delayFrame(uint32_t frameStart) {
 void createSprites(GameManager* gm){
     // Create background sprite
     SDL_Rect src;
-    uint32_t x, y;
+    int32_t x, y;
     src = (SDL_Rect){ 0, 0, 1560, 1080 };
     x = WINDOW_SIDE_OFFSET;
     y = WINDOW_TOP_OFFSET;
@@ -88,7 +88,7 @@ void GM_run(GameManager* gm) {
     createSprites(gm);
 
     while(!processInput(gm)){
-        uint32_t frameStart = SDL_GetTicks();
+        int32_t frameStart = SDL_GetTicks();
         VM_draw(gm->vm);
         delayFrame(frameStart);
     }
