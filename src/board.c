@@ -18,8 +18,8 @@ GameBoard* Board_init(void) {
     board->dice.die_0 = 1;
     board->dice.die_1 = 1;
 
-    board->lastClickedChecker = 0;
-    board->lastClickedLocation = 0;
+    board->clickedLocation = 0;
+    board->clickedSprite = 0;
 
 
     uint32_t checkerIndex = 0;
@@ -147,6 +147,20 @@ void Board_moveChecker(GameBoard* board, Checker* checker, uint32_t toLocation) 
     checker->location = toLocation;
     uint32_t numLocationCheckers = Board_getNumCheckersAtLocation(board, toLocation);
     checker->index = numLocationCheckers;
+}
+
+Checker* Board_getNextCheckerAtLocation(GameBoard* board, uint32_t location){
+    uint32_t highestIndex = 0;
+    Checker* highestChecker = NULL;
+    for (uint32_t i = 0; i < 30; i++) {
+        if (board->checkers[i].location == location) {
+            if (board->checkers[i].index > highestIndex){
+                highestIndex = board->checkers[i].index;
+                highestChecker = &board->checkers[i];
+            }
+        }
+    }
+    return highestChecker;
 }
 
 void Board_rollDice(GameBoard* board) {

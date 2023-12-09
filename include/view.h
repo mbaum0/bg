@@ -65,6 +65,11 @@ typedef struct Sprite Sprite;
 typedef void (*SpriteUpdate_fn)(Sprite* sprite, void* data);
 
 /**
+ * @brief Sprite click functions are called when the Sprite is clicked.
+ */
+typedef void (*SpriteClick_fn)(void* data);
+
+/**
  * @brief A Snippet is a bit of text that is drawn on the screen. It can be manipulated using
  * the various Snippet_* functions.
 */
@@ -109,10 +114,12 @@ void VM_draw(ViewManager* vm);
  * @param flip Flip the Texture for the Sprite
  * @param update_fn The update function to call every frame
  * @param update_data The data to pass to the update function
+ * @param click_fn The click function to call when the Sprite is clicked
+ * @param click_data The data to pass to the click function
  *
  * @return The ID of the new Sprite
  */
-uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data);
+uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks

@@ -7,8 +7,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include "checker.h"
 
-typedef struct Checker Checker;
 typedef struct Dice Dice;
 typedef struct GameBoard GameBoard;
 
@@ -17,17 +17,6 @@ typedef struct GameBoard GameBoard;
 #define LOC_BAR_LIGHT LOC_HOME_DARK
 #define LOC_BAR_DARK LOC_HOME_LIGHT
 
-typedef enum {
-    P_Dark,
-    P_Light,
-    P_None
-} Player;
-
-struct Checker {
-    Player player; // player that owns the checker
-    uint32_t location; // 0 - light's home, 1 - 24 - pips, 25 - dark's home
-    uint32_t index; // the index of the checker at a given location (between 0 and 4 if on a pip)
-};
 
 struct Dice {
     uint32_t die_0;
@@ -37,14 +26,19 @@ struct Dice {
 struct GameBoard {
     Checker checkers[30];
     Dice dice;
-    uint32_t lastClickedChecker;
-    uint32_t lastClickedLocation;
+    uint32_t clickedLocation;
+    uint32_t clickedSprite;
 };
 
 /**
  * @brief Return the number of checkers at a given location
  */
 uint32_t Board_getNumCheckersAtLocation(GameBoard* board, uint32_t location);
+
+/**
+ * @brief Return the checker at the highest index at a given location
+*/
+Checker* Board_getNextCheckerAtLocation(GameBoard* board, uint32_t location);
 
 /**
  * @brief Return the owner of a given pip

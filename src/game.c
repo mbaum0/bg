@@ -39,64 +39,18 @@ bool processInput(GameManager* gm) {
             if (event.type == SPRITE_CLICK_EVENT) {
                 SpriteClickEvent* spe = (SpriteClickEvent*)event.user.data1;
                 log_debug("Sprite click! %d", spe->sprite_id);
-                gm->board->lastClickedChecker = spe->sprite_id;
+                gm->board->clickedSprite = spe->sprite_id;
                 free(spe);
+            } else if (event.type == LOCATION_CLICK_EVENT) {
+                LocationClickEvent* lce = (LocationClickEvent*)event.user.data1;
+                log_debug("Location click! %d", lce->location);
+                gm->board->clickedLocation = lce->location;
+                free(lce);
             }
             break;
         }
     }
     return false;
-}
-
-void updateCheckerSprite(Sprite* sprite, void* data){
-    Checker* checker = (Checker*)data;
-    uint32_t x = GET_CHECKER_X(checker->location);
-    uint32_t y = GET_CHECKER_Y(checker->location, checker->index);
-    Sprite_setLocation(sprite, x, y);
-}
-
-void createSprites(GameManager* gm){
-    SDL_Rect src;
-    uint32_t x, y;
-    // Create the board
-    src = (SDL_Rect){0, 0, 1560, 1080};
-    x = WINDOW_SIDE_OFFSET;
-    y = WINDOW_TOP_OFFSET;
-    VM_createSprite(gm->vm, gm->mm->textures.board, src, x, y, Z_BOARD, false, NULL, NULL);
-
-    // Create the pips
-    for (int i = 0; i < 24; i++){
-        bool flip = (i < 12) ? true : false;
-        uint32_t color = (i % 2 == 0) ? 0 : PIP_WIDTH;
-        src = (SDL_Rect){color, 0, PIP_WIDTH, PIP_HEIGHT};
-        x = GET_PIP_X(i);
-        y = GET_PIP_Y(i);
-        VM_createSprite(gm->vm, gm->mm->textures.pip, src, x, y, Z_PIP, flip, NULL, NULL);
-    }
-
-    // Create the checkers
-    for (int i = 0; i < 30; i++){
-        Checker* checker = &gm->board->checkers[i];
-        uint32_t colorOffset = (checker->player == P_Light) ? 0 : CHECKER_SIZE;
-        src = (SDL_Rect){colorOffset, 0, CHECKER_SIZE, CHECKER_SIZE};
-        x = GET_CHECKER_X(checker->location);
-        y = GET_CHECKER_Y(checker->location, checker->index);
-        VM_createSprite(gm->vm, gm->mm->textures.checker, src, x, y, Z_CHECKER, false, updateCheckerSprite, checker);
-    }
-}
-
-void updateDebugStats(Snippet* snippet, void* data){
-    GameManager* gm = (GameManager*)data;
-    char lastClickedText[100];
-    sprintf(lastClickedText, "Last clicked: %d", gm->board->lastClickedChecker);
-    Snippet_setText(snippet, lastClickedText);
-}
-
-void createDebugStats(GameManager* gm){
-    char lastClickedText[100];
-    sprintf(lastClickedText, "Last clicked: %d", 0);
-    SDL_Color color = {255, 0, 0, 255};
-    VM_createSnippet(gm->vm, gm->mm->fonts.debug, color, lastClickedText, 0, 0, Z_DEBUGTEXT, updateDebugStats, gm);
 }
 
 void delayFrame(uint32_t frameStart) {
@@ -106,9 +60,31 @@ void delayFrame(uint32_t frameStart) {
     }
 }
 
+void createSprites(GameManager* gm){
+    // Create background sprite
+    SDL_Rect src;
+    uint32_t x, y;
+    src = (SDL_Rect){ 0, 0, 1560, 1080 };
+    x = WINDOW_SIDE_OFFSET;
+    y = WINDOW_TOP_OFFSET;
+    VM_createSprite(gm->vm, gm->mm->textures.board, src, x, y, Z_BOARD, false, NULL, NULL, NULL, NULL);
+
+    // Create pip sprites
+    for (int i = 0; i < 24; i++){
+        Pip_createSprite(i, gm->mm, gm->vm);
+    }
+
+    // Create checker sprites
+    for (int i = 0; i < 30; i++){
+        Checker_createSprite(&gm->board->checkers[i], gm->mm, gm->vm);
+    }
+
+    // Create debug stats
+    DStats_createSnippet(gm->mm, gm->vm, gm->board);
+}
+
 void GM_run(GameManager* gm) {
     createSprites(gm);
-    createDebugStats(gm);
 
     while(!processInput(gm)){
         uint32_t frameStart = SDL_GetTicks();

@@ -20,6 +20,7 @@ struct SpriteArray {
 };
 
 struct Sprite {
+    uint32_t id;
     SDL_Texture* texture;
     SDL_Rect src_rect;
     SDL_Rect dst_rect;
@@ -27,6 +28,8 @@ struct Sprite {
     bool hovered;
     SpriteUpdate_fn update_fn;
     void* update_data;
+    SpriteClick_fn click_fn;
+    void* click_data;
     int32_t z;
     bool flip;
 };
@@ -98,7 +101,7 @@ void freeSnippetArray(SnippetArray* snippetArray) {
  */
 int handle_event(void* data, SDL_Event* event) {
     SpriteArray* spriteArray = (SpriteArray*)data;
-    uint32_t topSpriteID = 0;
+    Sprite* topSprite = NULL;
     int32_t currentTopZ = -1;
     switch (event->type) {
     case SDL_MOUSEBUTTONUP:
@@ -109,7 +112,7 @@ int handle_event(void* data, SDL_Event* event) {
                 if (SDL_PointInRect(&p, &sprite->dst_rect)) {
                     if (sprite->z > currentTopZ) {
                         currentTopZ = sprite->z;
-                        topSpriteID = i;
+                        topSprite = sprite;
                     }
                 }
             }
@@ -117,11 +120,14 @@ int handle_event(void* data, SDL_Event* event) {
         }
         if (currentTopZ != -1) {
             SpriteClickEvent* spe = malloc(sizeof(SpriteClickEvent));
-            spe->sprite_id = topSpriteID;
+            spe->sprite_id = topSprite->id;
             SDL_Event e;
             e.type = SPRITE_CLICK_EVENT;
             e.user.data1 = spe;
             SDL_PushEvent(&e);
+            if (topSprite->click_fn != NULL) {
+                topSprite->click_fn(topSprite->click_data);
+            }
         }
         break;
     default:
@@ -170,7 +176,7 @@ void VM_draw(ViewManager* vm) {
     SDL_RenderPresent(vm->renderer);
 }
 
-uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data) {
+uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, uint32_t x, uint32_t y, uint32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data){
     Sprite* sprite = malloc(sizeof(Sprite));
     sprite->texture = texture;
     sprite->src_rect = src;
@@ -180,6 +186,9 @@ uint32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, ui
     sprite->z = z;
     sprite->flip = flip;
     sprite->update_data = update_data;
+    sprite->click_fn = click_fn;
+    sprite->click_data = click_data;
+    sprite->id = vm->sprites->size;
     appendSprite(vm->sprites, sprite);
     return vm->sprites->size - 1;
 }
@@ -217,7 +226,7 @@ uint32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char
     snippet->update_fn = update_fn;
     snippet->update_data = update_data;
     snippet->renderer = vm->renderer;
-    SDL_Surface* surface = TTF_RenderText_Solid(snippet->font, snippet->text, snippet->color);
+    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
     snippet->texture = SDL_CreateTextureFromSurface(vm->renderer, surface);
     snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
     SDL_FreeSurface(surface);
@@ -229,7 +238,7 @@ void Snippet_setLocation(Snippet* snippet, uint32_t x, uint32_t y) {
     SDL_DestroyTexture(snippet->texture);
     snippet->x = x;
     snippet->y = y;
-    SDL_Surface* surface = TTF_RenderText_Solid(snippet->font, snippet->text, snippet->color);
+    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
     snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
     snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
     SDL_FreeSurface(surface);
@@ -240,7 +249,7 @@ void Snippet_setText(Snippet* snippet, char* text) {
     snippet->text = malloc(strlen(text) + 1);
     strcpy(snippet->text, text);
     SDL_DestroyTexture(snippet->texture);
-    SDL_Surface* surface = TTF_RenderText_Solid(snippet->font, snippet->text, snippet->color);
+    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
     snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
     snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
     SDL_FreeSurface(surface);

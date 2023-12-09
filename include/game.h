@@ -4,12 +4,16 @@
  * @brief Contains all functionality related to starting and running the game
  */
 #pragma once
+
 #include "media.h"
 #include "view.h"
 #include "log.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include "board.h"
+#include "pip.h"
+#include "checker.h"
+#include "dstats.h"
 
 #define FPS 60
 #define MS_PER_FRAME (1000 / FPS)
