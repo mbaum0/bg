@@ -18,6 +18,8 @@ GameBoard* Board_init(void) {
     board->dice.die_0 = 1;
     board->dice.die_1 = 1;
 
+    board->lastClickedChecker = 0;
+
 
     uint32_t checkerIndex = 0;
     // Set the initial checker locations

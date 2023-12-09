@@ -24,7 +24,7 @@ suppress: $(BUILD_TARGET)
 	valgrind --leak-check=full --show-reachable=yes --error-limit=no --gen-suppressions=all --suppressions=sdl.supp -v --log-file=memcheck.log ./$(BUILD_TARGET)
 
 leaks: $(BUILD_TARGET)
-	valgrind --leak-check=full --show-reachable=yes --show-leak-kinds=all --suppressions=sdl.supp ./$(BUILD_TARGET)
+	valgrind --leak-check=full --show-reachable=yes --show-leak-kinds=all --track-origins=yes --suppressions=sdl.supp ./$(BUILD_TARGET)
 
 docker:
 	docker build -t valgrind .

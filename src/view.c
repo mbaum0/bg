@@ -210,7 +210,8 @@ uint32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char
     snippet->x = x;
     snippet->y = y;
     snippet->z = z;
-    snippet->text = strdup(text);
+    snippet->text = malloc(strlen(text) + 1);
+    strcpy(snippet->text, text);
     snippet->update_fn = update_fn;
     snippet->update_data = update_data;
     snippet->renderer = vm->renderer;
@@ -234,7 +235,8 @@ void Snippet_setLocation(Snippet* snippet, uint32_t x, uint32_t y) {
 
 void Snippet_setText(Snippet* snippet, char* text) {
     free(snippet->text);
-    snippet->text = strdup(text);
+    snippet->text = malloc(strlen(text) + 1);
+    strcpy(snippet->text, text);
     SDL_DestroyTexture(snippet->texture);
     SDL_Surface* surface = TTF_RenderText_Solid(snippet->font, snippet->text, snippet->color);
     snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);

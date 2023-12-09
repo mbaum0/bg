@@ -37,6 +37,8 @@
     ((pip >= 1 && pip <= 12) ? (PLAY_AREA_TOP_OFFSET + BOARD_HEIGHT - ((2 +  index) * CHECKER_SIZE)) : \
     (PLAY_AREA_TOP_OFFSET + ((index) * CHECKER_SIZE))))
 
+
+#define MAX_TEXT_LENGTH 100
 #define Z_BOARD 1
 #define Z_CHECKER 2
 #define Z_DEBUGTEXT 3
