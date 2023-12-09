@@ -9,6 +9,7 @@
 #include "view.h"
 #include "events.h"
 #include "media.h"
+#include <math.h>
 
 typedef struct Checker Checker;
 

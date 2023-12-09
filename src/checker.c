@@ -14,49 +14,30 @@ void updateCheckerSprite(Sprite* sprite, void* data) {
     int32_t newX = lastX;
     int32_t newY = lastY;
 
-    // animate checker movement
-    int32_t baseV = 20;
-    if (lastX != destX || lastY != destY) {
-        // if we're close to the destination, just snap to it
-        if (abs(lastX - destX) < baseV && abs(lastY - destY) < baseV) {
-            newX = destX;
-            newY = destY;
-        }
-        else {
-            if (lastY == destY) {
-                // if Y's are the same, just move horizontally
-                if (lastX < destX) {
-                    newX = lastX + baseV;
-                }
-                else if (lastX > destX) {
-                    newX = lastX - baseV;
-                }
-            }
-            else if (lastX == destX) {
-                // if X's are the same, just move vertically
-                if (lastY < destY) {
-                    newY = lastY + baseV;
-                }
-                else if (lastY > destY) {
-                    newY = lastY - baseV;
-                }
-            }
-            else {
-                float vRatio = (float)(destX - lastX) / (float)(destY - lastY);
-                int hRate = fabsf(baseV * vRatio);
-                int vRate = fabsf(baseV * (1/vRatio));
-                if (lastX > destX) {
-                    hRate *= -1;
-                }
-                if (lastY > destY) {
-                    vRate *= -1;
-                }
-                newX = lastX + hRate;
-                newY = lastY + vRate;
-            }
-        }
+    if (lastX == destX && lastY == destY) {
+        return;
     }
 
+    int32_t velocity = 30;
+
+    // if the checker is close enough, just set it to the destination
+    if (abs(destX - lastX) < velocity && abs(destY - lastY) < velocity) {
+        newX = destX;
+        newY = destY;
+    }
+    else {
+        float hypotenuse = sqrt(pow(destX - lastX, 2) + pow(destY - lastY, 2));
+        float sinOrigin = abs(destX - lastX) / hypotenuse;
+        float cosOrigin = abs(destY - lastY) / hypotenuse;
+        int32_t xVelocity = sinOrigin * velocity;
+        int32_t yVelocity = cosOrigin * velocity;
+
+        xVelocity *= (lastX < destX) ? 1 : -1;
+        yVelocity *= (lastY < destY) ? 1 : -1;
+
+        newX += xVelocity;
+        newY += yVelocity;
+    }
 
     Sprite_setLocation(sprite, newX, newY);
 }
