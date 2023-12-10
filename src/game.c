@@ -31,30 +31,45 @@ bool processInput(GameManager* gm) {
     SDL_Event event;
 
     while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-        case SDL_QUIT:
+        if (event.type == SDL_QUIT) {
             log_debug("Received SDL_QUIT event");
             return true;
-        default:
+        }
+        else if (event.type == SDL_KEYDOWN) {
+            switch (event.key.keysym.sym) {
+            case SDLK_s:
+                log_debug("Saving game to file");
+                Board_export(gm->board, "save.txt");
+                break;
+            case SDLK_l:
+                log_debug("Loading game from file");
+                Board_import(gm->board, "save.txt");
+                break;
+            default:
+                break;
+            }
+        }
+        else {
             if (event.type == SPRITE_CLICK_EVENT) {
                 SpriteClickEvent* spe = (SpriteClickEvent*)event.user.data1;
                 log_debug("Sprite click! %d", spe->sprite_id);
                 gm->board->clickedSprite = spe->sprite_id;
                 free(spe);
-            } else if (event.type == LOCATION_CLICK_EVENT) {
+            }
+            else if (event.type == LOCATION_CLICK_EVENT) {
                 LocationClickEvent* lce = (LocationClickEvent*)event.user.data1;
                 log_debug("Location click! %d", lce->location);
                 gm->board->clickedLocation = lce->location;
                 Board_moveIfPossible(gm->board, gm->board->clickedLocation, 2);
                 free(lce);
-            } else if(event.type == DIE_CLICK_EVENT) {
+            }
+            else if (event.type == DIE_CLICK_EVENT) {
                 DieClickEvent* dce = (DieClickEvent*)event.user.data1;
                 log_debug("Die click! %d", dce->value);
                 Dice_roll(&gm->board->die0);
                 Dice_roll(&gm->board->die1);
                 free(dce);
             }
-            break;
         }
     }
     return false;
@@ -67,7 +82,7 @@ void delayFrame(int32_t frameStart) {
     }
 }
 
-void createSprites(GameManager* gm){
+void createSprites(GameManager* gm) {
     // Create background sprite
     SDL_Rect src;
     int32_t x, y;
@@ -77,12 +92,12 @@ void createSprites(GameManager* gm){
     VM_createSprite(gm->vm, gm->mm->textures.board, src, x, y, Z_BOARD, false, NULL, NULL, NULL, NULL);
 
     // Create pip sprites
-    for (int i = 0; i < 24; i++){
+    for (int i = 0; i < 24; i++) {
         Pip_createSprite(i, gm->mm, gm->vm);
     }
 
     // Create checker sprites
-    for (int i = 0; i < 30; i++){
+    for (int i = 0; i < 30; i++) {
         Checker_createSprite(&gm->board->checkers[i], gm->mm, gm->vm);
     }
 
@@ -97,7 +112,7 @@ void createSprites(GameManager* gm){
 void GM_run(GameManager* gm) {
     createSprites(gm);
 
-    while(!processInput(gm)){
+    while (!processInput(gm)) {
         int32_t frameStart = SDL_GetTicks();
         VM_draw(gm->vm);
         delayFrame(frameStart);

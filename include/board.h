@@ -71,3 +71,14 @@ GameBoard* Board_init(void);
  * @brief Free memory allocated by the game board
  */
 void Board_free(GameBoard* board);
+
+
+/**
+ * @brief Export the game board to a file
+ */
+void Board_export(GameBoard* board, char* filename);
+
+/**
+ * @brief Import a game board from a file
+ */
+void Board_import(GameBoard* board, char* filename);

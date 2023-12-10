@@ -187,3 +187,71 @@ bool Board_moveIfPossible(GameBoard* board, int32_t fromLocation, int32_t amount
 void Board_free(GameBoard* board) {
     free(board);
 }
+
+void Board_export(GameBoard* board, char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        log_debug("Error opening file!\n");
+        return;
+    }
+
+    for (int32_t i = 0; i < 30; i++) {
+        fprintf(file, "%d,%d,%d\n", board->checkers[i].player, board->checkers[i].location, board->checkers[i].index);
+    }
+    fprintf(file, "%d,%d\n", board->die0.value, board->die0.side);
+    fprintf(file, "%d,%d\n", board->die1.value, board->die1.side);
+
+    fclose(file);
+}
+
+void Board_import(GameBoard* board, char* filename){
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        log_debug("Error opening file!\n");
+        return;
+    }
+
+    char line[256];
+    int32_t lineIndex = 0;
+    while (fgets(line, sizeof(line), file)) {
+        char* token = strtok(line, ",");
+        int32_t tokenIndex = 0;
+        while (token != NULL) {
+            int32_t value = atoi(token);
+            if (lineIndex < 30) {
+                switch (tokenIndex) {
+                    case 0:
+                        board->checkers[lineIndex].player = value;
+                        break;
+                    case 1:
+                        board->checkers[lineIndex].location = value;
+                        break;
+                    case 2:
+                        board->checkers[lineIndex].index = value;
+                        break;
+                }
+            } else if (lineIndex == 30) {
+                switch (tokenIndex) {
+                    case 0:
+                        board->die0.value = value;
+                        break;
+                    case 1:
+                        board->die0.side = value;
+                        break;
+                }
+            } else if (lineIndex == 31) {
+                switch (tokenIndex) {
+                    case 0:
+                        board->die1.value = value;
+                        break;
+                    case 1:
+                        board->die1.side = value;
+                        break;
+                }
+            }
+            token = strtok(NULL, ",");
+            tokenIndex++;
+        }
+        lineIndex++;
+    }
+}
