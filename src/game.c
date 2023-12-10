@@ -60,14 +60,12 @@ bool processInput(GameManager* gm) {
                 LocationClickEvent* lce = (LocationClickEvent*)event.user.data1;
                 log_debug("Location click! %d", lce->location);
                 gm->board->clickedLocation = lce->location;
-                Board_moveIfPossible(gm->board, gm->board->clickedLocation, 2);
                 free(lce);
             }
             else if (event.type == DIE_CLICK_EVENT) {
                 DieClickEvent* dce = (DieClickEvent*)event.user.data1;
                 log_debug("Die click! %d", dce->value);
-                Dice_roll(&gm->board->die0);
-                Dice_roll(&gm->board->die1);
+                gm->board->diceRolled = true;
                 free(dce);
             }
         }
@@ -114,6 +112,7 @@ void GM_run(GameManager* gm) {
 
     while (!processInput(gm)) {
         int32_t frameStart = SDL_GetTicks();
+        gm->board->state(gm->board);
         VM_draw(gm->vm);
         delayFrame(frameStart);
     }

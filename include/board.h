@@ -17,12 +17,23 @@ typedef struct GameBoard GameBoard;
 #define LOC_BAR_LIGHT LOC_HOME_DARK
 #define LOC_BAR_DARK LOC_HOME_LIGHT
 
+typedef void state_fn(GameBoard* board);
+void state_init(GameBoard* board);
+void state_diceRoll(GameBoard* board);
+void state_checkAvailableMoves(GameBoard* board);
+void state_getMove(GameBoard* board);
+
 struct GameBoard {
     Checker checkers[30];
     Die die0;
     Die die1;
     int32_t clickedLocation;
     int32_t clickedSprite;
+    int32_t playerMoveCount;
+    char stateName[20];
+    bool diceRolled;
+    Player activePlayer;
+    state_fn* state;
 };
 
 /**
@@ -41,9 +52,9 @@ Checker* Board_getNextCheckerAtLocation(GameBoard* board, int32_t location);
 Player Board_getPipOwner(GameBoard* board, int32_t pip);
 
 /**
- * @brief Returns true if a checker can move to a given location
+ * @brief Returns true if a checker can move a given amount
  */
-bool Board_canMoveChecker(GameBoard* board, Checker* checker, int32_t toLocation);
+bool Board_canMoveChecker(GameBoard* board, Checker* checker, int32_t amount);
 
 /**
  * @brief Move a checker to a given location
@@ -59,6 +70,11 @@ int32_t Board_getNumCheckersOnBar(GameBoard* board, Player player);
  * @brief Moves a checker if possible. Returns true if the move was successful
  */
 bool Board_moveIfPossible(GameBoard* board, int32_t fromLocation, int32_t amount);
+
+/**
+ * @brief Returns the number of possible moves for the active player given the current dice roll
+ */
+int32_t Board_getPossibleMoves(GameBoard* board);
 
 /**
  * @brief Initialize the game board to a new game state. Must be freed with Board_free
