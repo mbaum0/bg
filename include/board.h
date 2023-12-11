@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include "checker.h"
 #include "dice.h"
+#include "buttons.h"
 
 typedef struct GameBoard GameBoard;
 
@@ -22,6 +23,8 @@ void state_init(GameBoard* board);
 void state_diceRoll(GameBoard* board);
 void state_checkAvailableMoves(GameBoard* board);
 void state_getMove(GameBoard* board);
+void state_confirmTurn(GameBoard* board);
+void state_endTurn(GameBoard* board);
 
 struct GameBoard {
     Checker checkers[30];
@@ -31,7 +34,9 @@ struct GameBoard {
     int32_t clickedSprite;
     int32_t playerMoveCount;
     char stateName[20];
-    bool diceRolled;
+    Button confirmBtn;
+    Button undoBtn;
+    Button rollBtn;
     Player activePlayer;
     state_fn* state;
 };

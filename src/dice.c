@@ -15,19 +15,28 @@ void clickDie(void* data) {
     SDL_PushEvent(&e);
 }
 
-void updateDieSprite(Sprite* sprite, void* data){
+void updateDieSprite(Sprite* sprite, void* data) {
     Die* die = (Die*)data;
     int32_t faceOffset = (die->value - 1);
-    if (die->rollCount > 0){
+    if (die->rollCount > 0) {
         die->rollCount--;
 
-        if (die->rollCount % 3 == 0){
+        if (die->rollCount % 3 == 0) {
             faceOffset = rand() % 6;
-            Sprite_setSourceRect(sprite, (SDL_Rect){ (faceOffset) * DICE_SIZE, 0, DICE_SIZE, DICE_SIZE });
+            Sprite_setSourceRect(sprite, (SDL_Rect) { (faceOffset)*DICE_SIZE, 0, DICE_SIZE, DICE_SIZE });
         }
-    } else {
-        Sprite_setSourceRect(sprite, (SDL_Rect){ (faceOffset) * DICE_SIZE, 0, DICE_SIZE, DICE_SIZE });
     }
+    else {
+        Sprite_setSourceRect(sprite, (SDL_Rect) { (faceOffset)*DICE_SIZE, 0, DICE_SIZE, DICE_SIZE });
+    }
+
+    int32_t x = (die->turn == P_Light) ? \
+        (die->side == D_Left) ? DIE_0_LEFT_X_OFFSET : DIE_1_LEFT_X_OFFSET : \
+        (die->side == D_Left) ? DIE_0_RIGHT_X_OFFSET : DIE_1_RIGHT_X_OFFSET;
+    int32_t y = DICE_Y_OFFSET;
+    Sprite_setLocation(sprite, x, y);
+
+    Sprite_setVisible(sprite, !die->isDisabled);
 }
 
 void Dice_createSprite(Die* die, MediaManager* mm, ViewManager* vm) {
@@ -35,10 +44,21 @@ void Dice_createSprite(Die* die, MediaManager* mm, ViewManager* vm) {
     int32_t x, y;
     int32_t faceOffset = (die->value - 1) * DICE_SIZE;
     src = (SDL_Rect){ faceOffset, 0, DICE_SIZE, DICE_SIZE };
-    if (die->side == D_Left){
-        x = DIE_0_LEFT_X_OFFSET;
-    } else {
-        x = DIE_1_LEFT_X_OFFSET;
+    if (die->turn == P_Light) {
+        if (die->side == D_Left) {
+            x = DIE_0_LEFT_X_OFFSET;
+        }
+        else {
+            x = DIE_1_LEFT_X_OFFSET;
+        }
+    }
+    else {
+        if (die->side == D_Left) {
+            x = DIE_0_RIGHT_X_OFFSET;
+        }
+        else {
+            x = DIE_1_RIGHT_X_OFFSET;
+        }
     }
     y = DICE_Y_OFFSET;
 

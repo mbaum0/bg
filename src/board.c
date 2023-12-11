@@ -18,16 +18,32 @@ GameBoard* Board_init(void) {
     board->die0.value = 1;
     board->die0.rollCount = 0;
     board->die0.side = D_Left;
+    board->die0.turn = P_Light;
+    board->die0.isDisabled = true;
     board->die1.value = 1;
     board->die1.rollCount = 0;
     board->die1.side = D_Right;
+    board->die1.turn = P_Light;
+    board->die1.isDisabled = true;
 
     board->clickedLocation = 0;
     board->clickedSprite = 0;
-    board->diceRolled = false;
     board->playerMoveCount = 0;
     board->activePlayer = P_Light;
     board->state = state_init;
+
+    board->confirmBtn.type = B_Confirm;
+    board->confirmBtn.isDisabled = true;
+    board->confirmBtn.isClicked = false;
+    board->confirmBtn.turn = P_Light;
+    board->undoBtn.type = B_Undo;
+    board->undoBtn.isDisabled = true;
+    board->undoBtn.isClicked = false;
+    board->undoBtn.turn = P_Light;
+    board->rollBtn.type = B_Roll;
+    board->rollBtn.isDisabled = true;
+    board->rollBtn.isClicked = false;
+    board->rollBtn.turn = P_Light;
 
 
     int32_t checkerIndex = 0;
@@ -44,19 +60,19 @@ GameBoard* Board_init(void) {
         checkerIndex++;
     }
 
-    for (int32_t i = 0; i< 5; i++){
+    for (int32_t i = 0; i < 5; i++) {
         board->checkers[checkerIndex].player = P_Dark;
         board->checkers[checkerIndex].location = 12;
         board->checkers[checkerIndex].index = i;
         checkerIndex++;
-        
+
         board->checkers[checkerIndex].player = P_Light;
         board->checkers[checkerIndex].location = 13;
         board->checkers[checkerIndex].index = i;
         checkerIndex++;
     }
 
-    for (int32_t i = 0; i< 3; i++){
+    for (int32_t i = 0; i < 3; i++) {
         board->checkers[checkerIndex].player = P_Dark;
         board->checkers[checkerIndex].location = 17;
         board->checkers[checkerIndex].index = i;
@@ -68,7 +84,7 @@ GameBoard* Board_init(void) {
         checkerIndex++;
     }
 
-    for (int32_t i = 0; i< 5; i++){
+    for (int32_t i = 0; i < 5; i++) {
         board->checkers[checkerIndex].player = P_Dark;
         board->checkers[checkerIndex].location = 19;
         board->checkers[checkerIndex].index = i;
@@ -100,12 +116,13 @@ int32_t Board_getNumCheckersAtLocation(GameBoard* board, int32_t location) {
 Player Board_getPipOwner(GameBoard* board, int32_t pip) {
     if (pip == 0) {
         return P_None;
-    } else if (pip == 25) {
+    }
+    else if (pip == 25) {
         return P_None;
     }
-    
+
     int32_t numCheckers = Board_getNumCheckersAtLocation(board, pip);
-    if (numCheckers == 0){
+    if (numCheckers == 0) {
         return P_None;
     }
 
@@ -114,7 +131,7 @@ Player Board_getPipOwner(GameBoard* board, int32_t pip) {
     return checker->player;
 }
 
-int32_t Board_getNumCheckersOnBar(GameBoard* board, Player player){
+int32_t Board_getNumCheckersOnBar(GameBoard* board, Player player) {
     int32_t numCheckers = 0;
     int32_t barLocation = (player == P_Dark) ? LOC_BAR_DARK : LOC_BAR_LIGHT;
     for (int32_t i = 0; i < 30; i++) {
@@ -138,7 +155,7 @@ bool Board_canMoveChecker(GameBoard* board, Checker* checker, int32_t amount) {
     }
 
     // Check if the checker is not on the bar, but there are checkers on the bar
-    if (Board_getNumCheckersOnBar(board, owner) > 0 && checker->location != barLocation){
+    if (Board_getNumCheckersOnBar(board, owner) > 0 && checker->location != barLocation) {
         return false;
     }
 
@@ -161,12 +178,12 @@ void Board_moveChecker(GameBoard* board, Checker* checker, int32_t toLocation) {
     checker->location = toLocation;
 }
 
-Checker* Board_getNextCheckerAtLocation(GameBoard* board, int32_t location){
+Checker* Board_getNextCheckerAtLocation(GameBoard* board, int32_t location) {
     int32_t highestIndex = 0;
     Checker* highestChecker = NULL;
     for (int32_t i = 0; i < 30; i++) {
         if (board->checkers[i].location == location) {
-            if (board->checkers[i].index >= highestIndex){
+            if (board->checkers[i].index >= highestIndex) {
                 highestIndex = board->checkers[i].index;
                 highestChecker = &board->checkers[i];
             }
@@ -175,37 +192,42 @@ Checker* Board_getNextCheckerAtLocation(GameBoard* board, int32_t location){
     return highestChecker;
 }
 
-bool Board_moveIfPossible(GameBoard* board, int32_t fromLocation, int32_t amount){
+bool Board_moveIfPossible(GameBoard* board, int32_t fromLocation, int32_t amount) {
     Checker* checker = Board_getNextCheckerAtLocation(board, fromLocation);
-    if (checker == NULL){
+    if (checker == NULL) {
         return false;
     }
 
-    if (checker->player != board->activePlayer){
+    if (checker->player != board->activePlayer) {
         return false;
     }
 
     int32_t toLocation = (checker->player == P_Dark) ? fromLocation + amount : fromLocation - amount;
-    if (Board_canMoveChecker(board, checker, amount)){
+    if (Board_canMoveChecker(board, checker, amount)) {
         Board_moveChecker(board, checker, toLocation);
         return true;
     }
     return false;
 }
 
-void Board_nextPlayer(GameBoard* board){
+void Board_nextPlayer(GameBoard* board) {
     board->activePlayer = (board->activePlayer == P_Dark) ? P_Light : P_Dark;
+    board->die0.turn = (board->activePlayer == P_Dark) ? P_Dark : P_Light;
+    board->die1.turn = (board->activePlayer == P_Dark) ? P_Dark : P_Light;
+    board->confirmBtn.turn = (board->activePlayer == P_Dark) ? P_Dark : P_Light;
+    board->undoBtn.turn = (board->activePlayer == P_Dark) ? P_Dark : P_Light;
+    board->rollBtn.turn = (board->activePlayer == P_Dark) ? P_Dark : P_Light;
 }
 
-int32_t Board_getPossibleMoves(GameBoard* board){
+int32_t Board_getPossibleMoves(GameBoard* board) {
     int32_t numMoves = 0;
-    for (int32_t i = 0; i <= 25; i++){
+    for (int32_t i = 0; i <= 25; i++) {
         Checker* checker = Board_getNextCheckerAtLocation(board, i);
-        if (checker != NULL && checker->player == board->activePlayer){
-            if (Board_canMoveChecker(board, checker, board->die0.value)){
+        if (checker != NULL && checker->player == board->activePlayer) {
+            if (Board_canMoveChecker(board, checker, board->die0.value)) {
                 numMoves++;
             }
-            if (Board_canMoveChecker(board, checker, board->die1.value)){
+            if (Board_canMoveChecker(board, checker, board->die1.value)) {
                 numMoves++;
             }
         }
@@ -233,7 +255,7 @@ void Board_export(GameBoard* board, char* filename) {
     fclose(file);
 }
 
-void Board_import(GameBoard* board, char* filename){
+void Board_import(GameBoard* board, char* filename) {
     FILE* file = fopen(filename, "r");
     if (file == NULL) {
         log_debug("Error opening file!\n");
@@ -249,33 +271,35 @@ void Board_import(GameBoard* board, char* filename){
             int32_t value = atoi(token);
             if (lineIndex < 30) {
                 switch (tokenIndex) {
-                    case 0:
-                        board->checkers[lineIndex].player = value;
-                        break;
-                    case 1:
-                        board->checkers[lineIndex].location = value;
-                        break;
-                    case 2:
-                        board->checkers[lineIndex].index = value;
-                        break;
+                case 0:
+                    board->checkers[lineIndex].player = value;
+                    break;
+                case 1:
+                    board->checkers[lineIndex].location = value;
+                    break;
+                case 2:
+                    board->checkers[lineIndex].index = value;
+                    break;
                 }
-            } else if (lineIndex == 30) {
+            }
+            else if (lineIndex == 30) {
                 switch (tokenIndex) {
-                    case 0:
-                        board->die0.value = value;
-                        break;
-                    case 1:
-                        board->die0.side = value;
-                        break;
+                case 0:
+                    board->die0.value = value;
+                    break;
+                case 1:
+                    board->die0.side = value;
+                    break;
                 }
-            } else if (lineIndex == 31) {
+            }
+            else if (lineIndex == 31) {
                 switch (tokenIndex) {
-                    case 0:
-                        board->die1.value = value;
-                        break;
-                    case 1:
-                        board->die1.side = value;
-                        break;
+                case 0:
+                    board->die1.value = value;
+                    break;
+                case 1:
+                    board->die1.side = value;
+                    break;
                 }
             }
             token = strtok(NULL, ",");
@@ -285,46 +309,72 @@ void Board_import(GameBoard* board, char* filename){
     }
 }
 
-void state_init(GameBoard* board){
+void state_init(GameBoard* board) {
     strcpy(board->stateName, "init");
     board->state = state_diceRoll;
 }
 
-void state_diceRoll(GameBoard* board){
+void state_diceRoll(GameBoard* board) {
     strcpy(board->stateName, "diceRoll");
-    if (board->diceRolled){
+    board->rollBtn.isDisabled = false;
+    if (board->rollBtn.isClicked) {
+        board->die0.isDisabled = false;
+        board->die1.isDisabled = false;
+        board->rollBtn.isDisabled = true;
         Dice_roll(&board->die0);
         Dice_roll(&board->die1);
-        board->diceRolled = false;
+        board->rollBtn.isClicked = false;
         board->playerMoveCount = (board->die0.value == board->die1.value) ? 4 : 2;
         board->state = state_checkAvailableMoves;
     }
 }
 
-void state_checkAvailableMoves(GameBoard* board){
+void state_checkAvailableMoves(GameBoard* board) {
     strcpy(board->stateName, "checkAvailableMoves");
-    if (board->playerMoveCount == 0){
-        Board_nextPlayer(board);
-        board->state = state_diceRoll;
-    }else if (Board_getPossibleMoves(board) == 0){
-        Board_nextPlayer(board);
-        board->state = state_diceRoll;
-    } else {
+    if (board->playerMoveCount == 0) {
+        board->state = state_confirmTurn;
+    }
+    else if (Board_getPossibleMoves(board) == 0) {
+        board->state = state_confirmTurn;
+    }
+    else {
         board->state = state_getMove;
     }
     board->clickedLocation = -1;
 }
 
-void state_getMove(GameBoard* board){
+void state_getMove(GameBoard* board) {
     strcpy(board->stateName, "getMove");
-    if (board->clickedLocation != -1){
+    if (board->clickedLocation != -1) {
         int32_t currentMove = (board->playerMoveCount % 2 == 0) ? board->die0.value : board->die1.value;
         bool success = Board_moveIfPossible(board, board->clickedLocation, currentMove);
-        if (success){
+        if (success) {
             board->playerMoveCount--;
             board->state = state_checkAvailableMoves;
-        }else {
+        }
+        else {
             board->clickedLocation = -1;
         }
     }
+}
+
+void state_confirmTurn(GameBoard* board) {
+    strcpy(board->stateName, "confirmTurn");
+    board->confirmBtn.isDisabled = false;
+    board->undoBtn.isDisabled = false;
+    board->die0.isDisabled = true;
+    board->die1.isDisabled = true;
+    if (board->confirmBtn.isClicked) {
+        board->confirmBtn.isDisabled = true;
+        board->undoBtn.isDisabled = true;
+        board->confirmBtn.isClicked = false;
+        board->undoBtn.isClicked = false;
+        board->state = state_endTurn;
+    }
+}
+
+void state_endTurn(GameBoard* board) {
+    strcpy(board->stateName, "endTurn");
+    Board_nextPlayer(board);
+    board->state = state_diceRoll;
 }

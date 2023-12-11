@@ -55,8 +55,9 @@
 #define Z_BOARD 1
 #define Z_PIP 2
 #define Z_DICE 3
-#define Z_CHECKER 4
-#define Z_DEBUGTEXT 5
+#define Z_BUTTON 4
+#define Z_CHECKER 5
+#define Z_DEBUGTEXT 6
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using

@@ -8,11 +8,13 @@
 #include <SDL.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "util.h"
 
 extern uint32_t SPRITE_CLICK_EVENT;
 extern uint32_t SPRITE_HOVER_EVENT;
 extern uint32_t LOCATION_CLICK_EVENT;
 extern uint32_t DIE_CLICK_EVENT;
+extern uint32_t BUTTON_CLICK_EVENT;
 
 /**
  * @brief Event data for a sprite is clicked on
@@ -42,6 +44,13 @@ typedef struct LocationClickEvent {
 typedef struct DieClickEvent {
     int32_t value;
 } DieClickEvent;
+
+/**
+ * @brief Event data for a button being clicked on
+ */
+typedef struct ButtonClickEvent {
+    ButtonType type;
+} ButtonClickEvent;
 
 /**
  * @brief Registers custom events with the SDL event system. This function must

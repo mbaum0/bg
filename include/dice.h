@@ -32,6 +32,8 @@ struct Die {
     int32_t value;
     int32_t rollCount;
     DieSide side;
+    Player turn;
+    bool isDisabled;
 };
 
 /**

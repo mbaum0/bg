@@ -20,6 +20,8 @@ struct TexturePack {
     SDL_Texture* dice;
     SDL_Texture* rollBtn;
     SDL_Texture* pip;
+    SDL_Texture* confirmBtn;
+    SDL_Texture* undoBtn;
 };
 
 struct FontPack {

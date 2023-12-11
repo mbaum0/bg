@@ -81,7 +81,9 @@ bool loadTextures(MediaManager *mm) {
         loadTexture(&(mm->textures.checker), mm, "assets/checker.png") &&
         loadTexture(&(mm->textures.dice), mm, "assets/dice.png") &&
         loadTexture(&(mm->textures.rollBtn), mm, "assets/rollBtn.png") &&
-        loadTexture(&(mm->textures.pip), mm, "assets/pip.png")
+        loadTexture(&(mm->textures.pip), mm, "assets/pip.png") &&
+        loadTexture(&(mm->textures.confirmBtn), mm, "assets/confirmBtn.png") &&
+        loadTexture(&(mm->textures.undoBtn), mm, "assets/undoBtn.png")
         );
 }
 
@@ -90,6 +92,9 @@ void destroyTextures(MediaManager *mm) {
     SDL_DestroyTexture(mm->textures.checker);
     SDL_DestroyTexture(mm->textures.dice);
     SDL_DestroyTexture(mm->textures.rollBtn);
+    SDL_DestroyTexture(mm->textures.pip);
+    SDL_DestroyTexture(mm->textures.confirmBtn);
+    SDL_DestroyTexture(mm->textures.undoBtn);
     IMG_Quit();
 }
 

@@ -26,14 +26,8 @@ void updateCheckerSprite(Sprite* sprite, void* data) {
         newY = destY;
     }
     else {
-        float hypotenuse = sqrt(pow(destX - lastX, 2) + pow(destY - lastY, 2));
-        float sinOrigin = abs(destX - lastX) / hypotenuse;
-        float cosOrigin = abs(destY - lastY) / hypotenuse;
-        int32_t xVelocity = sinOrigin * velocity;
-        int32_t yVelocity = cosOrigin * velocity;
-
-        xVelocity *= (lastX < destX) ? 1 : -1;
-        yVelocity *= (lastY < destY) ? 1 : -1;
+        int32_t xVelocity = getHorizontalVelocity(velocity, lastX, lastY, destX, destY);
+        int32_t yVelocity = getVerticalVelocity(velocity, lastX, lastY, destX, destY);
 
         newX += xVelocity;
         newY += yVelocity;

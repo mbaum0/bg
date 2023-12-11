@@ -65,8 +65,19 @@ bool processInput(GameManager* gm) {
             else if (event.type == DIE_CLICK_EVENT) {
                 DieClickEvent* dce = (DieClickEvent*)event.user.data1;
                 log_debug("Die click! %d", dce->value);
-                gm->board->diceRolled = true;
+                //gm->board->diceRolled = true;
                 free(dce);
+            } else if (event.type == BUTTON_CLICK_EVENT){
+                ButtonClickEvent* bce = (ButtonClickEvent*)event.user.data1;
+                log_debug("Button click! %d", bce->type);
+                if (bce->type == B_Confirm) {
+                    gm->board->confirmBtn.isClicked = true;
+                } else if (bce->type == B_Undo) {
+                    gm->board->undoBtn.isClicked = true;
+                } else if (bce->type == B_Roll) {
+                    gm->board->rollBtn.isClicked = true;
+                }
+                free(bce);
             }
         }
     }
@@ -102,6 +113,12 @@ void createSprites(GameManager* gm) {
     // Create dice sprites
     Dice_createSprite(&gm->board->die0, gm->mm, gm->vm);
     Dice_createSprite(&gm->board->die1, gm->mm, gm->vm);
+
+    // Create button sprites
+    Button_createSprite(&gm->board->confirmBtn, gm->mm, gm->vm);
+    Button_createSprite(&gm->board->undoBtn, gm->mm, gm->vm);
+    Button_createSprite(&gm->board->rollBtn, gm->mm, gm->vm);
+    
 
     // Create debug stats
     DStats_createSnippet(gm->mm, gm->vm, gm->board);
