@@ -169,6 +169,21 @@ bool Board_canMoveChecker(GameBoard* board, Checker* checker, int32_t amount) {
         return false;
     }
 
+    // If the toLocation is the home location, ensure that all checkers are in the home quadrant
+    if (toLocation == LOC_HOME_LIGHT || toLocation == LOC_HOME_DARK){
+        for (int32_t i = 0; i < 30; i++){
+            Checker c = board->checkers[i];
+            if (c.player == owner){
+                if (owner == P_Light && c.location > 6){
+                    return false;
+                }
+                else if (owner == P_Dark && c.location < 19){
+                    return false;
+                }
+            }
+        }
+    }
+
     return true;
 }
 

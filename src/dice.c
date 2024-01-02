@@ -31,8 +31,8 @@ void updateDieSprite(Sprite* sprite, void* data) {
     }
 
     int32_t x = (die->turn == P_Light) ? \
-        (die->side == D_Left) ? DIE_0_LEFT_X_OFFSET : DIE_1_LEFT_X_OFFSET : \
-        (die->side == D_Left) ? DIE_0_RIGHT_X_OFFSET : DIE_1_RIGHT_X_OFFSET;
+        (die->side == D_Left) ? DIE_0_RIGHT_X_OFFSET : DIE_1_RIGHT_X_OFFSET : \
+        (die->side == D_Left) ? DIE_0_LEFT_X_OFFSET : DIE_1_LEFT_X_OFFSET;
     int32_t y = DICE_Y_OFFSET;
     Sprite_setLocation(sprite, x, y);
 
@@ -46,18 +46,18 @@ void Dice_createSprite(Die* die, MediaManager* mm, ViewManager* vm) {
     src = (SDL_Rect){ faceOffset, 0, DICE_SIZE, DICE_SIZE };
     if (die->turn == P_Light) {
         if (die->side == D_Left) {
-            x = DIE_0_LEFT_X_OFFSET;
-        }
-        else {
-            x = DIE_1_LEFT_X_OFFSET;
-        }
-    }
-    else {
-        if (die->side == D_Left) {
             x = DIE_0_RIGHT_X_OFFSET;
         }
         else {
             x = DIE_1_RIGHT_X_OFFSET;
+        }
+    }
+    else {
+        if (die->side == D_Left) {
+            x = DIE_0_LEFT_X_OFFSET;
+        }
+        else {
+            x = DIE_1_LEFT_X_OFFSET;
         }
     }
     y = DICE_Y_OFFSET;
