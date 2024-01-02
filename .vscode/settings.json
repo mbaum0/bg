@@ -25,7 +25,8 @@
         "system_error": "c",
         "tuple": "c",
         "atomic": "c",
-        "locale": "c"
+        "locale": "c",
+        "variant": "c"
     },
     "doxdocgen.generic.authorName": "Michael Baumgarten",
     "doxdocgen.file.fileOrder": [

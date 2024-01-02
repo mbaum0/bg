@@ -41,6 +41,7 @@ struct Snippet {
     int32_t x;
     int32_t y;
     int32_t z;
+    bool visible;
     char* text;
     SDL_Rect dst_rect;
     SDL_Texture* texture;
@@ -226,13 +227,14 @@ uint32_t Sprite_getFrame(Sprite* sprite){
 
 
 
-int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, SnippetUpdate_fn update_fn, void* update_data) {
+int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, bool visible, SnippetUpdate_fn update_fn, void* update_data) {
     Snippet* snippet = malloc(sizeof(Snippet));
     snippet->font = font;
     snippet->color = color;
     snippet->x = x;
     snippet->y = y;
     snippet->z = z;
+    snippet->visible = visible;
     snippet->text = malloc(strlen(text) + 1);
     strcpy(snippet->text, text);
     snippet->update_fn = update_fn;
@@ -265,4 +267,8 @@ void Snippet_setText(Snippet* snippet, char* text) {
     snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
     snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
     SDL_FreeSurface(surface);
+}
+
+void Snippet_setVisible(Snippet* snippet, bool visible) {
+    snippet->visible = visible;
 }

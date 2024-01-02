@@ -57,7 +57,8 @@
 #define Z_DICE 3
 #define Z_BUTTON 4
 #define Z_CHECKER 5
-#define Z_DEBUGTEXT 6
+#define Z_CHECKERTEXT 6
+#define Z_DEBUGTEXT 7
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
@@ -175,7 +176,7 @@ uint32_t Sprite_getFrame(Sprite* sprite);
  * @param update_fn The update function to call every frame
  * @param update_data The data to pass to the update function
  */
-int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, SnippetUpdate_fn update_fn, void* update_data);
+int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, bool visible, SnippetUpdate_fn update_fn, void* update_data);
 
 /**
  * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks

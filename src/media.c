@@ -55,6 +55,12 @@ bool loadFonts(MediaManager *mm) {
         log_error("Failed to open font: %s\n", TTF_GetError());
         return false;
     }
+
+    mm->fonts.standard = TTF_OpenFont("assets/SunnyspellsRegular.ttf", 30);
+    if (!mm->fonts.standard) {
+        log_error("Failed to open font: %s\n", TTF_GetError());
+        return false;
+    }
     return true;
 }
 
@@ -100,6 +106,7 @@ void destroyTextures(MediaManager *mm) {
 
 void destroyFonts(MediaManager *mm) {
     TTF_CloseFont(mm->fonts.debug);
+    TTF_CloseFont(mm->fonts.standard);
     TTF_Quit();
 }
 

@@ -26,6 +26,7 @@ struct TexturePack {
 
 struct FontPack {
     TTF_Font* debug;
+    TTF_Font* standard;
 };
 
 struct ColorPack {

@@ -68,5 +68,4 @@ void Dice_createSprite(Die* die, MediaManager* mm, ViewManager* vm) {
 void Dice_roll(Die* die) {
     die->value = rand() % 6 + 1;
     die->rollCount = 30;
-
 }

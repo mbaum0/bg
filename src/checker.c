@@ -46,6 +46,16 @@ void clickChecker(void* data) {
     SDL_PushEvent(&e);
 }
 
+void updateCheckerIndexText(Snippet* snippet, void* data) {
+    Checker* checker = (Checker*)data;
+    char text[2];
+    sprintf(text, "%d", checker->index + 1);
+    int32_t textX = GET_CHECKER_X(checker->location) + (CHECKER_SIZE / 2);
+    int32_t textY = GET_CHECKER_Y(checker->location, checker->index) + (CHECKER_SIZE / 2);
+    Snippet_setLocation(snippet, textX, textY);
+    Snippet_setText(snippet, text);
+}
+
 void Checker_createSprite(Checker* checker, MediaManager* mm, ViewManager* vm) {
     SDL_Rect src;
     int32_t x, y;
@@ -54,4 +64,17 @@ void Checker_createSprite(Checker* checker, MediaManager* mm, ViewManager* vm) {
     x = GET_CHECKER_X(checker->location);
     y = GET_CHECKER_Y(checker->location, checker->index);
     VM_createSprite(vm, mm->textures.checker, src, x, y, Z_CHECKER, false, updateCheckerSprite, checker, clickChecker, checker);
+
+    SDL_Color color;
+    if (checker->player == P_Light) {
+        color = (SDL_Color){ 0, 0, 0, 255 };
+    }
+    else {
+        color = (SDL_Color){ 255, 255, 255, 255 };
+    }
+    char text[2];
+    sprintf(text, "%d", checker->index + 1);
+    int32_t textX = x + CHECKER_SIZE / 2;
+    int32_t textY = y + CHECKER_SIZE / 2;
+    VM_createSnippet(vm, mm->fonts.standard, color, text, textX, textY, Z_CHECKERTEXT, true, updateCheckerIndexText, checker);
 }
