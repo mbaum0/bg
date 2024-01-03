@@ -65,7 +65,6 @@ bool processInput(GameManager* gm) {
             else if (event.type == DIE_CLICK_EVENT) {
                 DieClickEvent* dce = (DieClickEvent*)event.user.data1;
                 log_debug("Die click! %d", dce->value);
-                //gm->board->diceRolled = true;
                 free(dce);
             } else if (event.type == BUTTON_CLICK_EVENT){
                 ButtonClickEvent* bce = (ButtonClickEvent*)event.user.data1;
