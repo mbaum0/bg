@@ -7,7 +7,8 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "util.h"
-#include "view.h"
+#include "vmanager.h"
+#include "sprite.h"
 #include "events.h"
 #include "media.h"
 

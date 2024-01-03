@@ -7,7 +7,8 @@
 #include <stdint.h>
 #include "events.h"
 #include "media.h"
-#include "view.h"
+#include "vmanager.h"
+#include "sprite.h"
 
 /**
  * @brief Create a sprite for a given pip

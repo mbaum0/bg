@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/include",
+                "${workspaceFolder}/lib/engine/include",
                 "/usr/local/include/SDL2/"
             ],
             "compilerPath": "/usr/bin/clang",

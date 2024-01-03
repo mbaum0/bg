@@ -1,98 +1,15 @@
 /**
- * @file view.c
+ * @file vmanager.c
  * @author Michael Baumgarten
  * @brief ViewManager implementation
  */
-#include "view.h"
-
-typedef struct SpriteArray SpriteArray;
-typedef struct SnippetArray SnippetArray;
+#include "vmanager.h"
 
 struct ViewManager {
     SDL_Renderer* renderer;
     SpriteArray* sprites;
     SnippetArray* snippets;
 };
-
-struct SpriteArray {
-    Sprite** sprites;
-    int32_t size;
-};
-
-struct Sprite {
-    int32_t id;
-    SDL_Texture* texture;
-    SDL_Rect src_rect;
-    SDL_Rect dst_rect;
-    bool visible;
-    bool hovered;
-    SpriteUpdate_fn update_fn;
-    void* update_data;
-    SpriteClick_fn click_fn;
-    void* click_data;
-    int32_t z;
-    bool flip;
-    uint32_t frame; // for storing arbitrary data;
-};
-
-struct Snippet {
-    TTF_Font* font;
-    SDL_Color color;
-    int32_t x;
-    int32_t y;
-    int32_t z;
-    bool visible;
-    char* text;
-    SDL_Rect dst_rect;
-    SDL_Texture* texture;
-    SnippetUpdate_fn update_fn;
-    void* update_data;
-    SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
-};
-
-struct SnippetArray {
-    Snippet** snippets;
-    int32_t size;
-};
-
-void initSpriteArray(SpriteArray* spriteArray) {
-    spriteArray->sprites = NULL;
-    spriteArray->size = 0;
-}
-
-void appendSprite(SpriteArray* spriteArray, Sprite* sprite) {
-    spriteArray->size++;
-    spriteArray->sprites = realloc(spriteArray->sprites, spriteArray->size * sizeof(Sprite*));
-    spriteArray->sprites[spriteArray->size - 1] = sprite;
-}
-
-void freeSpriteArray(SpriteArray* spriteArray) {
-    for (int32_t i = 0; i < spriteArray->size; i++) {
-        free(spriteArray->sprites[i]);
-    }
-    free(spriteArray->sprites);
-    spriteArray->size = 0;
-}
-
-void initSnippetArray(SnippetArray* snippetArray) {
-    snippetArray->snippets = NULL;
-    snippetArray->size = 0;
-}
-
-void appendSnippet(SnippetArray* snippetArray, Snippet* snippet) {
-    snippetArray->size++;
-    snippetArray->snippets = realloc(snippetArray->snippets, snippetArray->size * sizeof(Snippet*));
-    snippetArray->snippets[snippetArray->size - 1] = snippet;
-}
-
-void freeSnippetArray(SnippetArray* snippetArray) {
-    for (int32_t i = 0; i < snippetArray->size; i++) {
-        free(snippetArray->snippets[i]->text);
-        free(snippetArray->snippets[i]);
-    }
-    free(snippetArray->snippets);
-    snippetArray->size = 0;
-}
 
 /**
  * @brief Used to pickup on mouse clicks on sprites
@@ -196,37 +113,6 @@ int32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, int
     return vm->sprites->size - 1;
 }
 
-void Sprite_setLocation(Sprite* sprite, int32_t x, int32_t y) {
-    sprite->dst_rect.x = x;
-    sprite->dst_rect.y = y;
-}
-
-int32_t Sprite_getX(Sprite* sprite) {
-    return sprite->dst_rect.x;
-}
-
-int32_t Sprite_getY(Sprite* sprite) {
-    return sprite->dst_rect.y;
-}
-
-void Sprite_setVisible(Sprite* sprite, bool visible) {
-    sprite->visible = visible;
-}
-
-void Sprite_setSourceRect(Sprite* sprite, SDL_Rect src) {
-    sprite->src_rect = src;
-}
-
-void Sprite_setFrame(Sprite* sprite, uint32_t frame){
-    sprite->frame = frame;
-}
-
-uint32_t Sprite_getFrame(Sprite* sprite){
-    return sprite->frame;
-}
-
-
-
 int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, bool visible, SnippetUpdate_fn update_fn, void* update_data) {
     Snippet* snippet = malloc(sizeof(Snippet));
     snippet->font = font;
@@ -246,29 +132,4 @@ int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char*
     SDL_FreeSurface(surface);
     appendSnippet(vm->snippets, snippet);
     return vm->snippets->size - 1;
-}
-
-void Snippet_setLocation(Snippet* snippet, int32_t x, int32_t y) {
-    SDL_DestroyTexture(snippet->texture);
-    snippet->x = x;
-    snippet->y = y;
-    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
-    snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
-    snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
-    SDL_FreeSurface(surface);
-}
-
-void Snippet_setText(Snippet* snippet, char* text) {
-    free(snippet->text);
-    snippet->text = malloc(strlen(text) + 1);
-    strcpy(snippet->text, text);
-    SDL_DestroyTexture(snippet->texture);
-    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
-    snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
-    snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
-    SDL_FreeSurface(surface);
-}
-
-void Snippet_setVisible(Snippet* snippet, bool visible) {
-    snippet->visible = visible;
 }

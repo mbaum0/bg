@@ -6,7 +6,8 @@
 #pragma once
 
 #include "media.h"
-#include "view.h"
+#include "vmanager.h"
+#include "sprite.h"
 #include "log.h"
 #include <SDL.h>
 #include <stdbool.h>

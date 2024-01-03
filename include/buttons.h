@@ -4,12 +4,13 @@
  * @brief Game button functions
  */
 #pragma once
-#include "view.h"
 #include <media.h>
 #include <stdbool.h>
 #include "events.h"
 #include "util.h"
 #include "dice.h"
+#include "vmanager.h"
+#include "sprite.h"
 
 #define ROLL_BUTTON_WIDTH 150
 #define BUTTON_HEIGHT DICE_SIZE

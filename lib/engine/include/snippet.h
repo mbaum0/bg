@@ -8,7 +8,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <SDL_ttf.h>
-#include "vmanager.h"
 
 /**
  * @brief A Snippet is a bit of text that is drawn on the screen. It can be manipulated using
@@ -16,26 +15,32 @@
 */
 typedef struct Snippet Snippet;
 
+typedef struct SnippetArray SnippetArray;
+
 /**
  * @brief Snippet update functions are called every frame to update the Snippet's state.
  */
 typedef void (*SnippetUpdate_fn)(Snippet* snippet, void* data);
 
+struct Snippet {
+    TTF_Font* font;
+    SDL_Color color;
+    int32_t x;
+    int32_t y;
+    int32_t z;
+    bool visible;
+    char* text;
+    SDL_Rect dst_rect;
+    SDL_Texture* texture;
+    SnippetUpdate_fn update_fn;
+    void* update_data;
+    SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
+};
 
-/**
- * @brief Create a new managed Snippet instance. Do not free Snippets directly, as they are managed by the ViewManager.
- * 
- * @param vm The ViewManager instance
- * @param font The SDL_Font to use for this Snippet
- * @param color The color to use for this Snippet
- * @param text The text to use for this Snippet. A copy will be created and freed when the Snippet is freed.
- * @param x The x coordinate of the Snippet
- * @param y The y coordinate of the Snippet
- * @param z The z coordinate of the Snippet
- * @param update_fn The update function to call every frame
- * @param update_data The data to pass to the update function
- */
-int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, bool visible, SnippetUpdate_fn update_fn, void* update_data);
+struct SnippetArray {
+    Snippet** snippets;
+    int32_t size;
+};
 
 /**
  * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks

@@ -6,7 +6,9 @@
 #pragma once
 #include <stdint.h>
 #include "util.h"
-#include "view.h"
+#include "vmanager.h"
+#include "sprite.h"
+#include "snippet.h"
 #include "events.h"
 #include "media.h"
 #include <math.h>

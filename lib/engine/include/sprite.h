@@ -7,13 +7,14 @@
 #include <SDL.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "vmanager.h"
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
   * the various Sprite_* functions.
   */
 typedef struct Sprite Sprite;
+
+typedef struct SpriteArray SpriteArray;
 
 /**
  * @brief Sprite update functions are called every frame to update the Sprite's state.
@@ -25,24 +26,26 @@ typedef void (*SpriteUpdate_fn)(Sprite* sprite, void* data);
  */
 typedef void (*SpriteClick_fn)(void* data);
 
-/**
- * @brief Create a new managed Sprite instance. Do not free Sprites directly, as they are managed by the ViewManager.
- *
- * @param vm The ViewManager instance
- * @param texture The SDL_Texture to use for this Sprite
- * @param src The source rectangle to use for this Sprite
- * @param x The x coordinate of the Sprite
- * @param y The y coordinate of the Sprite
- * @param z The z coordinate of the Sprite
- * @param flip Flip the Texture for the Sprite
- * @param update_fn The update function to call every frame
- * @param update_data The data to pass to the update function
- * @param click_fn The click function to call when the Sprite is clicked
- * @param click_data The data to pass to the click function
- *
- * @return The ID of the new Sprite
- */
-int32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data);
+struct SpriteArray {
+    Sprite** sprites;
+    int32_t size;
+};
+
+struct Sprite {
+    int32_t id;
+    SDL_Texture* texture;
+    SDL_Rect src_rect;
+    SDL_Rect dst_rect;
+    bool visible;
+    bool hovered;
+    SpriteUpdate_fn update_fn;
+    void* update_data;
+    SpriteClick_fn click_fn;
+    void* click_data;
+    int32_t z;
+    bool flip;
+    uint32_t frame; // for storing arbitrary data;
+};
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks

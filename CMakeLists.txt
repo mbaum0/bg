@@ -11,8 +11,15 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 file(GLOB SOURCES "src/*.c")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
+# Add all c source files under the lib/engine/src directory
+file(GLOB ENGINE_SOURCES "lib/engine/src/*.c")
+target_sources(${PROJECT_NAME} PRIVATE ${ENGINE_SOURCES})
+
 # Add all headers files under the include directory
 target_include_directories(${PROJECT_NAME} PRIVATE include)
+
+# Add all header files under the lib/engine/include directory
+target_include_directories(${PROJECT_NAME} PRIVATE lib/engine/include)
 
 # Add compiler errors/warnings flags
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
