@@ -44,12 +44,6 @@ bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
     return true;
 };
 
-void destroySDL(MediaManager *mm) {
-    SDL_DestroyRenderer(mm->renderer);
-    SDL_DestroyWindow(mm->window);
-    SDL_Quit();
-}
-
 MediaManager* MM_init(char* title, int32_t width, int32_t height){
     MediaManager* mm = malloc(sizeof(MediaManager));
     TextureArray_init(&mm->textures, 10);
@@ -61,7 +55,33 @@ MediaManager* MM_init(char* title, int32_t width, int32_t height){
     return mm;
 }
 
+void destroySDL(MediaManager *mm) {
+    SDL_DestroyRenderer(mm->renderer);
+    SDL_DestroyWindow(mm->window);
+    SDL_Quit();
+}
+
+void destroyTextures(MediaManager* mm){
+    int32_t i;
+    SDL_Texture* texture;
+    while ((texture = TextureArray_iterator(&mm->textures, &i)) != NULL) {
+        SDL_DestroyTexture(texture);
+    }
+    IMG_Quit();
+}
+
+void destroyFonts(MediaManager* mm){
+    int32_t i;
+    TTF_Font* font;
+    while ((font = FontArray_iterator(&mm->fonts, &i)) != NULL) {
+        TTF_CloseFont(font);
+    }
+    TTF_Quit();
+}
+
 void MM_free(MediaManager* mm){
+    destroyFonts(mm);
+    destroyTextures(mm);
     TextureArray_free(&mm->textures);
     FontArray_free(&mm->fonts);
     destroySDL(mm);
