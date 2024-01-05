@@ -20,32 +20,13 @@ struct ViewManager {
  */
 int handle_event(void* data, SDL_Event* event) {
     SpriteArray* spriteArray = (SpriteArray*)data;
-    Sprite* topSprite = NULL;
-    int32_t currentTopZ = -1;
+    Sprite* sprite = NULL;
     switch (event->type) {
     case SDL_MOUSEBUTTONUP:
-        for (int32_t i = 0; i < spriteArray->size; i++) {
-            Sprite* sprite = spriteArray->sprites[i];
-            if (sprite->visible) {
-                SDL_Point p = { event->button.x, event->button.y };
-                if (SDL_PointInRect(&p, &sprite->dst_rect)) {
-                    if (sprite->z > currentTopZ) {
-                        currentTopZ = sprite->z;
-                        topSprite = sprite;
-                    }
-                }
-            }
-
-        }
-        if (currentTopZ != -1) {
-            SpriteClickEvent* spe = malloc(sizeof(SpriteClickEvent));
-            spe->sprite_id = topSprite->id;
-            SDL_Event e;
-            e.type = SPRITE_CLICK_EVENT;
-            e.user.data1 = spe;
-            SDL_PushEvent(&e);
-            if (topSprite->click_fn != NULL) {
-                topSprite->click_fn(topSprite->click_data);
+        sprite = SpriteArray_findAtCoordinate(spriteArray, event->button.x, event->button.y);
+        if (sprite != NULL) {
+            if (sprite->click_fn != NULL) {
+                sprite->click_fn(sprite->click_data);
             }
         }
         break;
@@ -59,17 +40,17 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
     ViewManager* vm = malloc(sizeof(ViewManager));
     vm->renderer = renderer;
     vm->sprites = malloc(sizeof(SpriteArray));
-    initSpriteArray(vm->sprites);
+    SpriteArray_init(vm->sprites);
     vm->snippets = malloc(sizeof(SnippetArray));
-    initSnippetArray(vm->snippets);
+    SnippetArray_init(vm->snippets);
     SDL_AddEventWatch(handle_event, vm->sprites);
     return vm;
 }
 
 void VM_free(ViewManager* vm) {
-    freeSpriteArray(vm->sprites);
+    SpriteArray_free(vm->sprites);
     free(vm->sprites);
-    freeSnippetArray(vm->snippets);
+    SnippetArray_free(vm->snippets);
     free(vm->snippets);
     free(vm);
 }
@@ -95,41 +76,14 @@ void VM_draw(ViewManager* vm) {
     SDL_RenderPresent(vm->renderer);
 }
 
-int32_t VM_createSprite(ViewManager* vm, SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data){
-    Sprite* sprite = malloc(sizeof(Sprite));
-    sprite->texture = texture;
-    sprite->src_rect = src;
-    sprite->dst_rect = (SDL_Rect){ x, y, src.w, src.h };
-    sprite->visible = true;
-    sprite->update_fn = update_fn;
-    sprite->z = z;
-    sprite->flip = flip;
-    sprite->update_data = update_data;
-    sprite->click_fn = click_fn;
-    sprite->click_data = click_data;
+int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
     sprite->id = vm->sprites->size;
-    sprite->frame = 0;
-    appendSprite(vm->sprites, sprite);
+    SpriteArray_append(vm->sprites, sprite);
     return vm->sprites->size - 1;
 }
 
-int32_t VM_createSnippet(ViewManager* vm, TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, bool visible, SnippetUpdate_fn update_fn, void* update_data) {
-    Snippet* snippet = malloc(sizeof(Snippet));
-    snippet->font = font;
-    snippet->color = color;
-    snippet->x = x;
-    snippet->y = y;
-    snippet->z = z;
-    snippet->visible = visible;
-    snippet->text = malloc(strlen(text) + 1);
-    strcpy(snippet->text, text);
-    snippet->update_fn = update_fn;
-    snippet->update_data = update_data;
-    snippet->renderer = vm->renderer;
-    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
-    snippet->texture = SDL_CreateTextureFromSurface(vm->renderer, surface);
-    snippet->dst_rect = (SDL_Rect){ snippet->x, snippet->y, surface->w, surface->h };
-    SDL_FreeSurface(surface);
-    appendSnippet(vm->snippets, snippet);
+int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
+    snippet->id = vm->snippets->size;
+    SnippetArray_append(vm->snippets, snippet);
     return vm->snippets->size - 1;
 }

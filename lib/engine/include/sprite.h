@@ -48,6 +48,49 @@ struct Sprite {
 };
 
 /**
+ * @brief Initialize a SpriteArray
+ */
+void SpriteArray_init(SpriteArray* spriteArray);
+
+/**
+ * @brief Append a Sprite to a SpriteArray
+ */
+void SpriteArray_append(SpriteArray* spriteArray, Sprite* sprite);
+
+/**
+ * @brief Free a SpriteArray
+ */
+void SpriteArray_free(SpriteArray* spriteArray);
+
+/**
+ * @brief Get the sprite at the given coordinates
+ * 
+ * @param spriteArray The SpriteArray to search
+ * @param x The x coordinate
+ * @param y The y coordinate
+ * 
+ * @return Sprite* The Sprite at the given coordinates, or NULL if no Sprite is found
+ */
+Sprite* SpriteArray_findAtCoordinate(SpriteArray* spriteArray, int32_t x, int32_t y);
+
+/**
+ * @brief Create a new Sprite instance
+ * 
+ * @param texture The SDL_Texture to use for this sprite
+ * @param src The source rectangle
+ * @param x The x coordinate
+ * @param y The y coordinate
+ * @param z The z coordinate
+ * @param flip Flip orientation
+ * @param update_fn Update function called each frame
+ * @param update_data Data to pass to the update function
+ * @param click_fn Click function is called when the sprite is clicked
+ * @param click_data The data to pass to the click function
+ * @return Sprite* The new Sprite instance
+ */
+Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data);
+
+/**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks
  */
 void Sprite_setLocation(Sprite* sprite, int32_t x, int32_t y);

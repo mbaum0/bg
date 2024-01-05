@@ -32,27 +32,6 @@ typedef struct SpriteHoverEvent {
 } SpriteHoverEvent;
 
 /**
- * @brief Event data for a location being clicked on
- */
-typedef struct LocationClickEvent {
-    int32_t location;
-} LocationClickEvent;
-
-/**
- * @brief Event data for a die being clicked on
- */
-typedef struct DieClickEvent {
-    int32_t value;
-} DieClickEvent;
-
-/**
- * @brief Event data for a button being clicked on
- */
-typedef struct ButtonClickEvent {
-    ButtonType type;
-} ButtonClickEvent;
-
-/**
  * @brief Registers custom events with the SDL event system. This function must
  * be called before any custom events can be used.
  */

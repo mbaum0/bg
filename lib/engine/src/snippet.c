@@ -5,18 +5,18 @@
  */
 #include "snippet.h"
 
-void initSnippetArray(SnippetArray* snippetArray) {
+void SnippetArray_init(SnippetArray* snippetArray) {
     snippetArray->snippets = NULL;
     snippetArray->size = 0;
 }
 
-void appendSnippet(SnippetArray* snippetArray, Snippet* snippet) {
+void SnippetArray_append(SnippetArray* snippetArray, Snippet* snippet) {
     snippetArray->size++;
     snippetArray->snippets = realloc(snippetArray->snippets, snippetArray->size * sizeof(Snippet*));
     snippetArray->snippets[snippetArray->size - 1] = snippet;
 }
 
-void freeSnippetArray(SnippetArray* snippetArray) {
+void SnippetArray_free(SnippetArray* snippetArray) {
     for (int32_t i = 0; i < snippetArray->size; i++) {
         free(snippetArray->snippets[i]->text);
         free(snippetArray->snippets[i]);

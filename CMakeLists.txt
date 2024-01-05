@@ -18,8 +18,11 @@ target_sources(${PROJECT_NAME} PRIVATE ${ENGINE_SOURCES})
 # Add all headers files under the include directory
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
-# Add all header files under the lib/engine/include directory
-target_include_directories(${PROJECT_NAME} PRIVATE lib/engine/include)
+# Add the game engine library
+add_subdirectory(lib/engine)
+
+# Link the game engine library
+target_link_libraries(${PROJECT_NAME} engine)
 
 # Add compiler errors/warnings flags
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)

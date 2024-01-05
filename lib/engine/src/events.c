@@ -19,4 +19,3 @@ void init_events(void) {
     DIE_CLICK_EVENT = SDL_RegisterEvents(1);
     BUTTON_CLICK_EVENT = SDL_RegisterEvents(1);
 }
-
