@@ -18,7 +18,7 @@ struct ViewManager {
  * @param event event that occured
  * @return int always 1 (this value is ignored)
  */
-int handle_event(void* data, SDL_Event* event) {
+int handleEvent(void* data, SDL_Event* event) {
     SpriteArray* spriteArray = (SpriteArray*)data;
     Sprite* sprite = NULL;
     switch (event->type) {
@@ -43,7 +43,7 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
     SpriteArray_init(vm->sprites);
     vm->snippets = malloc(sizeof(SnippetArray));
     SnippetArray_init(vm->snippets);
-    SDL_AddEventWatch(handle_event, vm->sprites);
+    SDL_AddEventWatch(handleEvent, vm->sprites);
     return vm;
 }
 

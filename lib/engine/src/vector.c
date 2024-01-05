@@ -1,10 +1,10 @@
 /**
- * @file util.c
+ * @file vector.c
  * @author Michael Baumgarten
- * @brief Things that don't fit anywhere else
+ * @brief Vector math implementations
  */
 
-#include "util.h"
+#include "vector.h"
 
 int32_t getVerticalVelocity(int32_t velocity, int32_t x0, int32_t y0, int32_t x1, int32_t y1){
     float hypotenuse = sqrt(pow(x1 - x0, 2) + pow(y1 - y0, 2));

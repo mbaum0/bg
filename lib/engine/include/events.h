@@ -12,9 +12,6 @@
 
 extern uint32_t SPRITE_CLICK_EVENT;
 extern uint32_t SPRITE_HOVER_EVENT;
-extern uint32_t LOCATION_CLICK_EVENT;
-extern uint32_t DIE_CLICK_EVENT;
-extern uint32_t BUTTON_CLICK_EVENT;
 
 /**
  * @brief Event data for a sprite is clicked on

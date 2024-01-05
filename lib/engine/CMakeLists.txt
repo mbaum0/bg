@@ -12,6 +12,9 @@ add_library(${PROJECT_NAME} STATIC
     src/sprite.c
     src/snippet.c
     src/events.c
+    src/vector.c
+    src/mmanager.c
+    src/log.c
 )
 
 # Specify include directories for the library
@@ -28,3 +31,6 @@ target_link_libraries(${PROJECT_NAME} SDL2::Image)
 # Add SDL2_ttf library
 find_package(SDL2_ttf REQUIRED)
 target_link_libraries(${PROJECT_NAME} SDL2::TTF)
+
+# Add math
+target_link_libraries(${PROJECT_NAME} m)
