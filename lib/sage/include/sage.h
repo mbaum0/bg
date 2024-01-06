@@ -7,6 +7,10 @@
 #pragma once
 #include "vmanager.h"
 #include "mmanager.h"
+#include "input.h"
+
+#define FPS 60
+#define MS_PER_FRAME (1000 / FPS)
 
 typedef struct Sage Sage;
 
@@ -33,11 +37,11 @@ Sage* Sage_create(char* title, int width, int height);
 void Sage_destroy(Sage* s);
 
 /**
- * @brief Step the SAGE engine forward one frame
+ * @brief Run the SAGE engine. This function will block until the user exits the game.
  * 
  * @param s The SAGE engine
  */
-void Sage_step(Sage* s);
+void Sage_run(Sage* s);
 
 /**
  * @brief Load a texture from a file
@@ -47,3 +51,12 @@ void Sage_step(Sage* s);
  * @return SDL_Texture* The loaded texture
  */
 SDL_Texture* Sage_loadTexture(Sage* s, char* path);
+
+/**
+ * @brief Register a sprite with the SAGE engine
+ * 
+ * @param s The SAGE engine
+ * @param sprite Sprite to register
+ * @return int32_t The id of the Sprite
+ */
+int32_t Sage_registerSprite(Sage* s, Sprite* sprite);

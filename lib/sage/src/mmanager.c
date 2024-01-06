@@ -5,6 +5,9 @@
  */
 #include "mmanager.h"
 
+ARRAY_INIT(Texture, SDL_Texture)
+ARRAY_INIT(Font, TTF_Font)
+
 bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         log_error("Couldn't initialize SDL: %s", SDL_GetError());
@@ -45,7 +48,7 @@ bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
 }
 
 MediaManager* MM_init(char* title, int32_t width, int32_t height){
-    MediaManager* mm = malloc(sizeof(MediaManager));
+    MediaManager* mm = calloc(1, sizeof(MediaManager));
     TextureArray_init(&mm->textures, 10);
     FontArray_init(&mm->fonts, 10);
     if (!initSDL(mm, title, width, height)) {

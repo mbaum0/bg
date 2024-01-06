@@ -5,6 +5,13 @@
  */
 #include "sage.h"
 
+void delayFrame(int32_t frameStart) {
+    int32_t frameTime = SDL_GetTicks() - frameStart;
+    if (frameTime < MS_PER_FRAME) {
+        SDL_Delay(MS_PER_FRAME - frameTime);
+    }
+}
+
 Sage* Sage_create(char* title, int width, int height){
     Sage* s = malloc(sizeof(Sage));
     s->mm = MM_init(title, width, height);
@@ -18,10 +25,18 @@ void Sage_destroy(Sage* s){
     free(s);
 }
 
-void Sage_step(Sage* s){
-    VM_draw(s->vm);
+void Sage_run(Sage* s){
+    while(processInput() == false){
+        int32_t frameStart = SDL_GetTicks();
+        VM_draw(s->vm);
+        delayFrame(frameStart);
+    }
 }
 
 SDL_Texture* Sage_loadTexture(Sage* s, char* path){
     return MM_loadTexture(s->mm, path);
+}
+
+int32_t Sage_registerSprite(Sage* s, Sprite* sprite){
+    return VM_registerSprite(s->vm, sprite);
 }

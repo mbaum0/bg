@@ -29,5 +29,6 @@ void Checker_create(Sage* sage, int32_t index){
 
     SDL_Texture* texture = Sage_loadTexture(sage, "assets/checker.png");
     SDL_Rect src_rect = {0, 0, CHECKER_SIZE, CHECKER_SIZE};
-    Sprite_create(texture, src_rect, 0, 0, 0, false, updateChecker, c, clickChecker, c);
+    Sprite* s = Sprite_create(texture, src_rect, 0, 0, 0, false, updateChecker, c, clickChecker, c);
+    Sage_registerSprite(sage, s);
 }

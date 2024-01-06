@@ -43,6 +43,24 @@ Sprite* SpriteArray_findAtCoordinate(SpriteArray* spriteArray, int32_t x, int32_
     return topSprite;
 }
 
+Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip, SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data){
+    Sprite* sprite = malloc(sizeof(Sprite));
+    sprite->id = 0;
+    sprite->texture = texture;
+    sprite->src_rect = src;
+    sprite->dst_rect = (SDL_Rect){ x, y, src.w, src.h };
+    sprite->visible = true;
+    sprite->hovered = false;
+    sprite->update_fn = update_fn;
+    sprite->update_data = update_data;
+    sprite->click_fn = click_fn;
+    sprite->click_data = click_data;
+    sprite->z = z;
+    sprite->flip = flip;
+    sprite->frame = 0;
+    return sprite;
+}
+
 void Sprite_setLocation(Sprite* sprite, int32_t x, int32_t y) {
     sprite->dst_rect.x = x;
     sprite->dst_rect.y = y;
@@ -71,3 +89,4 @@ void Sprite_setFrame(Sprite* sprite, uint32_t frame){
 uint32_t Sprite_getFrame(Sprite* sprite){
     return sprite->frame;
 }
+

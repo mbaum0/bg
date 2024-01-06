@@ -15,6 +15,13 @@ struct name##Array { \
     int32_t length; \
     int32_t index; \
 }; \
+void name##Array_init(name##Array* array, int32_t initialSize); \
+void name##Array_append(name##Array* array, type* item); \
+void name##Array_free(name##Array* array); \
+type* name##Array_iterator(name##Array* array, int32_t* index); \
+
+
+#define ARRAY_INIT(name, type) \
 void name##Array_init(name##Array* array, int32_t initialSize) { \
     array->items = malloc(initialSize * sizeof(type*)); \
     array->size = initialSize; \
@@ -30,9 +37,6 @@ void name##Array_append(name##Array* array, type* item) { \
     array->length++; \
 } \
 void name##Array_free(name##Array* array) { \
-    for (int32_t i = 0; i < array->length; i++) { \
-        free(array->items[i]); \
-    } \
     free(array->items); \
     array->size = 0; \
     array->length = 0; \

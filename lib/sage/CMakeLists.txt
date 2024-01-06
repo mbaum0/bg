@@ -16,6 +16,7 @@ add_library(${PROJECT_NAME} STATIC
     src/mmanager.c
     src/log.c
     src/sage.c
+    src/input.c
 )
 
 # Specify include directories for the library
