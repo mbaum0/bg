@@ -30,7 +30,8 @@
         "charconv": "c",
         "type_traits": "c",
         "__locale": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "ios": "c"
     },
     "doxdocgen.generic.authorName": "Michael Baumgarten",
     "doxdocgen.file.fileOrder": [

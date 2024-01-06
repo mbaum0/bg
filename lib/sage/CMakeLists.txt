@@ -1,7 +1,7 @@
 # Set the minimum required version of CMake
 cmake_minimum_required(VERSION 3.7)
 
-project(engine)
+project(sage)
 
 # Add SDL2 CMake modules
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
@@ -15,6 +15,7 @@ add_library(${PROJECT_NAME} STATIC
     src/vector.c
     src/mmanager.c
     src/log.c
+    src/sage.c
 )
 
 # Specify include directories for the library
