@@ -8,7 +8,7 @@
 
 void clickChecker(void* data){
     Checker* c = (Checker*)data;
-    log_debug("Clicked checker %d\n", c->index);
+    log_debug("Clicked checker %d", c->index);
     c->index++;
 }
 
@@ -23,7 +23,7 @@ void updateChecker(Sprite* sprite, void* data){
     Sprite_setSourceRect(sprite, src_rect);
 }
 
-void Checker_create(Sage* sage, int32_t index){
+Checker* Checker_create(Sage* sage, int32_t index){
     Checker* c = malloc(sizeof(Checker));
     c->index = index;
 
@@ -31,4 +31,9 @@ void Checker_create(Sage* sage, int32_t index){
     SDL_Rect src_rect = {0, 0, CHECKER_SIZE, CHECKER_SIZE};
     Sprite* s = Sprite_create(texture, src_rect, 0, 0, 0, false, updateChecker, c, clickChecker, c);
     Sage_registerSprite(sage, s);
+    return c;
+}
+
+void Checker_destroy(Checker* c){
+    free(c);
 }

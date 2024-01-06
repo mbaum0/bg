@@ -49,4 +49,4 @@ type* name##Array_iterator(name##Array* array, int32_t* index) { \
     type* item = array->items[*index]; \
     *index += 1; \
     return item; \
-} \
+}

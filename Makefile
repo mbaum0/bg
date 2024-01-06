@@ -1,15 +1,17 @@
 SRC_DIR = src
 INC_DIR = include
+LIB_DIR = lib
 BUILD_DIR = build
 OBJ_NAME = bg
 BUILD_TARGET = $(BUILD_DIR)/$(OBJ_NAME)
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 HEADER_FILES = $(wildcard $(INC_DIR)/*.h)
+LIB_FILES = $(wildcard $(LIB_DIR)/*.c)
 
 build: $(BUILD_TARGET)
 
-$(BUILD_TARGET): $(SRC_FILES) $(HEADER_FILES)
+$(BUILD_TARGET): $(SRC_FILES) $(HEADER_FILES) $(LIB_FILES)
 	mkdir -p $(BUILD_DIR)
 	cmake -B build -S .
 	make -C build
@@ -17,16 +19,8 @@ $(BUILD_TARGET): $(SRC_FILES) $(HEADER_FILES)
 clean:
 	rm -rf $(BUILD_DIR)
 
-suppress: $(BUILD_TARGET)
-	rm memcheck.log
-	valgrind --leak-check=full --show-reachable=yes --error-limit=no --gen-suppressions=all --suppressions=sdl.supp -v --log-file=memcheck.log ./$(BUILD_TARGET)
-
 leaks: $(BUILD_TARGET)
-	valgrind --leak-check=full --show-reachable=yes --show-leak-kinds=all --track-origins=yes --suppressions=sdl.supp ./$(BUILD_TARGET)
-
-docker:
-	docker build -t valgrind .
-	docker run -it -v .:/valgrind -e DISPLAY=host.docker.internal:0 valgrind:latest make leaks
+	MallocStackLogging=1 leaks -quiet --atExit -- ./$(BUILD_TARGET)
 
 run: $(BUILD_TARGET)
 	./$(BUILD_TARGET)

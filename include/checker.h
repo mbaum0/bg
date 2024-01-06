@@ -15,4 +15,6 @@ struct Checker {
     int32_t index;
 };
 
-void Checker_create(Sage* sage, int32_t index);
+Checker* Checker_create(Sage* sage, int32_t index);
+
+void Checker_destroy(Checker* c);

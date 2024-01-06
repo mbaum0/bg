@@ -8,7 +8,6 @@
 #include <SDL.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "util.h"
 
 extern uint32_t SPRITE_CLICK_EVENT;
 extern uint32_t SPRITE_HOVER_EVENT;
