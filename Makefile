@@ -7,11 +7,12 @@ BUILD_TARGET = $(BUILD_DIR)/$(OBJ_NAME)
 
 SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
 HEADER_FILES = $(wildcard $(INC_DIR)/*.h)
-LIB_FILES = $(wildcard $(LIB_DIR)/*.c)
+LIB_SRC_FILES = $(shell find $(LIB_DIR) -name '*.c')
+LIB_HEADER_FILES = $(shell find $(LIB_DIR) -name '*.h')
 
 build: $(BUILD_TARGET)
 
-$(BUILD_TARGET): $(SRC_FILES) $(HEADER_FILES) $(LIB_FILES)
+$(BUILD_TARGET): $(SRC_FILES) $(HEADER_FILES) $(LIB_SRC_FILES) $(LIB_HEADER_FILES)
 	mkdir -p $(BUILD_DIR)
 	cmake -B build -S .
 	make -C build

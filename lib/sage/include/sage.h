@@ -8,6 +8,7 @@
 #include "vmanager.h"
 #include "mmanager.h"
 #include "input.h"
+#include "events.h"
 
 #define FPS 60
 #define MS_PER_FRAME (1000 / FPS)
@@ -17,6 +18,7 @@ typedef struct Sage Sage;
 struct Sage {
     MediaManager* mm;
     ViewManager* vm;
+    EventManager* em;
 };
 
 /**
@@ -60,3 +62,13 @@ SDL_Texture* Sage_loadTexture(Sage* s, char* path);
  * @return int32_t The id of the Sprite
  */
 int32_t Sage_registerSprite(Sage* s, Sprite* sprite);
+
+/**
+ * @brief Register a callback function for an event
+ * 
+ * @param s The SAGE engine
+ * @param eventType Type of event
+ * @param callback_fn Callback function
+ * @param data data to pass to the callback function
+ */
+void Sage_registerEventCallback(Sage* s, uint32_t eventType, EventCallback_fn callback_fn, void* data);

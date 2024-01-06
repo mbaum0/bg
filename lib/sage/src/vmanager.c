@@ -56,6 +56,7 @@ void VM_free(ViewManager* vm) {
 }
 
 void VM_draw(ViewManager* vm) {
+    SDL_SetRenderDrawColor(vm->renderer, 255, 255, 255, 255);
     SDL_RenderClear(vm->renderer);
     for (int32_t i = 0; i < vm->sprites->size; i++) {
         Sprite* sprite = vm->sprites->sprites[i];

@@ -8,27 +8,42 @@
 #include <SDL.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "array.h"
 
-extern uint32_t SPRITE_CLICK_EVENT;
-extern uint32_t SPRITE_HOVER_EVENT;
+typedef struct EventManager EventManager;
+typedef void (*EventCallback_fn)(uint32_t eventType, SDL_Event* e, void* data);
+typedef struct EventCallback EventCallback;
+
+struct EventCallback {
+    uint32_t eventType;
+    EventCallback_fn callback;
+    void* data;
+};
+
+
+ARRAY_DEFINE(EventCB, EventCallback)
+
+struct EventManager {
+    EventCBArray callbacks;
+};
 
 /**
- * @brief Event data for a sprite is clicked on
+ * @brief Registers a callback function to be called when the specified event
+ * occurs.
+ * 
+ * @param em The event manager to register the callback with
+ * @param event_type The type of event to register the callback for
+ * @param callback_fn The callback function to be called when the event occurs
+ * @param data The data to be passed to the callback function
  */
-typedef struct SpriteClickEvent {
-    int sprite_id;
-} SpriteClickEvent;
+void EM_registerCallback(EventManager* em, uint32_t event_type, EventCallback_fn callback_fn, void* data);
 
 /**
- * @brief Event data for a sprite that is being hovered over
-*/
-typedef struct SpriteHoverEvent {
-    int sprite_id;
-    bool hovered;
-} SpriteHoverEvent;
-
-/**
- * @brief Registers custom events with the SDL event system. This function must
- * be called before any custom events can be used.
+ * @brief Initialize the event manager
  */
-void init_events(void);
+EventManager* EM_init(void);
+
+/**
+ * @brief Free the event manager
+ */
+void EM_free(EventManager* em);

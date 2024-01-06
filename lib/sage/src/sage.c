@@ -16,6 +16,7 @@ Sage* Sage_create(char* title, int width, int height){
     Sage* s = malloc(sizeof(Sage));
     s->mm = MM_init(title, width, height);
     s->vm = VM_init(s->mm->renderer);
+    s->em = EM_init();
     return s;
 }
 
@@ -39,4 +40,8 @@ SDL_Texture* Sage_loadTexture(Sage* s, char* path){
 
 int32_t Sage_registerSprite(Sage* s, Sprite* sprite){
     return VM_registerSprite(s->vm, sprite);
+}
+
+void Sage_registerEventCallback(Sage* s, uint32_t eventType, EventCallback_fn callback_fn, void* data){
+    EM_registerCallback(s->em, eventType, callback_fn, data);
 }
