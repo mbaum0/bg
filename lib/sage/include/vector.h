@@ -4,13 +4,13 @@
  * @brief Vector math implementations
  */
 #pragma once
-#include <stdint.h>
 #include <math.h>
+#include <stdint.h>
 #include <stdlib.h>
 
 /**
  * @brief Returns the vertical component of a velocity vector given the start and end points
- * 
+ *
  * @param velocity The magnitude of the velocity vector
  * @param x0 Starting x coordinate
  * @param y0 Starting y coordinate
@@ -21,7 +21,7 @@ int32_t getVerticalVelocity(int32_t velocity, int32_t x0, int32_t y0, int32_t x1
 
 /**
  * @brief Returns the horizontal component of a velocity vector given the start and end points
- * 
+ *
  * @param velocity The magnitude of the velocity vector
  * @param x0 Starting x coordinate
  * @param y0 Starting y coordinate

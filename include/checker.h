@@ -1,18 +1,17 @@
 /**
  * @file checker.h
  * @author Michael Baumgarten
- * @brief 
+ * @brief
  */
 #pragma once
-#include <stdint.h>
 #include "sage.h"
+#include <stdint.h>
 
 #define CHECKER_SIZE 80
 typedef struct Checker Checker;
 
-
 struct Checker {
-    int32_t index;
+  int32_t index;
 };
 
 Checker* Checker_create(Sage* sage, int32_t index);

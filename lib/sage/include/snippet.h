@@ -4,16 +4,16 @@
  * @brief Spinnet implementation for the game engine
  */
 #pragma once
-#include <SDL.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <SDL_ttf.h>
 #include "array.h"
+#include <SDL.h>
+#include <SDL_ttf.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 /**
  * @brief A Snippet is a bit of text that is drawn on the screen. It can be manipulated using
  * the various Snippet_* functions.
-*/
+ */
 typedef struct Snippet Snippet;
 
 ARRAY_DEFINE(Snippet, Snippet)
@@ -24,24 +24,24 @@ ARRAY_DEFINE(Snippet, Snippet)
 typedef void (*SnippetUpdate_fn)(Snippet* snippet, void* data);
 
 struct Snippet {
-    int32_t id;
-    TTF_Font* font;
-    SDL_Color color;
-    int32_t x;
-    int32_t y;
-    int32_t z;
-    bool visible;
-    char* text;
-    SDL_Rect dst_rect;
-    SDL_Texture* texture;
-    SnippetUpdate_fn update_fn;
-    void* update_data;
-    SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
+  int32_t id;
+  TTF_Font* font;
+  SDL_Color color;
+  int32_t x;
+  int32_t y;
+  int32_t z;
+  bool visible;
+  char* text;
+  SDL_Rect dst_rect;
+  SDL_Texture* texture;
+  SnippetUpdate_fn update_fn;
+  void* update_data;
+  SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
 };
 
 /**
  * @brief Create a new Snippet instance.
- * 
+ *
  * @param font The SDL_Font to use for this Snippet
  * @param color Color of text
  * @param text String text. A copy will be created and freed when the Snippet is freed
@@ -51,9 +51,10 @@ struct Snippet {
  * @param visible Whether or not the Snippet is visible
  * @param update_fn The update function to call every frame
  * @param update_data The data to pass to the update function
- * @return Snippet* 
+ * @return Snippet*
  */
-Snippet* Snippet_create(TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, bool visible, SnippetUpdate_fn update_fn, void* update_data);
+Snippet* Snippet_create(TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, bool visible,
+                        SnippetUpdate_fn update_fn, void* update_data);
 
 /**
  * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks

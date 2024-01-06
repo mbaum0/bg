@@ -1,17 +1,17 @@
 /**
  * @file input.h
  * @author Michael Baumgarten
- * @brief 
+ * @brief
  */
 #pragma once
 
+#include "log.h"
 #include <SDL.h>
 #include <stdbool.h>
-#include "log.h"
 
 /**
  * @brief Processes input from SDL
- * 
+ *
  * @return true if the game should quit
  */
 bool processInput(void);

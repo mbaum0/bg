@@ -23,5 +23,8 @@ clean:
 leaks: $(BUILD_TARGET)
 	MallocStackLogging=1 leaks -quiet --atExit -- ./$(BUILD_TARGET)
 
+format: $(SRC_FILES) $(HEADER_FILES) $(LIB_SRC_FILES) $(LIB_HEADER_FILES)
+	find . \( -name "*.c" -o -name "*.h" \) -exec clang-format -i {} \;
+
 run: $(BUILD_TARGET)
 	./$(BUILD_TARGET)

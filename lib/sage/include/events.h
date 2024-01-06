@@ -5,32 +5,31 @@
  */
 #pragma once
 
-#include <SDL.h>
-#include <stdint.h>
-#include <stdbool.h>
 #include "array.h"
+#include <SDL.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 typedef struct EventManager EventManager;
 typedef void (*EventCallback_fn)(uint32_t eventType, SDL_Event* e, void* data);
 typedef struct EventCallback EventCallback;
 
 struct EventCallback {
-    uint32_t eventType;
-    EventCallback_fn callback;
-    void* data;
+  uint32_t eventType;
+  EventCallback_fn callback;
+  void* data;
 };
-
 
 ARRAY_DEFINE(EventCB, EventCallback)
 
 struct EventManager {
-    EventCBArray callbacks;
+  EventCBArray callbacks;
 };
 
 /**
  * @brief Registers a callback function to be called when the specified event
  * occurs.
- * 
+ *
  * @param em The event manager to register the callback with
  * @param event_type The type of event to register the callback for
  * @param callback_fn The callback function to be called when the event occurs

@@ -5,12 +5,12 @@
  */
 
 #pragma once
-#include <SDL.h>
-#include <SDL_ttf.h>
-#include <SDL_image.h>
 #include "array.h"
-#include <stdbool.h>
 #include "log.h"
+#include <SDL.h>
+#include <SDL_image.h>
+#include <SDL_ttf.h>
+#include <stdbool.h>
 
 typedef struct MediaManager MediaManager;
 
@@ -18,10 +18,10 @@ ARRAY_DEFINE(Texture, SDL_Texture)
 ARRAY_DEFINE(Font, TTF_Font)
 
 struct MediaManager {
-    SDL_Renderer* renderer;
-    SDL_Window* window;
-    TextureArray textures;
-    FontArray fonts;
+  SDL_Renderer* renderer;
+  SDL_Window* window;
+  TextureArray textures;
+  FontArray fonts;
 };
 
 /**
@@ -40,7 +40,6 @@ MediaManager* MM_init(char* title, int32_t width, int32_t height);
  */
 void MM_free(MediaManager* mm);
 
-
 /**
  * @brief Loads a texture from a file
  * @param mm MediaManager instance
@@ -51,7 +50,7 @@ SDL_Texture* MM_loadTexture(MediaManager* mm, char* path);
 
 /**
  * @brief Loads a font from a file
- * 
+ *
  * @param mm MediaManager instance
  * @param path Path to font file
  * @param size font size

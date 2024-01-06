@@ -4,10 +4,10 @@
  * @brief ViewManager implementation for the game engine
  */
 #pragma once
-#include <SDL.h>
-#include "sprite.h"
-#include "snippet.h"
 #include "events.h"
+#include "snippet.h"
+#include "sprite.h"
+#include <SDL.h>
 
 /**
  * @brief ViewManager manages rendering Sprites to the screen.
@@ -31,8 +31,9 @@ void VM_free(ViewManager* vm);
 void VM_draw(ViewManager* vm);
 
 /**
- * @brief Register a Sprite with the ViewManager. Do not free Sprites directly once registered, as they are managed by the ViewManager.
- * 
+ * @brief Register a Sprite with the ViewManager. Do not free Sprites directly once registered, as they are managed by
+ * the ViewManager.
+ *
  * @param vm The ViewManager instance
  * @param sprite Sprite to register
  * @return int32_t The id of the Sprite
@@ -40,8 +41,9 @@ void VM_draw(ViewManager* vm);
 int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite);
 
 /**
- * @brief Register a Snippet with the ViewManager. Do not free Snippets directly once registered, as they are managed by the ViewManager.
- * 
+ * @brief Register a Snippet with the ViewManager. Do not free Snippets directly once registered, as they are managed by
+ * the ViewManager.
+ *
  * @param vm The ViewManager instance
  * @param snippet Snippet to register
  * @return int32_t The id of the Snippet
