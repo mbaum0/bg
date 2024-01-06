@@ -21,3 +21,7 @@ void Sage_destroy(Sage* s){
 void Sage_step(Sage* s){
     VM_draw(s->vm);
 }
+
+SDL_Texture* Sage_loadTexture(Sage* s, char* path){
+    return MM_loadTexture(s->mm, path);
+}

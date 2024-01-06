@@ -38,3 +38,12 @@ void Sage_destroy(Sage* s);
  * @param s The SAGE engine
  */
 void Sage_step(Sage* s);
+
+/**
+ * @brief Load a texture from a file
+ * 
+ * @param s The SAGE engine
+ * @param path The path to the texture file
+ * @return SDL_Texture* The loaded texture
+ */
+SDL_Texture* Sage_loadTexture(Sage* s, char* path);

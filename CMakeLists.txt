@@ -5,43 +5,43 @@ cmake_minimum_required(VERSION 3.7)
 project(bg)
 
 # Add SDL2 CMake modules
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+# list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib/sage/cmake/sdl2)
 
 # Add all c source files under the src directory
 file(GLOB SOURCES "src/*.c")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add all c source files under the lib/engine/src directory
-file(GLOB ENGINE_SOURCES "lib/engine/src/*.c")
-target_sources(${PROJECT_NAME} PRIVATE ${ENGINE_SOURCES})
+file(GLOB SAGE_SOURCES "lib/sage/src/*.c")
+target_sources(${PROJECT_NAME} PRIVATE ${SAGE_SOURCES})
 
 # Add all headers files under the include directory
 target_include_directories(${PROJECT_NAME} PRIVATE include)
 
-# Add the game engine library
-add_subdirectory(lib/engine)
+# Add the sage engine library
+add_subdirectory(lib/sage)
 
-# Link the game engine library
-target_link_libraries(${PROJECT_NAME} engine)
+# Link the sage engine library
+target_link_libraries(${PROJECT_NAME} sage)
 
 # Add compiler errors/warnings flags
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror -std=c11 -O0 -g -gdwarf-4>)
 
-# Add SDL2 library
-find_package(SDL2 REQUIRED)
-target_link_libraries(${PROJECT_NAME} SDL2::Main)
+# # Add SDL2 library
+# find_package(SDL2 REQUIRED)
+# target_link_libraries(${PROJECT_NAME} SDL2::Main)
 
-# Add SDL2_image library
-find_package(SDL2_image REQUIRED)
-target_link_libraries(${PROJECT_NAME} SDL2::Image)
+# # Add SDL2_image library
+# find_package(SDL2_image REQUIRED)
+# target_link_libraries(${PROJECT_NAME} SDL2::Image)
 
-# Add SDL2_ttf library
-find_package(SDL2_ttf REQUIRED)
-target_link_libraries(${PROJECT_NAME} SDL2::TTF)
+# # Add SDL2_ttf library
+# find_package(SDL2_ttf REQUIRED)
+# target_link_libraries(${PROJECT_NAME} SDL2::TTF)
 
-# Add math
-target_link_libraries(${PROJECT_NAME} m)
+# # Add math
+# target_link_libraries(${PROJECT_NAME} m)
 
 # Copy over assets to the build directory
 file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})

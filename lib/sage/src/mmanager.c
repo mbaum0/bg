@@ -42,7 +42,7 @@ bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
     }
 
     return true;
-};
+}
 
 MediaManager* MM_init(char* title, int32_t width, int32_t height){
     MediaManager* mm = malloc(sizeof(MediaManager));
@@ -88,7 +88,7 @@ void MM_free(MediaManager* mm){
     free(mm);
 }
 
-SDL_Texture* loadTexture(MediaManager* mm, char* path){
+SDL_Texture* MM_loadTexture(MediaManager* mm, char* path){
     log_debug("Loading texture: %s", path);
     SDL_Texture* texture = IMG_LoadTexture(mm->renderer, path);
     if (!texture) {
@@ -99,7 +99,7 @@ SDL_Texture* loadTexture(MediaManager* mm, char* path){
     return texture;
 }
 
-TTF_Font* loadFont(MediaManager* mm, char* path, int32_t size){
+TTF_Font* MM_loadFont(MediaManager* mm, char* path, int32_t size){
     log_debug("Loading font: %s", path);
     TTF_Font* font = TTF_OpenFont(path, size);
     if (!font) {
