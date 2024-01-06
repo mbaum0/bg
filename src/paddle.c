@@ -20,9 +20,11 @@ void key_cb(uint32_t eventType, SDL_Event* e, void* data) {
       switch (e->key.keysym.sym) {
       case SDLK_LEFT:
         printf("Left key pressed\n");
+        p->vel = -10;
         break;
       case SDLK_RIGHT:
         printf("Right key pressed\n");
+        p->vel = 10;
         break;
       }
     }
