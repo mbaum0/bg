@@ -7,6 +7,7 @@
 #include <SDL.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include "array.h"
 
  /**
   * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
@@ -14,7 +15,7 @@
   */
 typedef struct Sprite Sprite;
 
-typedef struct SpriteArray SpriteArray;
+ARRAY_DEFINE(Sprite, Sprite)
 
 /**
  * @brief Sprite update functions are called every frame to update the Sprite's state.
@@ -25,11 +26,6 @@ typedef void (*SpriteUpdate_fn)(Sprite* sprite, void* data);
  * @brief Sprite click functions are called when the Sprite is clicked.
  */
 typedef void (*SpriteClick_fn)(void* data);
-
-struct SpriteArray {
-    Sprite** sprites;
-    int32_t size;
-};
 
 struct Sprite {
     int32_t id;
@@ -46,21 +42,6 @@ struct Sprite {
     bool flip;
     uint32_t frame; // for storing arbitrary data;
 };
-
-/**
- * @brief Initialize a SpriteArray
- */
-void SpriteArray_init(SpriteArray* spriteArray);
-
-/**
- * @brief Append a Sprite to a SpriteArray
- */
-void SpriteArray_append(SpriteArray* spriteArray, Sprite* sprite);
-
-/**
- * @brief Free a SpriteArray
- */
-void SpriteArray_free(SpriteArray* spriteArray);
 
 /**
  * @brief Get the sprite at the given coordinates

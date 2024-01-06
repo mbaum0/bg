@@ -40,9 +40,9 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
     ViewManager* vm = malloc(sizeof(ViewManager));
     vm->renderer = renderer;
     vm->sprites = malloc(sizeof(SpriteArray));
-    SpriteArray_init(vm->sprites);
+    SpriteArray_init(vm->sprites, 10);
     vm->snippets = malloc(sizeof(SnippetArray));
-    SnippetArray_init(vm->snippets);
+    SnippetArray_init(vm->snippets, 10);
     SDL_AddEventWatch(handleEvent, vm->sprites);
     return vm;
 }
@@ -58,8 +58,8 @@ void VM_free(ViewManager* vm) {
 void VM_draw(ViewManager* vm) {
     SDL_SetRenderDrawColor(vm->renderer, 255, 255, 255, 255);
     SDL_RenderClear(vm->renderer);
-    for (int32_t i = 0; i < vm->sprites->size; i++) {
-        Sprite* sprite = vm->sprites->sprites[i];
+    for (int32_t i = 0; i < vm->sprites->length; i++) {
+        Sprite* sprite = vm->sprites->items[i];
         if (sprite->update_fn != NULL) {
             sprite->update_fn(sprite, sprite->update_data);
         }
@@ -67,8 +67,8 @@ void VM_draw(ViewManager* vm) {
             SDL_RenderCopyEx(vm->renderer, sprite->texture, &sprite->src_rect, &sprite->dst_rect, 0, NULL, sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
         }
     }
-    for (int32_t i = 0; i < vm->snippets->size; i++) {
-        Snippet* snippet = vm->snippets->snippets[i];
+    for (int32_t i = 0; i < vm->snippets->length; i++) {
+        Snippet* snippet = vm->snippets->items[i];
         if (snippet->update_fn != NULL) {
             snippet->update_fn(snippet, snippet->update_data);
         }
@@ -78,13 +78,13 @@ void VM_draw(ViewManager* vm) {
 }
 
 int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
-    sprite->id = vm->sprites->size;
+    sprite->id = vm->sprites->length;
     SpriteArray_append(vm->sprites, sprite);
-    return vm->sprites->size - 1;
+    return vm->sprites->length - 1;
 }
 
 int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
-    snippet->id = vm->snippets->size;
+    snippet->id = vm->snippets->length;
     SnippetArray_append(vm->snippets, snippet);
-    return vm->snippets->size - 1;
+    return vm->snippets->length - 1;
 }

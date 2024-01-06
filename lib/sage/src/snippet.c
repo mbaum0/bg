@@ -5,25 +5,7 @@
  */
 #include "snippet.h"
 
-void SnippetArray_init(SnippetArray* snippetArray) {
-    snippetArray->snippets = NULL;
-    snippetArray->size = 0;
-}
-
-void SnippetArray_append(SnippetArray* snippetArray, Snippet* snippet) {
-    snippetArray->size++;
-    snippetArray->snippets = realloc(snippetArray->snippets, snippetArray->size * sizeof(Snippet*));
-    snippetArray->snippets[snippetArray->size - 1] = snippet;
-}
-
-void SnippetArray_free(SnippetArray* snippetArray) {
-    for (int32_t i = 0; i < snippetArray->size; i++) {
-        free(snippetArray->snippets[i]->text);
-        free(snippetArray->snippets[i]);
-    }
-    free(snippetArray->snippets);
-    snippetArray->size = 0;
-}
+ARRAY_INIT(Snippet, Snippet)
 
 void Snippet_setLocation(Snippet* snippet, int32_t x, int32_t y) {
     SDL_DestroyTexture(snippet->texture);

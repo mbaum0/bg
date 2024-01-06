@@ -5,31 +5,13 @@
  */
 #include "sprite.h"
 
-
-void SpriteArray_init(SpriteArray* spriteArray) {
-    spriteArray->sprites = NULL;
-    spriteArray->size = 0;
-}
-
-void SpriteArray_append(SpriteArray* spriteArray, Sprite* sprite) {
-    spriteArray->size++;
-    spriteArray->sprites = realloc(spriteArray->sprites, spriteArray->size * sizeof(Sprite*));
-    spriteArray->sprites[spriteArray->size - 1] = sprite;
-}
-
-void SpriteArray_free(SpriteArray* spriteArray) {
-    for (int32_t i = 0; i < spriteArray->size; i++) {
-        free(spriteArray->sprites[i]);
-    }
-    free(spriteArray->sprites);
-    spriteArray->size = 0;
-}
+ARRAY_INIT(Sprite, Sprite)
 
 Sprite* SpriteArray_findAtCoordinate(SpriteArray* spriteArray, int32_t x, int32_t y){
     Sprite* topSprite = NULL;
     int32_t currentTopZ = -1;
     for (int32_t i = 0; i < spriteArray->size; i++) {
-        Sprite* sprite = spriteArray->sprites[i];
+        Sprite* sprite = spriteArray->items[i];
         if (sprite->visible) {
             SDL_Point p = { x, y };
             if (SDL_PointInRect(&p, &sprite->dst_rect)) {
@@ -89,4 +71,3 @@ void Sprite_setFrame(Sprite* sprite, uint32_t frame){
 uint32_t Sprite_getFrame(Sprite* sprite){
     return sprite->frame;
 }
-

@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <SDL_ttf.h>
+#include "array.h"
 
 /**
  * @brief A Snippet is a bit of text that is drawn on the screen. It can be manipulated using
@@ -15,7 +16,7 @@
 */
 typedef struct Snippet Snippet;
 
-typedef struct SnippetArray SnippetArray;
+ARRAY_DEFINE(Snippet, Snippet)
 
 /**
  * @brief Snippet update functions are called every frame to update the Snippet's state.
@@ -37,26 +38,6 @@ struct Snippet {
     void* update_data;
     SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
 };
-
-struct SnippetArray {
-    Snippet** snippets;
-    int32_t size;
-};
-
-/**
- * @brief Initialize a SnippetArray
- */
-void SnippetArray_init(SnippetArray* snippetArray);
-
-/**
- * @brief Append a Snippet to a SnippetArray
- */
-void SnippetArray_append(SnippetArray* snippetArray, Snippet* snippet);
-
-/**
- * @brief Free a SnippetArray
- */
-void SnippetArray_free(SnippetArray* snippetArray);
 
 /**
  * @brief Create a new Snippet instance.
