@@ -49,3 +49,30 @@ int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite);
  * @return int32_t The id of the Snippet
  */
 int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet);
+
+
+/**
+ * @brief Sprite update functions are called every frame to update the Sprite's state.
+ */
+typedef void (*SpriteUpdate_fn)(ViewManager* vm, Sprite* sprite, void* data);
+
+/**
+ * @brief Sprite click functions are called when the Sprite is clicked.
+ */
+typedef void (*SpriteClick_fn)(ViewManager* vm, Sprite* sprite, void* data);
+
+void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* data);
+void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* data);
+
+/**
+ * @brief Get the Sprite at the given coordinates
+ *
+ * @param vm The ViewManager instance
+ * @param x The x coordinate
+ * @param y The y coordinate
+ *
+ * @return Sprite* The Sprite at the given coordinates, or NULL if no Sprite is found
+ */
+Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y);
+
+Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite);

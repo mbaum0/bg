@@ -6,13 +6,16 @@
 #include "checker.h"
 #include "sprite.h"
 
-void clickChecker(void* data) {
+void clickChecker(ViewManager* vm, Sprite* sprite, void* data) {
+  (void)vm;
+  (void)sprite;
   Checker* c = (Checker*)data;
   log_debug("Clicked checker %d", c->index);
   c->index++;
 }
 
-void updateChecker(Sprite* sprite, void* data) {
+void updateChecker(ViewManager* vm, Sprite* sprite, void* data) {
+  (void)vm;
   Checker* c = (Checker*)data;
   SDL_Rect src_rect;
   if (c->index % 2 == 0) {
@@ -29,7 +32,9 @@ Checker* Checker_create(Sage* sage, int32_t index) {
 
   SDL_Texture* texture = Sage_loadTexture(sage, "assets/checker.png");
   SDL_Rect src_rect = {0, 0, CHECKER_SIZE, CHECKER_SIZE};
-  Sprite* s = Sprite_create(texture, src_rect, 0, 0, 0, false, updateChecker, c, clickChecker, c);
+  Sprite* s = Sprite_create(texture, src_rect, 0, 0, 0, false);
+  Sprite_registerUpdateFn(s, updateChecker, c);
+  Sprite_registerClickFn(s, clickChecker, c);
   Sage_registerSprite(sage, s);
   return c;
 }

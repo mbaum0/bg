@@ -5,7 +5,8 @@
  */
 #include "ball.h"
 
-void updateBall(Sprite* sprite, void* data) {
+void updateBall(ViewManager* vm, Sprite* sprite, void* data) {
+  (void)vm;
   Ball* b = (Ball*)data;
 
   if (Sprite_getX(sprite) < 0 || Sprite_getX(sprite) > 800 - BALL_SIZE) {
@@ -29,7 +30,8 @@ Ball* Ball_create(Sage* sage, int32_t h_vel, int32_t v_vel) {
 
   SDL_Texture* texture = Sage_loadTexture(sage, "assets/ball.png");
   SDL_Rect src_rect = {0, 0, BALL_SIZE, BALL_SIZE};
-  Sprite* s = Sprite_create(texture, src_rect, b->x, b->y, 0, false, updateBall, b, NULL, NULL);
+  Sprite* s = Sprite_create(texture, src_rect, b->x, b->y, 0, false);
+  Sprite_registerUpdateFn(s, updateBall, b);
   Sage_registerSprite(sage, s);
   return b;
 }

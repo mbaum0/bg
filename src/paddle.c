@@ -5,7 +5,8 @@
  */
 #include "paddle.h"
 
-void updatePaddle(Sprite* sprite, void* data) {
+void updatePaddle(ViewManager* vm, Sprite* sprite, void* data) {
+  (void)vm;
   Paddle* p = (Paddle*)data;
   p->x += p->vel;
   Sprite_setLocation(sprite, p->x, p->y);
@@ -52,7 +53,8 @@ Paddle* Paddle_create(Sage* sage) {
 
   SDL_Texture* texture = Sage_loadTexture(sage, "assets/paddle.png");
   SDL_Rect src_rect = {0, 0, PADDLE_WIDTH, PADDLE_HEIGHT};
-  Sprite* s = Sprite_create(texture, src_rect, 0, 0, 0, false, updatePaddle, p, NULL, NULL);
+  Sprite* s = Sprite_create(texture, src_rect, 0, 0, 0, false);
+  Sprite_registerUpdateFn(s, updatePaddle, p);
   Sage_registerSprite(sage, s);
   Sage_registerEventCallback(sage, SDL_KEYDOWN, key_cb, p);
   Sage_registerEventCallback(sage, SDL_KEYUP, key_cb, p);

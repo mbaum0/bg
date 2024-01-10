@@ -14,16 +14,6 @@
  */
 typedef struct Sprite Sprite;
 
-/**
- * @brief Sprite update functions are called every frame to update the Sprite's state.
- */
-typedef void (*SpriteUpdate_fn)(Sprite* sprite, void* data);
-
-/**
- * @brief Sprite click functions are called when the Sprite is clicked.
- */
-typedef void (*SpriteClick_fn)(void* data);
-
 struct Sprite {
   int32_t id;
   SDL_Texture* texture;
@@ -31,25 +21,14 @@ struct Sprite {
   SDL_Rect dst_rect;
   bool visible;
   bool hovered;
-  SpriteUpdate_fn update_fn;
+  void* update_fn;
   void* update_data;
-  SpriteClick_fn click_fn;
+  void* click_fn;
   void* click_data;
   int32_t z;
   bool flip;
   uint32_t frame; // for storing arbitrary data;
 };
-
-/**
- * @brief Get the sprite at the given coordinates
- *
- * @param sprites An array of Sprite pointers to search
- * @param x The x coordinate
- * @param y The y coordinate
- *
- * @return Sprite* The Sprite at the given coordinates, or NULL if no Sprite is found
- */
-Sprite* Sprite_findAtCoordinate(Sprite** sprites, int32_t x, int32_t y);
 
 /**
  * @brief Create a new Sprite instance
@@ -60,14 +39,9 @@ Sprite* Sprite_findAtCoordinate(Sprite** sprites, int32_t x, int32_t y);
  * @param y The y coordinate
  * @param z The z coordinate
  * @param flip Flip orientation
- * @param update_fn Update function called each frame
- * @param update_data Data to pass to the update function
- * @param click_fn Click function is called when the sprite is clicked
- * @param click_data The data to pass to the click function
  * @return Sprite* The new Sprite instance
  */
-Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip,
-                      SpriteUpdate_fn update_fn, void* update_data, SpriteClick_fn click_fn, void* click_data);
+Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks
