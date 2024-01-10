@@ -8,6 +8,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
 
 # Define the library
 add_library(${PROJECT_NAME} STATIC 
+    src/util.c
     src/vmanager.c
     src/sprite.c
     src/snippet.c

@@ -4,14 +4,13 @@
  * @brief Sprite implementation
  */
 #include "sprite.h"
+#include "stb_ds.h"
 
-ARRAY_INIT(Sprite, Sprite)
-
-Sprite* SpriteArray_findAtCoordinate(SpriteArray* spriteArray, int32_t x, int32_t y) {
+Sprite* Sprite_findAtCoordinate(Sprite** sprites, int32_t x, int32_t y) {
   Sprite* topSprite = NULL;
   int32_t currentTopZ = -1;
-  for (int32_t i = 0; i < spriteArray->size; i++) {
-    Sprite* sprite = spriteArray->items[i];
+  for (int32_t i = 0; i < arrlen(sprites); i++) {
+    Sprite* sprite = sprites[i];
     if (sprite->visible) {
       SDL_Point p = {x, y};
       if (SDL_PointInRect(&p, &sprite->dst_rect)) {

@@ -5,8 +5,6 @@
  */
 #include "snippet.h"
 
-ARRAY_INIT(Snippet, Snippet)
-
 void Snippet_setLocation(Snippet* snippet, int32_t x, int32_t y) {
   SDL_DestroyTexture(snippet->texture);
   snippet->x = x;

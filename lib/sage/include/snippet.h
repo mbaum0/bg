@@ -4,7 +4,6 @@
  * @brief Spinnet implementation for the game engine
  */
 #pragma once
-#include "array.h"
 #include <SDL.h>
 #include <SDL_ttf.h>
 #include <stdbool.h>
@@ -15,8 +14,6 @@
  * the various Snippet_* functions.
  */
 typedef struct Snippet Snippet;
-
-ARRAY_DEFINE(Snippet, Snippet)
 
 /**
  * @brief Snippet update functions are called every frame to update the Snippet's state.

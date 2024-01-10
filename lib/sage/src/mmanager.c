@@ -4,9 +4,7 @@
  * @brief Media Manager implementation for the game engine
  */
 #include "mmanager.h"
-
-ARRAY_INIT(Texture, SDL_Texture)
-ARRAY_INIT(Font, TTF_Font)
+#include "stb_ds.h"
 
 bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -45,12 +43,12 @@ bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
 
 MediaManager* MM_init(char* title, int32_t width, int32_t height) {
   MediaManager* mm = calloc(1, sizeof(MediaManager));
-  TextureArray_init(&mm->textures, 10);
-  FontArray_init(&mm->fonts, 10);
   if (!initSDL(mm, title, width, height)) {
     log_error("Failed to initialize SDL");
     return NULL;
   }
+  mm->textures = malloc(sizeof(SDL_Texture**));
+  mm->fonts = malloc(sizeof(TTF_Font**));
   return mm;
 }
 
@@ -61,19 +59,17 @@ void destroySDL(MediaManager* mm) {
 }
 
 void destroyTextures(MediaManager* mm) {
-  int32_t i;
-  SDL_Texture* texture;
-  while ((texture = TextureArray_iterator(&mm->textures, &i)) != NULL) {
-    SDL_DestroyTexture(texture);
+  SDL_Texture** textures = *mm->textures;
+  for (int32_t i = 0; i < arrlen(textures); i++) {
+    SDL_DestroyTexture(textures[i]);
   }
   IMG_Quit();
 }
 
 void destroyFonts(MediaManager* mm) {
-  int32_t i;
-  TTF_Font* font;
-  while ((font = FontArray_iterator(&mm->fonts, &i)) != NULL) {
-    TTF_CloseFont(font);
+  TTF_Font** fonts = *mm->fonts;
+  for (int32_t i = 0; i < arrlen(fonts); i++) {
+    TTF_CloseFont(fonts[i]);
   }
   TTF_Quit();
 }
@@ -81,8 +77,10 @@ void destroyFonts(MediaManager* mm) {
 void MM_free(MediaManager* mm) {
   destroyFonts(mm);
   destroyTextures(mm);
-  TextureArray_free(&mm->textures);
-  FontArray_free(&mm->fonts);
+  arrfree(*mm->textures);
+  free(mm->textures);
+  arrfree(*mm->fonts);
+  free(mm->fonts);
   destroySDL(mm);
   free(mm);
 }
@@ -94,7 +92,7 @@ SDL_Texture* MM_loadTexture(MediaManager* mm, char* path) {
     log_error("Failed to load texture: %s", IMG_GetError());
     return NULL;
   }
-  TextureArray_append(&mm->textures, texture);
+  arrput(*mm->textures, texture);
   return texture;
 }
 
@@ -105,6 +103,6 @@ TTF_Font* MM_loadFont(MediaManager* mm, char* path, int32_t size) {
     log_error("Failed to load font: %s", TTF_GetError());
     return NULL;
   }
-  FontArray_append(&mm->fonts, font);
+  arrput(*mm->fonts, font);
   return font;
 }

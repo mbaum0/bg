@@ -5,7 +5,6 @@
  */
 #pragma once
 
-#include "array.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -20,10 +19,8 @@ struct EventCallback {
   void* data;
 };
 
-ARRAY_DEFINE(EventCB, EventCallback)
-
 struct EventManager {
-  EventCBArray callbacks;
+  EventCallback*** callbacks; // pointer to the callbacks array
 };
 
 /**

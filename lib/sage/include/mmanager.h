@@ -5,7 +5,6 @@
  */
 
 #pragma once
-#include "array.h"
 #include "log.h"
 #include <SDL.h>
 #include <SDL_image.h>
@@ -14,14 +13,11 @@
 
 typedef struct MediaManager MediaManager;
 
-ARRAY_DEFINE(Texture, SDL_Texture)
-ARRAY_DEFINE(Font, TTF_Font)
-
 struct MediaManager {
   SDL_Renderer* renderer;
   SDL_Window* window;
-  TextureArray textures;
-  FontArray fonts;
+  SDL_Texture*** textures;
+  TTF_Font*** fonts;
 };
 
 /**

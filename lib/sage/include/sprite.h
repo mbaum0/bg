@@ -4,7 +4,6 @@
  * @brief Sprite implementation for the game engine
  */
 #pragma once
-#include "array.h"
 #include <SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -14,8 +13,6 @@
  * the various Sprite_* functions.
  */
 typedef struct Sprite Sprite;
-
-ARRAY_DEFINE(Sprite, Sprite)
 
 /**
  * @brief Sprite update functions are called every frame to update the Sprite's state.
@@ -46,13 +43,13 @@ struct Sprite {
 /**
  * @brief Get the sprite at the given coordinates
  *
- * @param spriteArray The SpriteArray to search
+ * @param sprites An array of Sprite pointers to search
  * @param x The x coordinate
  * @param y The y coordinate
  *
  * @return Sprite* The Sprite at the given coordinates, or NULL if no Sprite is found
  */
-Sprite* SpriteArray_findAtCoordinate(SpriteArray* spriteArray, int32_t x, int32_t y);
+Sprite* Sprite_findAtCoordinate(Sprite** sprites, int32_t x, int32_t y);
 
 /**
  * @brief Create a new Sprite instance

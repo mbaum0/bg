@@ -5,8 +5,7 @@
  */
 
 #include "events.h"
-
-ARRAY_INIT(EventCB, EventCallback)
+#include "stb_ds.h"
 
 int EM_handleEvent(void* data, SDL_Event* event);
 
@@ -15,18 +14,20 @@ void EM_registerCallback(EventManager* em, uint32_t event_type, EventCallback_fn
   cb->eventType = event_type;
   cb->callback = callback_fn;
   cb->data = data;
-  EventCBArray_append(&em->callbacks, cb);
+  arrput(*em->callbacks, cb);
 }
 
 EventManager* EM_init(void) {
   EventManager* em = malloc(sizeof(EventManager));
-  EventCBArray_init(&em->callbacks, 10);
+  em->callbacks = malloc(sizeof(EventCallback**));
+  *em->callbacks = NULL;
   SDL_AddEventWatch(EM_handleEvent, em);
   return em;
 }
 
 void EM_free(EventManager* em) {
-  EventCBArray_free(&em->callbacks);
+  arrfree(*em->callbacks);
+  free(em->callbacks);
   free(em);
 }
 
@@ -40,8 +41,9 @@ void EM_free(EventManager* em) {
  */
 int EM_handleEvent(void* data, SDL_Event* event) {
   EventManager* em = (EventManager*)data;
-  for (int32_t i = 0; i < em->callbacks.length; i++) {
-    EventCallback* cb = em->callbacks.items[i];
+  EventCallback** callbacks = *em->callbacks;
+  for (int32_t i = 0; i < arrlen(callbacks); i++) {
+    EventCallback* cb = callbacks[i];
     if (cb->eventType == event->type) {
       cb->callback(cb->eventType, event, cb->data);
     }
