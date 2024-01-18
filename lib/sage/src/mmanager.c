@@ -12,16 +12,14 @@ bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
     return false;
   }
 
-  mm->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, 0);
+  mm->window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, SDL_WINDOW_ALLOW_HIGHDPI);
 
   if (!mm->window) {
     log_error("Failed to open %d x %d window: %s", width, height, SDL_GetError());
     return false;
   }
 
-  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-
-  mm->renderer = SDL_CreateRenderer(mm->window, -1, 0);
+  mm->renderer = SDL_CreateRenderer(mm->window, -1, SDL_RENDERER_ACCELERATED);
 
   if (!mm->renderer) {
     log_error("Failed to create renderer: %s", SDL_GetError());
