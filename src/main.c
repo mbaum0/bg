@@ -1,16 +1,11 @@
-#include "ball.h"
-#include "paddle.h"
 #include "sage.h"
-#include "sand.h"
+#include "board.h"
 
 int main(int argc, char** argv) {
   (void)argc;
   (void)argv;
-  Sage* s = Sage_create("SandSim", 800, 600);
-  // Ball* b = Ball_create(s, 4, 4);
-  // Paddle* p = Paddle_create(s);
-  Sand_init(s);
-
+  Sage* s = Sage_create("Baackgammon!", 375, 812);
+  Board_create(s, 375, 812);
 
   Sage_run(s);
 

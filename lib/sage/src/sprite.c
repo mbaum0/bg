@@ -24,6 +24,24 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, 
   return sprite;
 }
 
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_Rect dst, int32_t z, bool flip){
+  Sprite* sprite = malloc(sizeof(Sprite));
+  sprite->id = 0;
+  sprite->texture = texture;
+  sprite->src_rect = src;
+  sprite->dst_rect = dst;
+  sprite->visible = true;
+  sprite->hovered = false;
+  sprite->update_fn = NULL;
+  sprite->update_data = NULL;
+  sprite->click_fn = NULL;
+  sprite->click_data = NULL;
+  sprite->z = z;
+  sprite->flip = flip;
+  sprite->frame = 0;
+  return sprite;
+}
+
 void Sprite_setLocation(Sprite* sprite, int32_t x, int32_t y) {
   sprite->dst_rect.x = x;
   sprite->dst_rect.y = y;

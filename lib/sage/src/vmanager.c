@@ -85,7 +85,19 @@ void VM_draw(ViewManager* vm) {
 
 int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
   sprite->id = arrlen(*vm->sprites);
-  arrput(*vm->sprites, sprite);
+  int32_t zindex = -1;
+  for (int32_t i = 0; i < arrlen(*vm->sprites); i++) {
+    Sprite* s = (*vm->sprites)[i];
+    if (s->z > sprite->z) {
+      zindex = i;
+      break;
+    }
+  }
+  if (zindex == -1) {
+    arrput(*vm->sprites, sprite);
+  } else {
+    arrins(*vm->sprites, zindex, sprite);
+  }
   return sprite->id;
 }
 

@@ -43,6 +43,9 @@ struct Sprite {
  */
 Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip);
 
+
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_Rect dst, int32_t z, bool flip);
+
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks
  */
