@@ -9,8 +9,8 @@
 #define BOARD_SRC_H 2400
 #define TRIM_SRC_W 3408
 #define TRIM_SRC_H 2668
-#define PIP_SRC_W 400
-#define PIP_SRC_H 2000
+#define PIP_SRC_W 62
+#define PIP_SRC_H 310
 #define PIP_RATIO 5
 
 #define PIP_BOARD_X_OFFSET_PCT .08917
@@ -29,7 +29,7 @@
 
 
 void createPips(Sage* sage, SDL_Rect board){
-    SDL_Texture* pip = Sage_loadTexture(sage, "assets/pips.png"); 
+    SDL_Texture* pip = Sage_loadTexture(sage, "assets/pips_sm.png"); 
     for (int32_t i = 0; i < 6; i++){
         SDL_Rect pipSrc = {PIP_SRC_W*i, 0, PIP_SRC_W, PIP_SRC_H};
         int32_t pipWidth = board.w * PIP_BOARD_WIDTH_PCT;

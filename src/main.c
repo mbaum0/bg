@@ -1,8 +1,8 @@
 #include "sage.h"
 #include "board.h"
 
-#define WINDOW_W (960)
-#define WINDOW_H (540)
+#define WINDOW_W (1920)
+#define WINDOW_H (1080)
 
 int main(int argc, char** argv) {
   (void)argc;
