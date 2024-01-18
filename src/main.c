@@ -1,11 +1,14 @@
 #include "sage.h"
 #include "board.h"
 
+#define WINDOW_W (375)
+#define WINDOW_H (812)
+
 int main(int argc, char** argv) {
   (void)argc;
   (void)argv;
-  Sage* s = Sage_create("Baackgammon!", 375, 812);
-  Board_create(s, 375, 812);
+  Sage* s = Sage_create("Baackgammon!", WINDOW_W, WINDOW_H);
+  Board_create(s, WINDOW_W, WINDOW_H);
 
   Sage_run(s);
 
