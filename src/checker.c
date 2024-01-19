@@ -4,41 +4,40 @@
  * @brief
  */
 #include "checker.h"
+#include "board.h"
 #include "sprite.h"
 #include "util.h"
 
-// int32_t getCheckerXFromPipLocation(int32_t pipIndex) {
-//   int32_t checkerX, pipOffset;
-//   if (isBetween(pipIndex, 1, 6)) {
-//     pipOffset = (pipIndex - 1) % 6;
-//     checkerX = (board.x + board.w) - (board.w * CHECKER_BOARD_X_RIGHT_OFFSET_PCT) - (pipOffset * board.pipW);
-//   }
-//   else if (isBetween(pipIndex, 7, 12)) {
-//     pipOffset = 5 - ((pipIndex - 1) % 6);
-//     checkerX = board.x + (board.w * CHECKER_BOARD_X_LEFT_OFFSET_PCT) + (pipOffset * board.pipW);
-//   }
-//   else if (isBetween(pipIndex, 13, 18)) {
-//     pipOffset = (pipIndex - 13) % 6;
-//     checkerX = board.x + (board.w * CHECKER_BOARD_X_LEFT_OFFSET_PCT) + (pipOffset * board.pipW);
-//   }
-//   else {
-//     pipOffset = (pipIndex % 6);
-//     checkerX = (board.x + board.w) - (board.w * CHECKER_BOARD_X_RIGHT_OFFSET_PCT) - (pipOffset * board.pipW);
-//   }
-//   return checkerX;
-// }
+float getCheckerXFromPipLocation(int32_t pipIndex) {
+  float checkerX;
+  int32_t pipOffset;
+  if (isBetween(pipIndex, 1, 6)) {
+    pipOffset = (pipIndex - 1) % 6;
+    checkerX = CHECKER_RIGHT_OFFSET_NORMAL - (PIP_WIDTH_NORMAL * pipOffset);
+  }
+  else if (isBetween(pipIndex, 7, 12)) {
+    pipOffset = 5 - ((pipIndex - 1) % 6);
+    checkerX = CHECKER_LEFT_X_OFFSET_NORMAL + (PIP_WIDTH_NORMAL * pipOffset);
+  }
+  else if (isBetween(pipIndex, 13, 18)) {
+    pipOffset = (pipIndex - 13) % 6;
+    checkerX = CHECKER_LEFT_X_OFFSET_NORMAL + (PIP_WIDTH_NORMAL * pipOffset);
+  }
+  else {
+    pipOffset = (pipIndex - 1) % 6;
+    checkerX = CHECKER_RIGHT_OFFSET_NORMAL - (PIP_WIDTH_NORMAL * pipOffset);
+  }
+  return checkerX;
+}
 
-// int32_t getCheckerYFromPipLocation(int32_t pipIndex) {
-//   int32_t checkerY;
-//   int32_t checkerSize = board.w * CHECKER_BOARD_WIDTH_PCT;
-//   if (isBetween(pipIndex, 1, 12)) {
-//     checkerY = board.y + board.h - checkerSize;
-//   }
-//   else {
-//     checkerY = board.y;
-//   }
-//   return checkerY;
-// }
+float getCheckerYFromPipLocation(int32_t pipIndex) {
+  if (isBetween(pipIndex, 1, 12)) {
+    return CHECKER_BOTTOM_Y_OFFSET_NORMAL;
+  }
+  else {
+    return CHECKER_TOP_Y_OFFSET_NORMAL;
+  }
+}
 
 // void clickChecker(ViewManager* vm, Sprite* sprite, void* data) {
 //   (void)vm;
@@ -64,24 +63,23 @@ Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player) {
   c->pipIndex = pipIndex;
   c->player = player;
 
-  // SDL_Texture* texture = NULL;
-  // if (player == P_LIGHT) {
-  //   texture = Sage_loadTexture(sage, "assets/light.png");
-  // }
-  // else {
-  //   texture = Sage_loadTexture(sage, "assets/dark.png");
-  // }
-  // SDL_Rect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
-  // int32_t checkerSize = board.w * CHECKER_BOARD_WIDTH_PCT;
+  SDL_Texture* texture = NULL;
+  if (player == P_LIGHT) {
+    texture = Sage_loadTexture(sage, "assets/light.png");
+  }
+  else {
+    texture = Sage_loadTexture(sage, "assets/dark.png");
+  }
+  SDL_Rect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
 
-  // int32_t checkerX = getCheckerXFromPipLocation(pipIndex, board);
-  // int32_t checkerY = getCheckerYFromPipLocation(pipIndex, board);
+  float checkerX = getCheckerXFromPipLocation(pipIndex);
+  float checkerY = getCheckerYFromPipLocation(pipIndex);
 
-  // SDL_FRect dst_rect = { checkerX, checkerY, checkerSize, checkerSize };
-  // Sprite* s = Sprite_createEx(texture, src_rect, dst_rect, 5, false);
+  SDL_FRect dst_rect = { checkerX, checkerY, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
+  Sprite* s = Sprite_createEx(texture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
   // Sprite_registerUpdateFn(s, updateChecker, c);
   // Sprite_registerClickFn(s, clickChecker, c);
-  // Sage_registerSprite(sage, s);
+  Sage_registerSprite(sage, s);
   return c;
 }
 

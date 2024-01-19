@@ -3,8 +3,8 @@
 #include "checker.h"
 #include "dstats.h"
 
-#define WINDOW_W (932)
-#define WINDOW_H (430)
+#define WINDOW_W (1920)
+#define WINDOW_H (1080)
 #define MAX_ASPECT_RATIO (1.4)
 #define MIN_ASPECT_RATIO (.7)
 
@@ -43,7 +43,10 @@ int main(int argc, char** argv) {
   SDL_Rect normal = { x, y, w, h };
   Sage_setNormalRect(s, normal);
   Board_create(s);
-  //Checker_create(s, 1, P_LIGHT, board);
+  for (int i = 1; i <= 24; i++) {
+    Player p = i % 2 == 1 ? P_LIGHT : P_DARK;
+    Checker_create(s, i, p);
+  }
 
   DStats_create(s);
 
