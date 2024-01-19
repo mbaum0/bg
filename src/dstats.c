@@ -7,11 +7,13 @@
 
 void DStats_update(ViewManager* vm, Snippet* snippet, void* data){
     (void)vm;
-    Sage* s = (Sage*)data;
-    char debugText[100];
-    int32_t fps = (int32_t)s->fps;
-    sprintf(debugText, "FPS: %d", fps);
-    Snippet_setText(snippet, debugText);   
+    (void)snippet;
+    (void)data;
+    // Sage* s = (Sage*)data;
+    // char debugText[100];
+    // int32_t fps = (int32_t)s->fps;
+    // sprintf(debugText, "FPS: %d", fps);
+    // Snippet_setText(snippet, debugText);   
 }
 
 void DStats_create(Sage* sage) {
