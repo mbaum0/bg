@@ -15,11 +15,6 @@
  */
 typedef struct Snippet Snippet;
 
-/**
- * @brief Snippet update functions are called every frame to update the Snippet's state.
- */
-typedef void (*SnippetUpdate_fn)(Snippet* snippet, void* data);
-
 struct Snippet {
   int32_t id;
   TTF_Font* font;
@@ -31,7 +26,7 @@ struct Snippet {
   char* text;
   SDL_Rect dst_rect;
   SDL_Texture* texture;
-  SnippetUpdate_fn update_fn;
+  void* update_fn;
   void* update_data;
   SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
 };
@@ -41,18 +36,13 @@ struct Snippet {
  *
  * @param font The SDL_Font to use for this Snippet
  * @param color Color of text
- * @param text String text. A copy will be created and freed when the Snippet is freed
  * @param x The x coordinate
  * @param y The y coordinate
  * @param z The z coordinate
  * @param visible Whether or not the Snippet is visible
- * @param update_fn The update function to call every frame
- * @param update_data The data to pass to the update function
  * @return Snippet*
  */
-Snippet* Snippet_create(TTF_Font* font, SDL_Color color, char* text, int32_t x, int32_t y, int32_t z, bool visible,
-                        SnippetUpdate_fn update_fn, void* update_data);
-
+Snippet* Snippet_create(TTF_Font* font, SDL_Color color, int32_t x, int32_t y, int32_t z, bool visible);
 /**
  * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks
  */

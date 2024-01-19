@@ -19,6 +19,7 @@ struct Sage {
   MediaManager* mm;
   ViewManager* vm;
   EventManager* em;
+  float fps;
 };
 
 /**
@@ -55,6 +56,16 @@ void Sage_run(Sage* s);
 SDL_Texture* Sage_loadTexture(Sage* s, char* path);
 
 /**
+ * @brief Load a font from a file
+ * 
+ * @param s The SAGE engine
+ * @param path The path to the font file
+ * @param size Font size
+ * @return TTF_Font* 
+ */
+TTF_Font* Sage_loadFont(Sage* s, char* path, int32_t size);
+
+/**
  * @brief Register a sprite with the SAGE engine
  *
  * @param s The SAGE engine
@@ -62,6 +73,14 @@ SDL_Texture* Sage_loadTexture(Sage* s, char* path);
  * @return int32_t The id of the Sprite
  */
 int32_t Sage_registerSprite(Sage* s, Sprite* sprite);
+
+/**
+ * @brief Register a snippet with the SAGE engine
+ * 
+ * @param s The SAGE engine
+ * @param snippet Snippet to register
+ */
+void Sage_registerSnippet(Sage* s, Snippet* snippet);
 
 /**
  * @brief Register a callback function for an event

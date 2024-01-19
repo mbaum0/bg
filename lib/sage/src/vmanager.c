@@ -76,7 +76,8 @@ void VM_draw(ViewManager* vm) {
   for (int32_t i = 0; i < arrlen(snippets); i++) {
     Snippet* snippet = snippets[i];
     if (snippet->update_fn != NULL) {
-      snippet->update_fn(snippet, snippet->update_data);
+      SnippetUpdate_fn fptr = (SnippetUpdate_fn)snippet->update_fn;
+      fptr(vm, snippet, snippet->update_data);
     }
     SDL_RenderCopy(vm->renderer, snippet->texture, NULL, &snippet->dst_rect);
   }
@@ -105,16 +106,24 @@ void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* da
   sprite->update_fn = (void*)update_fn;
   sprite->update_data = data;
 }
+
 void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* data){
   sprite->click_fn = (void*)click_fn;
   sprite->click_data = data;
 }
 
 int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
+  snippet->renderer = vm->renderer;
   snippet->id = arrlen(*vm->snippets);
   arrput(*vm->snippets, snippet);
   return snippet->id;
 }
+
+void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void* data){
+  snippet->update_fn = (void*)update_fn;
+  snippet->update_data = data;
+}
+
 Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y){
   Sprite** sprites = *vm->sprites;
   Sprite* topSprite = NULL;
