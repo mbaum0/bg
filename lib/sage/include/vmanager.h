@@ -88,6 +88,6 @@ void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void
  *
  * @return Sprite* The Sprite at the given coordinates, or NULL if no Sprite is found
  */
-Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y);
+Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, float x, float y);
 
 Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite);

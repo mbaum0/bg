@@ -39,23 +39,25 @@ float getCheckerYFromPipLocation(int32_t pipIndex) {
   }
 }
 
-// void clickChecker(ViewManager* vm, Sprite* sprite, void* data) {
-//   (void)vm;
-//   (void)sprite;
-//   Checker* c = (Checker*)data;
-//   log_debug("Clicked checker %d", c->pipIndex);
-//   c->pipIndex++;
-// }
+void clickChecker(ViewManager* vm, Sprite* sprite, void* data) {
+  (void)vm;
+  (void)sprite;
+  Checker* c = (Checker*)data;
+  int32_t newIndex = c->pipIndex + 1;
+  if (newIndex > 24) {
+    newIndex = 1;
+  }
+  c->pipIndex = newIndex;
+  log_debug("Clicked checker %d", c->pipIndex);
+}
 
-// void updateChecker(ViewManager* vm, Sprite* sprite, void* data) {
-//   (void)vm;
-//   (void)data;
-//   (void)sprite;
-//   // Checker* c = (Checker*)data;
-//   // SDL_Rect dst_rect = sprite->dst_rect;
-//   // dst_rect.x = getCheckerXFromPipLocation(c->pipIndex, vm->board);
-//   // dst_rect.y = getCheckerYFromPipLocation(c->pipIndex, vm->board);
-// }
+void updateChecker(ViewManager* vm, Sprite* sprite, void* data) {
+  (void)vm;
+  Checker* c = (Checker*)data;
+  float x = getCheckerXFromPipLocation(c->pipIndex);
+  float y = getCheckerYFromPipLocation(c->pipIndex);
+  Sprite_setLocation(sprite, x, y);
+}
 
 Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player) {
   (void)sage;
@@ -77,8 +79,8 @@ Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player) {
 
   SDL_FRect dst_rect = { checkerX, checkerY, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
   Sprite* s = Sprite_createEx(texture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
-  // Sprite_registerUpdateFn(s, updateChecker, c);
-  // Sprite_registerClickFn(s, clickChecker, c);
+  Sprite_registerUpdateFn(s, updateChecker, c);
+  Sprite_registerClickFn(s, clickChecker, c);
   Sage_registerSprite(sage, s);
   return c;
 }

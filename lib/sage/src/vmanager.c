@@ -7,6 +7,8 @@
 #include "vmanager.h"
 #include "stb_ds.h"
 #include "log.h"
+#include "util.h"
+#include "log.h"
 
 struct ViewManager {
   SDL_Renderer* renderer;
@@ -25,9 +27,13 @@ struct ViewManager {
 int handleEvent(void* data, SDL_Event* event) {
   ViewManager* vm = (ViewManager*)data;
   Sprite* sprite = NULL;
+  float mouseX, mouseY;
   switch (event->type) {
   case SDL_MOUSEBUTTONUP:
-    sprite = VM_findSpriteAtCoordinate(vm, event->button.x, event->button.y);
+    mouseX = (event->button.x / 1920.0);
+    mouseY = (event->button.y / 1080.0);
+    log_debug("mouse up at %f, %f", mouseX, mouseY);
+    sprite = VM_findSpriteAtCoordinate(vm, mouseX, mouseY);
     if (sprite != NULL) {
       if (sprite->click_fn != NULL) {
         SpriteClick_fn fptr = (SpriteClick_fn)sprite->click_fn;
@@ -151,7 +157,7 @@ void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void
   snippet->update_data = data;
 }
 
-Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y) {
+Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, float x, float y) {
   Sprite** sprites = *vm->sprites;
   Sprite* topSprite = NULL;
   int32_t currentTopZ = -1;
