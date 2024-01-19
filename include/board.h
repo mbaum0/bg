@@ -6,5 +6,37 @@
 #pragma once
 #include "sage.h"
 #include <stdint.h>
+typedef struct Board Board;
 
-void Board_create(Sage* sage, int32_t gameHeight, int32_t gameWidth);
+struct Board {
+    int32_t h;
+    int32_t w;
+    int32_t x;
+    int32_t y;
+    int32_t pipW;
+    int32_t pipH;
+};
+
+#define BOARD_SRC_W 3140
+#define BOARD_SRC_H 2400
+#define TRIM_SRC_W 3408
+#define TRIM_SRC_H 2668
+#define PIP_SRC_W 62
+#define PIP_SRC_H 310
+#define PIP_RATIO 5
+
+#define PIP_BOARD_X_OFFSET_PCT .08917
+#define PIP_BOARD_WIDTH_PCT .06369
+
+#define TRIM_BOARD_X_OFFSET_PCT .04268
+#define TRIM_BOARD_Y_OFFSET_PCT .05583
+#define TRIM_BOARD_WIDTH_PCT 1.08535
+#define TRIM_BOARD_HEIGHT_PCT 1.11167
+
+#define BOARD_W_PERCENT .5
+#define BOARD_H_PERCENT .75
+
+#define MAX_ASPECT_RATIO 1.4
+#define MIN_ASPECT_RATIO .68
+
+Board Board_create(Sage* sage, int32_t gameHeight, int32_t gameWidth);

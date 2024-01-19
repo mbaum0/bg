@@ -5,29 +5,6 @@
  */
 #include "board.h"
 
-#define BOARD_SRC_W 3140
-#define BOARD_SRC_H 2400
-#define TRIM_SRC_W 3408
-#define TRIM_SRC_H 2668
-#define PIP_SRC_W 62
-#define PIP_SRC_H 310
-#define PIP_RATIO 5
-
-#define PIP_BOARD_X_OFFSET_PCT .08917
-#define PIP_BOARD_WIDTH_PCT .06369
-
-#define TRIM_BOARD_X_OFFSET_PCT .04268
-#define TRIM_BOARD_Y_OFFSET_PCT .05583
-#define TRIM_BOARD_WIDTH_PCT 1.08535
-#define TRIM_BOARD_HEIGHT_PCT 1.11167
-
-#define BOARD_W_PERCENT .5
-#define BOARD_H_PERCENT .75
-
-#define MAX_ASPECT_RATIO 1.4
-#define MIN_ASPECT_RATIO .68
-
-
 void createPips(Sage* sage, SDL_Rect board){
     SDL_Texture* pip = Sage_loadTexture(sage, "assets/pips_sm.png"); 
     for (int32_t i = 0; i < 6; i++){
@@ -89,14 +66,16 @@ void createTrim(Sage* sage, SDL_Rect board){
     Sage_registerSprite(sage, trimSprite);
 }
 
-void Board_create(Sage* sage, int32_t gameWidth, int32_t gameHeight){
+Board Board_create(Sage* sage, int32_t gameWidth, int32_t gameHeight){
+    Board board;
+
     SDL_Texture* background = Sage_loadTexture(sage, "assets/background.png");
     SDL_Rect bckSrc = {0, 0, BOARD_SRC_W, BOARD_SRC_H};
     SDL_Rect bckDst = {0, 0, gameWidth, gameHeight};
     Sprite* back = Sprite_createEx(background, bckSrc, bckDst, 0, false);
     Sage_registerSprite(sage, back);
 
-    SDL_Texture* board = Sage_loadTexture(sage, "assets/board.png");
+    SDL_Texture* boardTexture = Sage_loadTexture(sage, "assets/board.png");
     SDL_Rect boardSrc = {0, 0, BOARD_SRC_W, BOARD_SRC_H}; 
     int32_t boardWidth = gameWidth * BOARD_W_PERCENT;
     int32_t boardHeight = gameHeight * BOARD_H_PERCENT;
@@ -108,10 +87,18 @@ void Board_create(Sage* sage, int32_t gameWidth, int32_t gameHeight){
     }
     int32_t boardX = (gameWidth - boardWidth) / 2;
     int32_t boardY = (gameHeight - boardHeight) / 2;
+    board.h = boardHeight;
+    board.w = boardWidth;
+    board.x = boardX;
+    board.y = boardY;
+    board.pipW = boardWidth * PIP_BOARD_WIDTH_PCT;
+    board.pipH = board.pipW * PIP_RATIO;
+
     SDL_Rect boardDst = {boardX, boardY, boardWidth, boardHeight};
-    Sprite* boardSprite = Sprite_createEx(board, boardSrc, boardDst, 1, false);
+    Sprite* boardSprite = Sprite_createEx(boardTexture, boardSrc, boardDst, 1, false);
     Sage_registerSprite(sage, boardSprite);
 
     createPips(sage, boardDst);
     createTrim(sage, boardDst);
+    return board;
 }
