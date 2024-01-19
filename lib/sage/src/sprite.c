@@ -22,11 +22,12 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, 
   sprite->flip = false;
   sprite->normalized = false;
   sprite->lockAspectRatio = false;
+  sprite->yRelativeToBottom = false;
   sprite->frame = 0;
   return sprite;
 }
 
-Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect normDst, int32_t z, bool flip, bool normalized, bool lockAspectRatio){
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect normDst, int32_t z, bool flip, bool normalized, bool lockAspectRatio, bool yRelativeToBottom){
   Sprite* sprite = malloc(sizeof(Sprite));
   sprite->id = 0;
   sprite->texture = texture;
@@ -42,6 +43,7 @@ Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect normDst, i
   sprite->flip = flip;
   sprite->normalized = normalized;
   sprite->lockAspectRatio = lockAspectRatio;
+  sprite->yRelativeToBottom = yRelativeToBottom;
   sprite->frame = 0;
   return sprite;
 }

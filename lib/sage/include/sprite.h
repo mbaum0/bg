@@ -29,6 +29,7 @@ struct Sprite {
   int32_t z;
   bool flip;
   bool lockAspectRatio;
+  bool yRelativeToBottom;
   uint32_t frame; // for storing arbitrary data;
 };
 
@@ -41,12 +42,13 @@ struct Sprite {
  * @param y The y coordinate
  * @param z The z coordinate
  * @param flip Flip orientation
+ * @param yRelativeToBottom If true, the y coordinate is relative to the bottom of the normalized region
  * @return Sprite* The new Sprite instance
  */
 Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z);
 
 
-Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect dst, int32_t z, bool flip, bool normalized, bool lockAspectRatio);
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect dst, int32_t z, bool flip, bool normalized, bool lockAspectRatio, bool yRelativeToBottom);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks

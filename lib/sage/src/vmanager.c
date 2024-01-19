@@ -82,13 +82,17 @@ void VM_draw(ViewManager* vm) {
         normalDst.y = (sprite->dstn_rect.y * vm->normalRect.h) + vm->normalRect.y;
         normalDst.w = sprite->dstn_rect.w * vm->normalRect.w;
         normalDst.h = sprite->dstn_rect.h * vm->normalRect.h;
-        // if (sprite->lockAspectRatio) {
-        //   float aspectRatio = sprite->dstn_rect.w / sprite->dstn_rect.h;
-        //   float newNormalHeight = sprite->dstn_rect.w  aspectRatio;
-        //   float newY = (sprite->dstn_rect.y * newNormalHeight) + vm->normalRect.y;
-        //   normalDst.y = newY;
-        //   normalDst.h = newNormalHeight * vm->normalRect.h;
-        // }
+
+        float normalHeight = sprite->dstn_rect.h;
+        if (sprite->lockAspectRatio) {
+          float aspectRatio = (float)sprite->src_rect.w / (float)sprite->src_rect.h;
+          normalHeight = sprite->dstn_rect.w  / aspectRatio;
+          normalDst.h = normalHeight * vm->normalRect.w;
+        }
+        if (sprite->yRelativeToBottom) {
+          float normalY = 1.0 - sprite->dstn_rect.y;
+          normalDst.y = (normalY * vm->normalRect.h) + vm->normalRect.y - normalDst.h;
+        }
       }
       SDL_RenderCopyEx(vm->renderer, sprite->texture, &sprite->src_rect, &normalDst, 0, NULL,
         sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
