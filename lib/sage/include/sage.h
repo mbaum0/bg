@@ -33,6 +33,14 @@ struct Sage {
 Sage* Sage_create(char* title, int width, int height);
 
 /**
+ * @brief Set the normalization rect on the view manager. This is used to normalize the coordinate system for sprites.
+ * The default is (0, 0, 0, 0), which means that the coordinate system is not normalized.
+ * @param s 
+ * @param rect 
+ */
+void Sage_setNormalRect(Sage* s, SDL_Rect rect);
+
+/**
  * @brief Destroy the SAGE engine and free all resources
  *
  * @param s The SAGE engine

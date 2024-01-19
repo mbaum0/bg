@@ -25,6 +25,6 @@ struct Checker {
   Player player;
 };
 
-Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player, Board board);
+Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player);
 
 void Checker_destroy(Checker* c);

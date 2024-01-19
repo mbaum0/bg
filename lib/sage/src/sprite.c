@@ -11,7 +11,7 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, 
   sprite->id = 0;
   sprite->texture = texture;
   sprite->src_rect = src;
-  sprite->dst_rect = (SDL_Rect){x, y, src.w, src.h};
+  sprite->dstn_rect = (SDL_FRect){x, y, src.w, src.h};
   sprite->visible = true;
   sprite->hovered = false;
   sprite->update_fn = NULL;
@@ -24,12 +24,12 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, 
   return sprite;
 }
 
-Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_Rect dst, int32_t z, bool flip){
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect normDst, int32_t z, bool flip){
   Sprite* sprite = malloc(sizeof(Sprite));
   sprite->id = 0;
   sprite->texture = texture;
   sprite->src_rect = src;
-  sprite->dst_rect = dst;
+  sprite->dstn_rect = normDst;
   sprite->visible = true;
   sprite->hovered = false;
   sprite->update_fn = NULL;
@@ -42,17 +42,17 @@ Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_Rect dst, int32_
   return sprite;
 }
 
-void Sprite_setLocation(Sprite* sprite, int32_t x, int32_t y) {
-  sprite->dst_rect.x = x;
-  sprite->dst_rect.y = y;
+void Sprite_setLocation(Sprite* sprite, float x, float y) {
+  sprite->dstn_rect.x = x;
+  sprite->dstn_rect.y = y;
 }
 
-int32_t Sprite_getX(Sprite* sprite) {
-  return sprite->dst_rect.x;
+float Sprite_getX(Sprite* sprite) {
+  return sprite->dstn_rect.x;
 }
 
-int32_t Sprite_getY(Sprite* sprite) {
-  return sprite->dst_rect.y;
+float Sprite_getY(Sprite* sprite) {
+  return sprite->dstn_rect.y;
 }
 
 void Sprite_setVisible(Sprite* sprite, bool visible) {

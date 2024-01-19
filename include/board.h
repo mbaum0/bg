@@ -6,16 +6,6 @@
 #pragma once
 #include "sage.h"
 #include <stdint.h>
-typedef struct Board Board;
-
-struct Board {
-    int32_t h;
-    int32_t w;
-    int32_t x;
-    int32_t y;
-    int32_t pipW;
-    int32_t pipH;
-};
 
 #define BOARD_SRC_W 3140
 #define BOARD_SRC_H 2400
@@ -39,4 +29,4 @@ struct Board {
 #define MAX_ASPECT_RATIO 1.4
 #define MIN_ASPECT_RATIO .68
 
-Board Board_create(Sage* sage, int32_t gameHeight, int32_t gameWidth);
+void Board_create(Sage* sage);

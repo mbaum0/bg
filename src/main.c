@@ -10,10 +10,12 @@ int main(int argc, char** argv) {
   (void)argc;
   (void)argv;
   Sage* s = Sage_create("Baackgammon!", WINDOW_W, WINDOW_H);
-  Board board = Board_create(s, WINDOW_W, WINDOW_H);
-  Checker_create(s, 1, P_LIGHT, board);
+  SDL_Rect normal = { 0, 0, WINDOW_W, WINDOW_H };
+  Sage_setNormalRect(s, normal);
+  Board_create(s);
+  //Checker_create(s, 1, P_LIGHT, board);
 
-  DStats_create(s);
+  //DStats_create(s);
 
   Sage_run(s);
 

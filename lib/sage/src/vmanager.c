@@ -10,6 +10,7 @@ struct ViewManager {
   SDL_Renderer* renderer;
   Sprite*** sprites;
   Snippet*** snippets;
+  SDL_Rect normalRect;
 };
 
 /**
@@ -46,7 +47,12 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
   vm->snippets = malloc(sizeof(Snippet**));
   *vm->snippets = NULL;
   SDL_AddEventWatch(handleEvent, vm);
+  vm->normalRect = (SDL_Rect){ 0, 0, 0, 0 };
   return vm;
+}
+
+void VM_setNormalRect(ViewManager* vm, SDL_Rect rect) {
+  vm->normalRect = rect;
 }
 
 void VM_free(ViewManager* vm) {
@@ -68,7 +74,14 @@ void VM_draw(ViewManager* vm) {
       fptr(vm, sprite, sprite->update_data);
     }
     if (sprite->visible) {
-      SDL_RenderCopyEx(vm->renderer, sprite->texture, &sprite->src_rect, &sprite->dst_rect, 0, NULL,
+      SDL_Rect normalDst = (SDL_Rect){ sprite->dstn_rect.x, sprite->dstn_rect.y, sprite->dstn_rect.w, sprite->dstn_rect.h };
+      if (vm->normalRect.w != 0){
+        normalDst.x = (sprite->dstn_rect.x * vm->normalRect.w) + vm->normalRect.x;
+        normalDst.y = (sprite->dstn_rect.y * vm->normalRect.h) + vm->normalRect.y;
+        normalDst.w = sprite->dstn_rect.w * vm->normalRect.w;
+        normalDst.h = sprite->dstn_rect.h * vm->normalRect.h;
+      }
+      SDL_RenderCopyEx(vm->renderer, sprite->texture, &sprite->src_rect, &normalDst, 0, NULL,
                        sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
     }
   }
@@ -131,8 +144,8 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y){
   for (int32_t i = 0; i < arrlen(sprites); i++) {
     Sprite* sprite = sprites[i];
     if (sprite->visible) {
-      SDL_Point p = {x, y};
-      if (SDL_PointInRect(&p, &sprite->dst_rect)) {
+      SDL_FPoint p = {x, y};
+      if (SDL_PointInFRect(&p, &sprite->dstn_rect)) {
         if (sprite->z > currentTopZ) {
           currentTopZ = sprite->z;
           topSprite = sprite;
@@ -148,7 +161,7 @@ Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite){
   for (int32_t i = 0; i < arrlen(sprites); i++) {
     Sprite* other = sprites[i];
     if (other != sprite && other->visible) {
-      if (SDL_HasIntersection(&sprite->dst_rect, &other->dst_rect)) {
+      if (SDL_HasIntersectionF(&sprite->dstn_rect, &other->dstn_rect)) {
         return other;
       }
     }

@@ -18,7 +18,7 @@ struct Sprite {
   int32_t id;
   SDL_Texture* texture;
   SDL_Rect src_rect;
-  SDL_Rect dst_rect;
+  SDL_FRect dstn_rect; // normalized
   bool visible;
   bool hovered;
   void* update_fn;
@@ -44,22 +44,22 @@ struct Sprite {
 Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip);
 
 
-Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_Rect dst, int32_t z, bool flip);
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect dst, int32_t z, bool flip);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks
  */
-void Sprite_setLocation(Sprite* sprite, int32_t x, int32_t y);
+void Sprite_setLocation(Sprite* sprite, float x, float y);
 
 /**
  * @brief Get the x coordinate of the sprite
  */
-int32_t Sprite_getX(Sprite* sprite);
+float Sprite_getX(Sprite* sprite);
 
 /**
  * @brief Get the y coordinate of the sprite
  */
-int32_t Sprite_getY(Sprite* sprite);
+float Sprite_getY(Sprite* sprite);
 
 /**
  * @brief Set the visibility of the sprite. Only used in SpriteUpdate_fn callbacks

@@ -22,6 +22,10 @@ Sage* Sage_create(char* title, int width, int height) {
   return s;
 }
 
+void Sage_setNormalRect(Sage* s, SDL_Rect rect){
+  VM_setNormalRect(s->vm, rect);
+}
+
 void Sage_destroy(Sage* s) {
   VM_free(s->vm);
   MM_free(s->mm);
