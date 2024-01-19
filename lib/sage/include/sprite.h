@@ -19,6 +19,7 @@ struct Sprite {
   SDL_Texture* texture;
   SDL_Rect src_rect;
   SDL_FRect dstn_rect; // normalized
+  bool normalized;
   bool visible;
   bool hovered;
   void* update_fn;
@@ -27,6 +28,7 @@ struct Sprite {
   void* click_data;
   int32_t z;
   bool flip;
+  bool lockAspectRatio;
   uint32_t frame; // for storing arbitrary data;
 };
 
@@ -41,10 +43,10 @@ struct Sprite {
  * @param flip Flip orientation
  * @return Sprite* The new Sprite instance
  */
-Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z, bool flip);
+Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z);
 
 
-Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect dst, int32_t z, bool flip);
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect dst, int32_t z, bool flip, bool normalized, bool lockAspectRatio);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks

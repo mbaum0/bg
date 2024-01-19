@@ -3,8 +3,10 @@
  * @author Michael Baumgarten
  * @brief ViewManager implementation
  */
+#include <math.h>
 #include "vmanager.h"
 #include "stb_ds.h"
+#include "log.h"
 
 struct ViewManager {
   SDL_Renderer* renderer;
@@ -75,14 +77,21 @@ void VM_draw(ViewManager* vm) {
     }
     if (sprite->visible) {
       SDL_Rect normalDst = (SDL_Rect){ sprite->dstn_rect.x, sprite->dstn_rect.y, sprite->dstn_rect.w, sprite->dstn_rect.h };
-      if (vm->normalRect.w != 0){
+      if (sprite->normalized) {
         normalDst.x = (sprite->dstn_rect.x * vm->normalRect.w) + vm->normalRect.x;
         normalDst.y = (sprite->dstn_rect.y * vm->normalRect.h) + vm->normalRect.y;
         normalDst.w = sprite->dstn_rect.w * vm->normalRect.w;
         normalDst.h = sprite->dstn_rect.h * vm->normalRect.h;
+        // if (sprite->lockAspectRatio) {
+        //   float aspectRatio = sprite->dstn_rect.w / sprite->dstn_rect.h;
+        //   float newNormalHeight = sprite->dstn_rect.w  aspectRatio;
+        //   float newY = (sprite->dstn_rect.y * newNormalHeight) + vm->normalRect.y;
+        //   normalDst.y = newY;
+        //   normalDst.h = newNormalHeight * vm->normalRect.h;
+        // }
       }
       SDL_RenderCopyEx(vm->renderer, sprite->texture, &sprite->src_rect, &normalDst, 0, NULL,
-                       sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
+        sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
     }
   }
   Snippet** snippets = *vm->snippets;
@@ -109,18 +118,19 @@ int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
   }
   if (zindex == -1) {
     arrput(*vm->sprites, sprite);
-  } else {
+  }
+  else {
     arrins(*vm->sprites, zindex, sprite);
   }
   return sprite->id;
 }
 
-void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* data){
+void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* data) {
   sprite->update_fn = (void*)update_fn;
   sprite->update_data = data;
 }
 
-void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* data){
+void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* data) {
   sprite->click_fn = (void*)click_fn;
   sprite->click_data = data;
 }
@@ -132,19 +142,19 @@ int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
   return snippet->id;
 }
 
-void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void* data){
+void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void* data) {
   snippet->update_fn = (void*)update_fn;
   snippet->update_data = data;
 }
 
-Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y){
+Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y) {
   Sprite** sprites = *vm->sprites;
   Sprite* topSprite = NULL;
   int32_t currentTopZ = -1;
   for (int32_t i = 0; i < arrlen(sprites); i++) {
     Sprite* sprite = sprites[i];
     if (sprite->visible) {
-      SDL_FPoint p = {x, y};
+      SDL_FPoint p = { x, y };
       if (SDL_PointInFRect(&p, &sprite->dstn_rect)) {
         if (sprite->z > currentTopZ) {
           currentTopZ = sprite->z;
@@ -156,7 +166,7 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y){
   return topSprite;
 }
 
-Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite){
+Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite) {
   Sprite** sprites = *vm->sprites;
   for (int32_t i = 0; i < arrlen(sprites); i++) {
     Sprite* other = sprites[i];

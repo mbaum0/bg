@@ -19,6 +19,8 @@ Sage* Sage_create(char* title, int width, int height) {
   s->vm = VM_init(s->mm->renderer);
   s->em = EM_init();
   s->fps = 0;
+  s->width = width;
+  s->height = height;
   return s;
 }
 

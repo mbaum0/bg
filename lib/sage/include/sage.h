@@ -20,6 +20,8 @@ struct Sage {
   ViewManager* vm;
   EventManager* em;
   float fps;
+  int width;
+  int height;
 };
 
 /**
