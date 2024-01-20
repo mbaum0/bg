@@ -49,7 +49,8 @@ int main(int argc, char** argv) {
   //   Player p = i % 2 == 1 ? P_LIGHT : P_DARK;
   //   Checker_create(s, i, p);
   // }
-  Checker_create(s, 1, P_LIGHT);
+  //Checker_create(s, 1, P_LIGHT);
+  Checkers_create(s);
 
   DStats_create(s);
 

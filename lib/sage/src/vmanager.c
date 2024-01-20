@@ -79,7 +79,7 @@ void VM_draw(ViewManager* vm) {
     Sprite* sprite = sprites[i];
     if (sprite->update_fn != NULL) {
       SpriteUpdate_fn fptr = (SpriteUpdate_fn)sprite->update_fn;
-      fptr(vm, sprite, sprite->update_data);
+      fptr(vm, sprite, sprite->update_object, sprite->update_context);
     }
     if (sprite->visible) {
       SDL_Rect normalDst = (SDL_Rect){ sprite->dstn_rect.x, sprite->dstn_rect.y, sprite->dstn_rect.w, sprite->dstn_rect.h };
@@ -135,9 +135,10 @@ int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
   return sprite->id;
 }
 
-void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* data) {
+void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* object, void* context) {
   sprite->update_fn = (void*)update_fn;
-  sprite->update_data = data;
+  sprite->update_object = object;
+  sprite->update_context = context;
 }
 
 void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* data) {

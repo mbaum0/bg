@@ -15,7 +15,8 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, 
   sprite->visible = true;
   sprite->hovered = false;
   sprite->update_fn = NULL;
-  sprite->update_data = NULL;
+  sprite->update_object = NULL;
+  sprite->update_context = NULL;
   sprite->click_fn = NULL;
   sprite->click_data = NULL;
   sprite->z = z;
@@ -36,7 +37,8 @@ Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect normDst, i
   sprite->visible = true;
   sprite->hovered = false;
   sprite->update_fn = NULL;
-  sprite->update_data = NULL;
+  sprite->update_object = NULL;
+  sprite->update_context = NULL;
   sprite->click_fn = NULL;
   sprite->click_data = NULL;
   sprite->z = z;

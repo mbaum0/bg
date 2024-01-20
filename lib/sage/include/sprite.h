@@ -23,7 +23,8 @@ struct Sprite {
   bool visible;
   bool hovered;
   void* update_fn;
-  void* update_data;
+  void* update_object;
+  void* update_context;
   void* click_fn;
   void* click_data;
   int32_t z;

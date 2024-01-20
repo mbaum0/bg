@@ -62,7 +62,7 @@ int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet);
 /**
  * @brief Sprite update functions are called every frame to update the Sprite's state.
  */
-typedef void (*SpriteUpdate_fn)(ViewManager* vm, Sprite* sprite, void* data);
+typedef void (*SpriteUpdate_fn)(ViewManager* vm, Sprite* sprite, void* object, void* context);
 
 /**
  * @brief Snippet update functions are called every frame to update the Snippet's state.
@@ -75,7 +75,7 @@ typedef void (*SnippetUpdate_fn)(ViewManager* vm, Snippet* snippet, void* data);
  */
 typedef void (*SpriteClick_fn)(ViewManager* vm, Sprite* sprite, void* data);
 
-void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* data);
+void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* object, void* context);
 void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* data);
 void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void* data);
 
