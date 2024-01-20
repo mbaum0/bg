@@ -31,7 +31,10 @@
         "type_traits": "c",
         "__locale": "c",
         "typeinfo": "c",
-        "ios": "c"
+        "ios": "c",
+        "chrono": "c",
+        "complex": "c",
+        "cstdlib": "c"
     },
     "doxdocgen.generic.authorName": "Michael Baumgarten",
     "doxdocgen.file.fileOrder": [

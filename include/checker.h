@@ -16,6 +16,8 @@
 #define CHECKER_TOP_Y_OFFSET_NORMAL 0.050224887556222
 #define CHECKER_BOTTOM_Y_OFFSET_NORMAL 0.879310344827586
 
+#define CHECKER_VELOCITY 0.08
+#define CHECKER_ACCELERATION 0.001
 
 typedef struct Checker Checker;
 
@@ -27,6 +29,8 @@ typedef enum Player {
 struct Checker {
   int32_t pipIndex;
   Player player;
+  float xVelocity;
+  float yVelocity;
 };
 
 Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player);

@@ -5,7 +5,6 @@
  */
 #pragma once
 #include <math.h>
-#include <stdint.h>
 #include <stdlib.h>
 
 /**
@@ -17,7 +16,7 @@
  * @param x1 Ending x coordinate
  * @param y1 Ending y coordinate
  */
-int32_t getVerticalVelocity(int32_t velocity, int32_t x0, int32_t y0, int32_t x1, int32_t y1);
+float getVerticalVelocity(float velocity, float x0, float y0, float x1, float y1);
 
 /**
  * @brief Returns the horizontal component of a velocity vector given the start and end points
@@ -28,4 +27,8 @@ int32_t getVerticalVelocity(int32_t velocity, int32_t x0, int32_t y0, int32_t x1
  * @param x1 Ending x coordinate
  * @param y1 Ending y coordinate
  */
-int32_t getHorizontalVelocity(int32_t velocity, int32_t x0, int32_t y0, int32_t x1, int32_t y1);
+float getHorizontalVelocity(float velocity, float x0, float y0, float x1, float y1);
+
+float getVelocityFromAcceleration(float acceleration, float velocity, float x0, float x1, float y0, float y1, float* h, float* v);
+
+

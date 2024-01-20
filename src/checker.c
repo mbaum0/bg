@@ -7,6 +7,7 @@
 #include "board.h"
 #include "sprite.h"
 #include "util.h"
+#include "vector.h"
 
 float getCheckerXFromPipLocation(int32_t pipIndex) {
   float checkerX;
@@ -54,9 +55,17 @@ void clickChecker(ViewManager* vm, Sprite* sprite, void* data) {
 void updateChecker(ViewManager* vm, Sprite* sprite, void* data) {
   (void)vm;
   Checker* c = (Checker*)data;
-  float x = getCheckerXFromPipLocation(c->pipIndex);
-  float y = getCheckerYFromPipLocation(c->pipIndex);
-  Sprite_setLocation(sprite, x, y);
+  float newX = getCheckerXFromPipLocation(c->pipIndex);
+  float newY = getCheckerYFromPipLocation(c->pipIndex);
+  float x = Sprite_getX(sprite);
+  float y = Sprite_getY(sprite);
+  if (!isEqual(x, newX, CHECKER_VELOCITY) || !isEqual(y, newY, CHECKER_VELOCITY)) {
+    float xVel = getHorizontalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
+    float yVel = getVerticalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
+    Sprite_setLocation(sprite, x + xVel, y + yVel);
+  } else {
+    Sprite_setLocation(sprite, newX, newY);
+  }
 }
 
 Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player) {
@@ -64,6 +73,8 @@ Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player) {
   Checker* c = malloc(sizeof(Checker));
   c->pipIndex = pipIndex;
   c->player = player;
+  c->xVelocity = 0;
+  c->yVelocity = 0;
 
   SDL_Texture* texture = NULL;
   if (player == P_LIGHT) {

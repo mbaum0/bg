@@ -38,4 +38,7 @@
 #define PIP_WIDTH_NORMAL 0.05868544600939
 #define PIP_HEIGHT_NORMAL 0.374812593703148
 
+#define EPSILON 0.0001
+
 bool isBetween(int32_t x, int32_t min, int32_t max);
+bool isEqual(float x, float y, float epsilon);
