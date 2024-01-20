@@ -24,7 +24,7 @@ float getCheckerXFromPipLocation(int32_t pipIndex) {
     checkerX = CHECKER_LEFT_X_OFFSET_NORMAL + (PIP_WIDTH_NORMAL * pipOffset);
   }
   else {
-    pipOffset = (pipIndex - 1) % 6;
+    pipOffset = 5 -((pipIndex - 1) % 6);
     checkerX = CHECKER_RIGHT_OFFSET_NORMAL - (PIP_WIDTH_NORMAL * pipOffset);
   }
   return checkerX;

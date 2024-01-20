@@ -30,8 +30,8 @@ int handleEvent(void* data, SDL_Event* event) {
   float mouseX, mouseY;
   switch (event->type) {
   case SDL_MOUSEBUTTONUP:
-    mouseX = (event->button.x / 1920.0);
-    mouseY = (event->button.y / 1080.0);
+    mouseX = (float)(event->button.x - vm->normalRect.x) / (float)vm->normalRect.w;
+    mouseY = (float)(event->button.y - vm->normalRect.y) / (float)vm->normalRect.h;
     log_debug("mouse up at %f, %f", mouseX, mouseY);
     sprite = VM_findSpriteAtCoordinate(vm, mouseX, mouseY);
     if (sprite != NULL) {

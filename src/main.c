@@ -2,20 +2,22 @@
 #include "board.h"
 #include "checker.h"
 #include "dstats.h"
+#include "log.h"
 
 #define WINDOW_W (1920)
 #define WINDOW_H (1080)
 #define MAX_ASPECT_RATIO (1.4)
 #define MIN_ASPECT_RATIO (.7)
+#define MAX_BOARD_WIDTH_PCT (.9)
 
 void findDimensions(int w, int h, int* x, int* y) {
   // Start from the maximum width which is 90% of w
-  for (int possibleX = (int)(0.9 * w); possibleX > 0; possibleX--) {
+  for (int possibleX = (int)(MAX_BOARD_WIDTH_PCT * w); possibleX > 0; possibleX--) {
     // For each width, find a height that maintains the aspect ratio
     for (int possibleY = h; possibleY > 0; possibleY--) {
       float aspectRatio = (float)possibleX / possibleY;
       // Check if the aspect ratio is within the range
-      if (aspectRatio >= 0.7 && aspectRatio <= 1.4) {
+      if (aspectRatio >= MIN_ASPECT_RATIO && aspectRatio <= MAX_ASPECT_RATIO) {
         *x = possibleX;
         *y = possibleY;
         return;
