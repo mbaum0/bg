@@ -16,7 +16,8 @@ void DStats_update(ViewManager* vm, Snippet* snippet, void* data){
     // Snippet_setText(snippet, debugText);   
 }
 
-void DStats_create(Sage* sage) {
+void DStats_create(Sage* sage, GameBoard* board){
+    (void)board;
     char debugText[100];
     sprintf(debugText, "FPS: %d", FPS);
     SDL_Color color = {255, 255, 255, 255 };

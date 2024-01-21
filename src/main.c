@@ -4,8 +4,8 @@
 #include "dstats.h"
 #include "log.h"
 
-#define WINDOW_W (430)
-#define WINDOW_H (932)
+#define WINDOW_W (1920)
+#define WINDOW_H (1080)
 #define MAX_ASPECT_RATIO (1.4)
 #define MIN_ASPECT_RATIO (.7)
 #define MAX_BOARD_WIDTH_PCT (.9)
@@ -50,11 +50,12 @@ int main(int argc, char** argv) {
   //   Checker_create(s, i, p);
   // }
   //Checker_create(s, 1, P_LIGHT);
-  GameBoard_create(s);
+  GameBoard* gb = GameBoard_create(s);
 
-  DStats_create(s);
+  DStats_create(s, gb);
 
   Sage_run(s);
+  GameBoard_destroy(gb);
 
   return 0;
 }
