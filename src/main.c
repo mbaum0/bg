@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
   //   Checker_create(s, i, p);
   // }
   //Checker_create(s, 1, P_LIGHT);
-  Checkers_create(s);
+  GameBoard_create(s);
 
   DStats_create(s);
 

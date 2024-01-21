@@ -25,19 +25,19 @@ float getCheckerXFromPipLocation(int32_t pipIndex) {
     checkerX = CHECKER_LEFT_X_OFFSET_NORMAL + (PIP_WIDTH_NORMAL * pipOffset);
   }
   else {
-    pipOffset = 5 -((pipIndex - 1) % 6);
+    pipOffset = 5 - ((pipIndex - 1) % 6);
     checkerX = CHECKER_RIGHT_OFFSET_NORMAL - (PIP_WIDTH_NORMAL * pipOffset);
   }
   return checkerX;
 }
 
-int32_t getCheckersOnPip(int32_t pipIndex, Checkers* checkers){
+int32_t getCheckersOnPip(int32_t pipIndex, GameBoard* board) {
   int32_t count = 0;
   for (int32_t i = 0; i < 15; i++) {
-    if (checkers->lightCheckers[i].pipIndex == pipIndex) {
+    if (board->lightCheckers[i].pipIndex == pipIndex) {
       count++;
     }
-    if (checkers->darkCheckers[i].pipIndex == pipIndex) {
+    if (board->darkCheckers[i].pipIndex == pipIndex) {
       count++;
     }
   }
@@ -58,24 +58,24 @@ float getCheckerY(Checker* checker) {
   return offset;
 }
 
-void moveFromPip(int32_t pipIndex, Checkers* checkers){
+void moveFromPip(int32_t pipIndex, GameBoard* board) {
   // get the top checker on the pip
   Checker* c = NULL;
   int32_t topIndex = -1;
 
   for (int32_t i = 0; i < 15; i++) {
-    Checker* checker = &checkers->lightCheckers[i];
+    Checker* checker = &board->lightCheckers[i];
     if (checker->pipIndex == pipIndex) {
       if (checker->pipOffset > topIndex) {
         topIndex = checker->pipOffset;
         c = checker;
       }
     }
-    checker = &checkers->darkCheckers[i];
+    checker = &board->darkCheckers[i];
     if (checker->pipIndex == pipIndex) {
       if (checker->pipOffset > topIndex) {
         topIndex = checker->pipOffset;
-        c = &checkers->darkCheckers[i];
+        c = &board->darkCheckers[i];
       }
     }
   }
@@ -89,7 +89,7 @@ void moveFromPip(int32_t pipIndex, Checkers* checkers){
   if (newIndex > 24) {
     newIndex = 1;
   }
-  c->pipOffset = getCheckersOnPip(newIndex, checkers);
+  c->pipOffset = getCheckersOnPip(newIndex, board);
   c->pipIndex = newIndex;
   log_debug("moved checker from pip %d to pip %d", pipIndex, c->pipIndex);
 }
@@ -98,8 +98,8 @@ void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) 
   (void)vm;
   (void)sprite;
   Checker* checker = (Checker*)object;
-  Checkers* checkers = (Checkers*)context;
-  moveFromPip(checker->pipIndex, checkers);
+  GameBoard* board = (GameBoard*)context;
+  moveFromPip(checker->pipIndex, board);
 }
 
 void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
@@ -114,45 +114,18 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
     float xVel = getHorizontalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
     float yVel = getVerticalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
     Sprite_setLocation(sprite, x + xVel, y + yVel);
-  } else {
+  }
+  else {
     Sprite_setLocation(sprite, newX, newY);
   }
 }
 
-// Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player) {
-//   (void)sage;
-//   Checker* c = malloc(sizeof(Checker));
-//   c->pipIndex = pipIndex;
-//   c->player = player;
-//   c->xVelocity = 0;
-//   c->yVelocity = 0;
-
-//   SDL_Texture* texture = NULL;
-//   if (player == P_LIGHT) {
-//     texture = Sage_loadTexture(sage, "assets/light.png");
-//   }
-//   else {
-//     texture = Sage_loadTexture(sage, "assets/dark.png");
-//   }
-//   SDL_Rect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
-
-//   float checkerX = getCheckerXFromPipLocation(pipIndex);
-//   float checkerY = getCheckerYFromPipLocation(pipIndex);
-
-//   SDL_FRect dst_rect = { checkerX, checkerY, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
-//   Sprite* s = Sprite_createEx(texture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
-//   Sprite_registerUpdateFn(s, updateChecker, c, NULL);
-//   Sprite_registerClickFn(s, clickChecker, c);
-//   Sage_registerSprite(sage, s);
-//   return c;
-// }
-
-void Checker_destroy(Checker* c) {
-  free(c);
+void GameBoard_destroy(GameBoard* board) {
+  free(board);
 }
 
-Checkers* Checkers_create(Sage* sage){
-  Checkers* checkers = calloc(1, sizeof(Checkers));
+GameBoard* GameBoard_create(Sage* sage) {
+  GameBoard* board = calloc(1, sizeof(GameBoard));
   SDL_Texture* lightTexture = Sage_loadTexture(sage, "assets/light.png");
   SDL_Texture* darkTexture = Sage_loadTexture(sage, "assets/dark.png");
   SDL_Rect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
@@ -161,41 +134,40 @@ Checkers* Checkers_create(Sage* sage){
   int32_t darkSetup[] = { 24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6 };
   int32_t pipOffsets[] = { 0, 1, 0, 1, 2, 3, 4, 0, 1, 2, 0, 1, 2, 3, 4 };
 
-  for (int32_t i = 0; i < 15; i++){
-    checkers->lightCheckers[i].pipIndex = lightSetup[i];
-    checkers->lightCheckers[i].player = P_LIGHT;
-    checkers->lightCheckers[i].pipOffset = pipOffsets[i];
+  for (int32_t i = 0; i < 15; i++) {
+    board->lightCheckers[i].pipIndex = lightSetup[i];
+    board->lightCheckers[i].pipOffset = pipOffsets[i];
+    board->pipCounts[lightSetup[i]]++;
   }
 
-  for (int32_t i = 0; i < 15; i++){
-    checkers->darkCheckers[i].pipIndex = darkSetup[i];
-    checkers->darkCheckers[i].player = P_DARK;
-    checkers->darkCheckers[i].pipOffset = pipOffsets[i];
+  for (int32_t i = 0; i < 15; i++) {
+    board->darkCheckers[i].pipIndex = darkSetup[i];
+    board->darkCheckers[i].pipOffset = pipOffsets[i];
+    board->pipCounts[darkSetup[i] + 15]++;
   }
 
-  for (int32_t i = 0; i < 30; i++){
+  // create the checker sprites
+  for (int32_t i = 0; i < 30; i++) {
     if (i < 15) {
-      Checker* c = &checkers->lightCheckers[i];
-      c->player = P_LIGHT;
+      Checker* c = &board->lightCheckers[i];
       float x = getCheckerXFromPipLocation(c->pipIndex);
       float y = getCheckerY(c);
       SDL_FRect dst_rect = { x, y, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
       Sprite* s = Sprite_createEx(lightTexture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
-      Sprite_registerUpdateFn(s, updateChecker, c, checkers);
-      Sprite_registerClickFn(s, clickChecker, c, checkers);
+      Sprite_registerUpdateFn(s, updateChecker, c, board);
+      Sprite_registerClickFn(s, clickChecker, c, board);
       Sage_registerSprite(sage, s);
     }
     else {
-      Checker* c = &checkers->darkCheckers[i - 15];
-      c->player = P_DARK;
+      Checker* c = &board->darkCheckers[i - 15];
       float x = getCheckerXFromPipLocation(c->pipIndex);
       float y = getCheckerY(c);
       SDL_FRect dst_rect = { x, y, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
       Sprite* s = Sprite_createEx(darkTexture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
-      Sprite_registerUpdateFn(s, updateChecker, c, checkers);
-      Sprite_registerClickFn(s, clickChecker, c, checkers);
+      Sprite_registerUpdateFn(s, updateChecker, c, board);
+      Sprite_registerClickFn(s, clickChecker, c, board);
       Sage_registerSprite(sage, s);
     }
   }
-  return checkers;
+  return board;
 }

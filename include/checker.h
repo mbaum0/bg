@@ -21,27 +21,19 @@
 #define CHECKER_ACCELERATION 0.001
 
 typedef struct Checker Checker;
-typedef struct Checkers Checkers;
-
-typedef enum Player {
-  P_LIGHT,
-  P_DARK,
-} Player;
+typedef struct GameBoard GameBoard;
 
 struct Checker {
   int32_t pipIndex;
   int32_t pipOffset;
-  float xVelocity;
-  float yVelocity;
-  Player player;
 };
 
-struct Checkers {
+struct GameBoard {
   Checker lightCheckers[15];
   Checker darkCheckers[15];
+  int32_t pipCounts[30];     // number of checkers on each pip
 };
 
-//Checker* Checker_create(Sage* sage, int32_t pipIndex, Player player);
-Checkers* Checkers_create(Sage* sage);
+GameBoard* GameBoard_create(Sage* sage);
 
-void Checker_destroy(Checker* c);
+void GameBoard_destroy(GameBoard* board);
