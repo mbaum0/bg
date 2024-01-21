@@ -3,6 +3,7 @@
  * @author Michael Baumgarten
  * @brief Simply-Another-Game-Engine (SAGE)
  */
+#include <stdlib.h>
 #include "sage.h"
 
 int32_t delayFrame(int32_t frameStart) {
@@ -24,7 +25,7 @@ Sage* Sage_create(char* title, int width, int height) {
   return s;
 }
 
-void Sage_setNormalRect(Sage* s, SDL_Rect rect){
+void Sage_setNormalRect(Sage* s, SDL_FRect rect){
   VM_setNormalRect(s->vm, rect);
 }
 

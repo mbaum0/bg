@@ -40,7 +40,7 @@ Sage* Sage_create(char* title, int width, int height);
  * @param s 
  * @param rect 
  */
-void Sage_setNormalRect(Sage* s, SDL_Rect rect);
+void Sage_setNormalRect(Sage* s, SDL_FRect rect);
 
 /**
  * @brief Destroy the SAGE engine and free all resources

@@ -6,7 +6,9 @@
                 "${workspaceFolder}/src",
                 "${workspaceFolder}/include",
                 "${workspaceFolder}/lib/sage/include",
-                "/usr/local/include/SDL2/"
+                "/usr/local/include/SDL3/",
+                "/usr/local/include/SDL3_ttf/",
+                "/usr/local/include/SDL3_image/"
             ],
             "compilerPath": "/usr/bin/clang",
             "cStandard": "c99",

@@ -4,7 +4,7 @@
  * @brief Sprite implementation for the game engine
  */
 #pragma once
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -17,7 +17,7 @@ typedef struct Sprite Sprite;
 struct Sprite {
   int32_t id;
   SDL_Texture* texture;
-  SDL_Rect src_rect;
+  SDL_FRect src_rect;
   SDL_FRect dstn_rect; // normalized
   bool normalized;
   bool visible;
@@ -47,10 +47,10 @@ struct Sprite {
  * @param yRelativeToBottom If true, the y coordinate is relative to the bottom of the normalized region
  * @return Sprite* The new Sprite instance
  */
-Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z);
+Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y, int32_t z);
 
 
-Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect dst, int32_t z, bool flip, bool normalized, bool lockAspectRatio, bool yRelativeToBottom);
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect dst, int32_t z, bool flip, bool normalized, bool lockAspectRatio, bool yRelativeToBottom);
 
 /**
  * @brief Set the location of the sprite. Only used in SpriteUpdate_fn callbacks
@@ -75,7 +75,7 @@ void Sprite_setVisible(Sprite* sprite, bool visible);
 /**
  * @brief Set the source rectangle of the sprite. Only used in SpriteUpdate_fn callbacks
  */
-void Sprite_setSourceRect(Sprite* sprite, SDL_Rect src);
+void Sprite_setSourceRect(Sprite* sprite, SDL_FRect src);
 
 /**
  * @brief Set the frame of the sprite. Only used in SpriteUpdate_fn callbacks

@@ -4,8 +4,8 @@
  * @brief Spinnet implementation for the game engine
  */
 #pragma once
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -24,7 +24,7 @@ struct Snippet {
   int32_t z;
   bool visible;
   char* text;
-  SDL_Rect dst_rect;
+  SDL_FRect dst_rect;
   SDL_Texture* texture;
   void* update_fn;
   void* update_data;

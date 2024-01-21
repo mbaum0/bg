@@ -7,7 +7,7 @@
 #include "events.h"
 #include "snippet.h"
 #include "sprite.h"
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 /**
  * @brief ViewManager manages rendering Sprites to the screen.
@@ -36,7 +36,7 @@ void VM_draw(ViewManager* vm);
  * x and y are used to determine the top left corner of the normalized coordinate system.
  * w and h are used to determine the width and height of the normalized coordinate system.
  */
-void VM_setNormalRect(ViewManager* vm, SDL_Rect rect);
+void VM_setNormalRect(ViewManager* vm, SDL_FRect rect);
 
 /**
  * @brief Register a Sprite with the ViewManager. Do not free Sprites directly once registered, as they are managed by

@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
   x = (WINDOW_W - w) * .5;
   y = (WINDOW_H - h) * .5;
 
-  SDL_Rect normal = { x, y, w, h };
+  SDL_FRect normal = { x, y, w, h };
   Sage_setNormalRect(s, normal);
   Board_create(s);
   // for (int i = 1; i <= 24; i++) {

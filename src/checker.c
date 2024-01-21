@@ -127,7 +127,7 @@ void GameBoard_destroy(GameBoard* board) {
 void createCheckers(Sage* sage, GameBoard* board){
   SDL_Texture* lightTexture = Sage_loadTexture(sage, "assets/light.png");
   SDL_Texture* darkTexture = Sage_loadTexture(sage, "assets/dark.png");
-  SDL_Rect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
+  SDL_FRect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
 
   int32_t lightSetup[] = { 1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19 };
   int32_t darkSetup[] = { 24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6 };
@@ -174,7 +174,7 @@ void createDice(Sage* sage, GameBoard* board){
   board->die1 = 1;
   board->die2 = 1;
   SDL_Texture* diceTexture = Sage_loadTexture(sage, "assets/dice.png");
-  SDL_Rect src_rect = { 0, 0, DIE_SRC_W, DIE_SRC_H };
+  SDL_FRect src_rect = { 0, 0, DIE_SRC_W, DIE_SRC_H };
 
   for (int32_t i = 0; i < 2; i++) {
     float x = DIE_R1_X_NORMAL + (i * DIE_W_NORMAL);

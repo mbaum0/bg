@@ -14,7 +14,7 @@ struct ViewManager {
   SDL_Renderer* renderer;
   Sprite*** sprites;
   Snippet*** snippets;
-  SDL_Rect normalRect;
+  SDL_FRect normalRect;
 };
 
 /**
@@ -29,7 +29,7 @@ int handleEvent(void* data, SDL_Event* event) {
   Sprite* sprite = NULL;
   float mouseX, mouseY;
   switch (event->type) {
-  case SDL_MOUSEBUTTONUP:
+  case SDL_EVENT_MOUSE_BUTTON_UP:
     mouseX = (float)(event->button.x - vm->normalRect.x) / (float)vm->normalRect.w;
     mouseY = (float)(event->button.y - vm->normalRect.y) / (float)vm->normalRect.h;
     log_debug("mouse up at %f, %f", mouseX, mouseY);
@@ -55,11 +55,11 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
   vm->snippets = malloc(sizeof(Snippet**));
   *vm->snippets = NULL;
   SDL_AddEventWatch(handleEvent, vm);
-  vm->normalRect = (SDL_Rect){ 0, 0, 0, 0 };
+  vm->normalRect = (SDL_FRect){ 0, 0, 0, 0 };
   return vm;
 }
 
-void VM_setNormalRect(ViewManager* vm, SDL_Rect rect) {
+void VM_setNormalRect(ViewManager* vm, SDL_FRect rect) {
   vm->normalRect = rect;
 }
 
@@ -82,7 +82,7 @@ void VM_draw(ViewManager* vm) {
       fptr(vm, sprite, sprite->update_object, sprite->update_context);
     }
     if (sprite->visible) {
-      SDL_Rect normalDst = (SDL_Rect){ sprite->dstn_rect.x, sprite->dstn_rect.y, sprite->dstn_rect.w, sprite->dstn_rect.h };
+      SDL_FRect normalDst = (SDL_FRect){ sprite->dstn_rect.x, sprite->dstn_rect.y, sprite->dstn_rect.w, sprite->dstn_rect.h };
       if (sprite->normalized) {
         normalDst.x = (sprite->dstn_rect.x * vm->normalRect.w) + vm->normalRect.x;
         normalDst.y = (sprite->dstn_rect.y * vm->normalRect.h) + vm->normalRect.y;
@@ -100,7 +100,7 @@ void VM_draw(ViewManager* vm) {
           normalDst.y = (normalY * vm->normalRect.h) + vm->normalRect.y - normalDst.h;
         }
       }
-      SDL_RenderCopyEx(vm->renderer, sprite->texture, &sprite->src_rect, &normalDst, 0, NULL,
+      SDL_RenderTextureRotated(vm->renderer, sprite->texture, &sprite->src_rect, &normalDst, 0, NULL,
         sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
     }
   }
@@ -111,7 +111,7 @@ void VM_draw(ViewManager* vm) {
       SnippetUpdate_fn fptr = (SnippetUpdate_fn)snippet->update_fn;
       fptr(vm, snippet, snippet->update_data);
     }
-    SDL_RenderCopy(vm->renderer, snippet->texture, NULL, &snippet->dst_rect);
+    SDL_RenderTexture(vm->renderer, snippet->texture, NULL, &snippet->dst_rect);
   }
   SDL_RenderPresent(vm->renderer);
 }
@@ -167,7 +167,7 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, float x, float y) {
     Sprite* sprite = sprites[i];
     if (sprite->visible) {
       SDL_FPoint p = { x, y };
-      if (SDL_PointInFRect(&p, &sprite->dstn_rect)) {
+      if (SDL_PointInRectFloat(&p, &sprite->dstn_rect)) {
         if (sprite->z > currentTopZ) {
           currentTopZ = sprite->z;
           topSprite = sprite;
@@ -183,7 +183,7 @@ Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite) {
   for (int32_t i = 0; i < arrlen(sprites); i++) {
     Sprite* other = sprites[i];
     if (other != sprite && other->visible) {
-      if (SDL_HasIntersectionF(&sprite->dstn_rect, &other->dstn_rect)) {
+      if (SDL_HasRectIntersectionFloat(&sprite->dstn_rect, &other->dstn_rect)) {
         return other;
       }
     }

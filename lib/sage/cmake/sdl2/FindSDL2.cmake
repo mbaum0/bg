@@ -143,7 +143,7 @@ environment CMAKE_INCLUDE_PATH to modify the search paths.
 
 Note that the header path has changed from SDL/SDL.h to just SDL.h
 This needed to change because "proper" SDL convention is #include
-"SDL.h", not <SDL/SDL.h>.  This is done for portability reasons
+<SDL3/SDL.h>, not <SDL/SDL.h>.  This is done for portability reasons
 because not all systems place things in SDL/ (see FreeBSD).
 #]=======================================================================]
 

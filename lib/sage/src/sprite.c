@@ -6,7 +6,7 @@
 #include "sprite.h"
 #include "stb_ds.h"
 
-Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, int32_t z) {
+Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y, int32_t z) {
   Sprite* sprite = malloc(sizeof(Sprite));
   sprite->id = 0;
   sprite->texture = texture;
@@ -29,7 +29,7 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_Rect src, int32_t x, int32_t y, 
   return sprite;
 }
 
-Sprite* Sprite_createEx(SDL_Texture* texture, SDL_Rect src, SDL_FRect normDst, int32_t z, bool flip, bool normalized, bool lockAspectRatio, bool yRelativeToBottom){
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect normDst, int32_t z, bool flip, bool normalized, bool lockAspectRatio, bool yRelativeToBottom){
   Sprite* sprite = malloc(sizeof(Sprite));
   sprite->id = 0;
   sprite->texture = texture;
@@ -69,7 +69,7 @@ void Sprite_setVisible(Sprite* sprite, bool visible) {
   sprite->visible = visible;
 }
 
-void Sprite_setSourceRect(Sprite* sprite, SDL_Rect src) {
+void Sprite_setSourceRect(Sprite* sprite, SDL_FRect src) {
   sprite->src_rect = src;
 }
 
