@@ -58,16 +58,18 @@ float getCheckerY(Checker* checker) {
   return offset;
 }
 
-void clickChecker(ViewManager* vm, Sprite* sprite, void* data) {
+void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   (void)vm;
   (void)sprite;
-  Checker* c = (Checker*)data;
+  Checker* c = (Checker*)object;
+  Checkers* checkers = (Checkers*)context;
   int32_t newIndex = c->pipIndex + 1;
   if (newIndex > 24) {
     newIndex = 1;
   }
+  c->pipOffset = getCheckersOnPip(newIndex, checkers);
   c->pipIndex = newIndex;
-  log_debug("Clicked checker %d", c->pipIndex);
+  log_debug("clicked checker. new index: %d, new offset: %d", c->pipIndex, c->pipOffset);
 }
 
 void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
@@ -150,7 +152,7 @@ Checkers* Checkers_create(Sage* sage){
       SDL_FRect dst_rect = { x, y, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
       Sprite* s = Sprite_createEx(lightTexture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
       Sprite_registerUpdateFn(s, updateChecker, c, checkers);
-      Sprite_registerClickFn(s, clickChecker, c);
+      Sprite_registerClickFn(s, clickChecker, c, checkers);
       Sage_registerSprite(sage, s);
     }
     else {
@@ -161,7 +163,7 @@ Checkers* Checkers_create(Sage* sage){
       SDL_FRect dst_rect = { x, y, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
       Sprite* s = Sprite_createEx(darkTexture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
       Sprite_registerUpdateFn(s, updateChecker, c, checkers);
-      Sprite_registerClickFn(s, clickChecker, c);
+      Sprite_registerClickFn(s, clickChecker, c, checkers);
       Sage_registerSprite(sage, s);
     }
   }

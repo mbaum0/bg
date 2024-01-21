@@ -26,7 +26,8 @@ struct Sprite {
   void* update_object;
   void* update_context;
   void* click_fn;
-  void* click_data;
+  void* click_object;
+  void* click_context;
   int32_t z;
   bool flip;
   bool lockAspectRatio;

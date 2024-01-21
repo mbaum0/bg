@@ -37,7 +37,7 @@ int handleEvent(void* data, SDL_Event* event) {
     if (sprite != NULL) {
       if (sprite->click_fn != NULL) {
         SpriteClick_fn fptr = (SpriteClick_fn)sprite->click_fn;
-        fptr(vm, sprite, sprite->click_data);
+        fptr(vm, sprite, sprite->click_object, sprite->click_context);
       }
     }
     break;
@@ -141,9 +141,10 @@ void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* ob
   sprite->update_context = context;
 }
 
-void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* data) {
+void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context) {
   sprite->click_fn = (void*)click_fn;
-  sprite->click_data = data;
+  sprite->click_object = object;
+  sprite->click_context = context;
 }
 
 int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
