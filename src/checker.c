@@ -124,8 +124,7 @@ void GameBoard_destroy(GameBoard* board) {
   free(board);
 }
 
-GameBoard* GameBoard_create(Sage* sage) {
-  GameBoard* board = calloc(1, sizeof(GameBoard));
+void createCheckers(Sage* sage, GameBoard* board){
   SDL_Texture* lightTexture = Sage_loadTexture(sage, "assets/light.png");
   SDL_Texture* darkTexture = Sage_loadTexture(sage, "assets/dark.png");
   SDL_Rect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
@@ -169,5 +168,28 @@ GameBoard* GameBoard_create(Sage* sage) {
       Sage_registerSprite(sage, s);
     }
   }
+}
+
+void createDice(Sage* sage, GameBoard* board){
+  board->die1 = 1;
+  board->die2 = 1;
+  SDL_Texture* diceTexture = Sage_loadTexture(sage, "assets/dice.png");
+  SDL_Rect src_rect = { 0, 0, DIE_SRC_W, DIE_SRC_H };
+
+  for (int32_t i = 0; i < 2; i++) {
+    float x = DIE_R1_X_NORMAL + (i * DIE_W_NORMAL);
+    float y = DIE_Y_NORMAL;
+    SDL_FRect dst_rect = { x, y, DIE_W_NORMAL, DIE_H_NORMAL };
+    Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE, false, true, true, false);
+    Sage_registerSprite(sage, s);
+  }
+}
+
+
+GameBoard* GameBoard_create(Sage* sage) {
+  GameBoard* board = calloc(1, sizeof(GameBoard));
+  createCheckers(sage, board);
+  createDice(sage, board);
+
   return board;
 }

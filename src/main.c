@@ -4,8 +4,8 @@
 #include "dstats.h"
 #include "log.h"
 
-#define WINDOW_W (1920)
-#define WINDOW_H (1080)
+#define WINDOW_W (430)
+#define WINDOW_H (932)
 #define MAX_ASPECT_RATIO (1.4)
 #define MIN_ASPECT_RATIO (.7)
 #define MAX_BOARD_WIDTH_PCT (.9)

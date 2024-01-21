@@ -12,6 +12,7 @@
 #define Z_PIPS 2
 #define Z_TRIM 3
 #define Z_CHECKERS 4
+#define Z_DICE 5
 
 #define BOARD_SRC_W 1630
 #define BOARD_SRC_H 1260
