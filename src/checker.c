@@ -58,18 +58,48 @@ float getCheckerY(Checker* checker) {
   return offset;
 }
 
-void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
-  (void)vm;
-  (void)sprite;
-  Checker* c = (Checker*)object;
-  Checkers* checkers = (Checkers*)context;
+void moveFromPip(int32_t pipIndex, Checkers* checkers){
+  // get the top checker on the pip
+  Checker* c = NULL;
+  int32_t topIndex = -1;
+
+  for (int32_t i = 0; i < 15; i++) {
+    Checker* checker = &checkers->lightCheckers[i];
+    if (checker->pipIndex == pipIndex) {
+      if (checker->pipOffset > topIndex) {
+        topIndex = checker->pipOffset;
+        c = checker;
+      }
+    }
+    checker = &checkers->darkCheckers[i];
+    if (checker->pipIndex == pipIndex) {
+      if (checker->pipOffset > topIndex) {
+        topIndex = checker->pipOffset;
+        c = &checkers->darkCheckers[i];
+      }
+    }
+  }
+  if (c == NULL) {
+    log_error("no checker found on pip %d", pipIndex);
+    return;
+  }
+
+  // move the checker
   int32_t newIndex = c->pipIndex + 1;
   if (newIndex > 24) {
     newIndex = 1;
   }
   c->pipOffset = getCheckersOnPip(newIndex, checkers);
   c->pipIndex = newIndex;
-  log_debug("clicked checker. new index: %d, new offset: %d", c->pipIndex, c->pipOffset);
+  log_debug("moved checker from pip %d to pip %d", pipIndex, c->pipIndex);
+}
+
+void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+  (void)vm;
+  (void)sprite;
+  Checker* checker = (Checker*)object;
+  Checkers* checkers = (Checkers*)context;
+  moveFromPip(checker->pipIndex, checkers);
 }
 
 void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
