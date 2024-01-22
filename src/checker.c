@@ -8,6 +8,7 @@
 #include "sprite.h"
 #include "util.h"
 #include "vector.h"
+#include "dstats.h"
 
 float getCheckerXFromPipLocation(int32_t pipIndex) {
   float checkerX;
@@ -105,6 +106,7 @@ void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) 
 void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   (void)vm;
   (void)context;
+  extern DStats stats;
   Checker* c = (Checker*)object;
   float newX = getCheckerXFromPipLocation(c->pipIndex);
   float newY = getCheckerY(c);
@@ -118,6 +120,8 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
   else {
     Sprite_setLocation(sprite, newX, newY);
   }
+  stats.checkerWidth = sprite->dstn_rect.w;
+  stats.checkerHeight = sprite->dstn_rect.h;
 }
 
 void GameBoard_destroy(GameBoard* board) {

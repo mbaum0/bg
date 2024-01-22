@@ -19,7 +19,6 @@ struct Sage {
   MediaManager* mm;
   ViewManager* vm;
   EventManager* em;
-  float fps;
   int width;
   int height;
 };

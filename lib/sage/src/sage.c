@@ -19,7 +19,6 @@ Sage* Sage_create(char* title, int width, int height) {
   s->mm = MM_init(title, width, height);
   s->vm = VM_init(s->mm->renderer);
   s->em = EM_init();
-  s->fps = 0;
   s->width = width;
   s->height = height;
   return s;
@@ -40,7 +39,8 @@ void Sage_run(Sage* s) {
     int32_t frameStart = SDL_GetTicks();
     VM_draw(s->vm);
     int32_t frameEnd = delayFrame(frameStart);
-    s->fps = 1000.0 / (frameEnd - frameStart);
+    (void)frameEnd;
+    //stats.fps = 1000.0 / (frameEnd - frameStart);
   }
 }
 
