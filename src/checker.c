@@ -128,9 +128,9 @@ void GameBoard_destroy(GameBoard* board) {
   free(board);
 }
 
-void createCheckers(Sage* sage, GameBoard* board){
-  SDL_Texture* lightTexture = Sage_loadTexture(sage, "assets/light.png");
-  SDL_Texture* darkTexture = Sage_loadTexture(sage, "assets/dark.png");
+void createCheckers(GameBoard* board){
+  SDL_Texture* lightTexture = Sage_loadTexture("assets/light.png");
+  SDL_Texture* darkTexture = Sage_loadTexture("assets/dark.png");
   SDL_FRect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
 
   int32_t lightSetup[] = { 1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19 };
@@ -159,7 +159,7 @@ void createCheckers(Sage* sage, GameBoard* board){
       Sprite* s = Sprite_createEx(lightTexture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
       Sprite_registerUpdateFn(s, updateChecker, c, board);
       Sprite_registerClickFn(s, clickChecker, c, board);
-      Sage_registerSprite(sage, s);
+      Sage_registerSprite(s);
     }
     else {
       Checker* c = &board->darkCheckers[i - 15];
@@ -169,15 +169,15 @@ void createCheckers(Sage* sage, GameBoard* board){
       Sprite* s = Sprite_createEx(darkTexture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
       Sprite_registerUpdateFn(s, updateChecker, c, board);
       Sprite_registerClickFn(s, clickChecker, c, board);
-      Sage_registerSprite(sage, s);
+      Sage_registerSprite(s);
     }
   }
 }
 
-void createDice(Sage* sage, GameBoard* board){
+void createDice(GameBoard* board){
   board->die1 = 1;
   board->die2 = 1;
-  SDL_Texture* diceTexture = Sage_loadTexture(sage, "assets/dice.png");
+  SDL_Texture* diceTexture = Sage_loadTexture("assets/dice.png");
   SDL_FRect src_rect = { 0, 0, DIE_SRC_W, DIE_SRC_H };
 
   for (int32_t i = 0; i < 2; i++) {
@@ -185,15 +185,15 @@ void createDice(Sage* sage, GameBoard* board){
     float y = DIE_Y_NORMAL;
     SDL_FRect dst_rect = { x, y, DIE_W_NORMAL, DIE_H_NORMAL };
     Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE, false, true, true, false);
-    Sage_registerSprite(sage, s);
+    Sage_registerSprite(s);
   }
 }
 
 
-GameBoard* GameBoard_create(Sage* sage) {
+GameBoard* GameBoard_create(void) {
   GameBoard* board = calloc(1, sizeof(GameBoard));
-  createCheckers(sage, board);
-  createDice(sage, board);
+  createCheckers(board);
+  createDice(board);
 
   return board;
 }

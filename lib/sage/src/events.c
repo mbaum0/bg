@@ -7,8 +7,6 @@
 #include "events.h"
 #include "stb_ds.h"
 
-int EM_handleEvent(void* data, SDL_Event* event);
-
 void EM_registerCallback(EventManager* em, uint32_t event_type, EventCallback_fn callback_fn, void* data) {
   EventCallback* cb = malloc(sizeof(EventCallback));
   cb->eventType = event_type;

@@ -4,7 +4,6 @@
  * @brief board and trim objects
  */
 #pragma once
-#include "sage.h"
 #include <stdint.h>
 
-void Board_create(Sage* sage);
+void Board_create(void);

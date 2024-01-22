@@ -37,6 +37,6 @@ struct GameBoard {
   int32_t die2;
 };
 
-GameBoard* GameBoard_create(Sage* sage);
+GameBoard* GameBoard_create(void);
 
 void GameBoard_destroy(GameBoard* board);

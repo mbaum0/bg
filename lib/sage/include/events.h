@@ -43,3 +43,5 @@ EventManager* EM_init(void);
  * @brief Free the event manager
  */
 void EM_free(EventManager* em);
+
+int EM_handleEvent(void* data, SDL_Event* event);

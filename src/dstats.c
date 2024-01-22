@@ -24,14 +24,14 @@ void DStats_update(ViewManager* vm, Snippet* snippet, void* data){
     Snippet_setText(snippet, debugText);   
 }
 
-void DStats_create(Sage* sage){
+void DStats_create(void){
     extern DStats stats;
     char debugText[200];
     sprintf(debugText, "FPS: %f\ngame height: %f\ngame width: %f\npipHeight: %f\npipWidth: %f\ncheckerHeight: %f\ncheckerWidth: %f ", stats.fps, stats.gameHeight, stats.gameWidth, stats.pipHeight, stats.pipWidth, stats.checkerHeight, stats.checkerWidth);
     SDL_Color color = {255, 255, 255, 255 };
-    TTF_Font* debugFont = Sage_loadFont(sage, "assets/VeraMono.ttf", 20);
+    TTF_Font* debugFont = Sage_loadFont("assets/VeraMono.ttf", 20);
     Snippet* snippet = Snippet_create(debugFont, color, 1, 1, 10, true);
-    Sage_registerSnippet(sage, snippet);
+    Sage_registerSnippet(snippet);
     Snippet_setText(snippet, debugText);
     Snippet_registerUpdateFn(snippet, DStats_update, NULL);
 }

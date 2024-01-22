@@ -18,4 +18,4 @@ struct DStats {
     float checkerWidth;
 };
 
-void DStats_create(Sage* sage);
+void DStats_create(void);

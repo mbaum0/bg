@@ -6,6 +6,8 @@
 #include <stdlib.h>
 #include "sage.h"
 
+Sage sage = { 0 };
+
 int32_t delayFrame(int32_t frameStart) {
   int32_t frameTime = SDL_GetTicks() - frameStart;
   if (frameTime < MS_PER_FRAME) {
@@ -14,24 +16,33 @@ int32_t delayFrame(int32_t frameStart) {
   return SDL_GetTicks();
 }
 
-Sage* Sage_create(char* title, int width, int height) {
-  Sage* s = malloc(sizeof(Sage));
-  s->mm = MM_init(title, width, height);
-  s->vm = VM_init(s->mm->renderer);
-  s->em = EM_init();
-  s->width = width;
-  s->height = height;
-  return s;
+void Sage_init(char* title, int width, int height) {
+  sage.mm = MM_init(title, width, height);
+  sage.vm = VM_init(sage.mm->renderer);
+  sage.em = EM_init();
+  sage.width = width;
+  sage.height = height;
 }
 
-void Sage_setNormalRect(Sage* s, SDL_FRect rect){
-  VM_setNormalRect(s->vm, rect);
+void Sage_setNormalRect(SDL_FRect rect){
+  VM_setNormalRect(sage.vm, rect);
 }
 
-void Sage_destroy(Sage* s) {
-  VM_free(s->vm);
-  MM_free(s->mm);
-  free(s);
+void Sage_destroy(void) {
+  VM_free(sage.vm);
+  MM_free(sage.mm);
+}
+
+void Sage_step(void){
+  VM_draw(sage.vm);
+}
+
+int Sage_handleEvent(SDL_Event *event){
+  EM_handleEvent(sage.em, event);
+  if (event->type == SDL_EVENT_QUIT){
+    return 1;
+  }
+  return 0;
 }
 
 void Sage_run(Sage* s) {
@@ -44,22 +55,22 @@ void Sage_run(Sage* s) {
   }
 }
 
-SDL_Texture* Sage_loadTexture(Sage* s, char* path) {
-  return MM_loadTexture(s->mm, path);
+SDL_Texture* Sage_loadTexture(char* path) {
+  return MM_loadTexture(sage.mm, path);
 }
 
-TTF_Font* Sage_loadFont(Sage* s, char* path, int32_t size) {
-  return MM_loadFont(s->mm, path, size);
+TTF_Font* Sage_loadFont(char* path, int32_t size) {
+  return MM_loadFont(sage.mm, path, size);
 }
 
-int32_t Sage_registerSprite(Sage* s, Sprite* sprite) {
-  return VM_registerSprite(s->vm, sprite);
+int32_t Sage_registerSprite(Sprite* sprite) {
+  return VM_registerSprite(sage.vm, sprite);
 }
 
-void Sage_registerSnippet(Sage* s, Snippet* snippet) {
-  VM_registerSnippet(s->vm, snippet);
+void Sage_registerSnippet(Snippet* snippet) {
+  VM_registerSnippet(sage.vm, snippet);
 }
 
-void Sage_registerEventCallback(Sage* s, uint32_t eventType, EventCallback_fn callback_fn, void* data) {
-  EM_registerCallback(s->em, eventType, callback_fn, data);
+void Sage_registerEventCallback(uint32_t eventType, EventCallback_fn callback_fn, void* data) {
+  EM_registerCallback(sage.em, eventType, callback_fn, data);
 }
