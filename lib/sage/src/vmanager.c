@@ -89,7 +89,7 @@ void VM_draw(ViewManager* vm) {
     if (sprite->visible) {
       SDL_FRect dst = sprite->dstn_rect;
       SDL_FRect computedNormalRect = sprite->dstn_rect;
-      if (sprite->normalized) {
+      if (sprite->normalized) { 
         dst.x = (sprite->dstn_rect.x * vm->normalRect.w) + vm->normalRect.x;
         dst.y = (sprite->dstn_rect.y * vm->normalRect.h) + vm->normalRect.y;
         dst.w = sprite->dstn_rect.w * vm->normalRect.w;
@@ -97,7 +97,7 @@ void VM_draw(ViewManager* vm) {
 
         float normalHeight = sprite->dstn_rect.h;
         if (sprite->lockAspectRatio) {
-          float aspectRatio = (float)sprite->src_rect.w / (float)sprite->src_rect.h;
+          float aspectRatio = sprite->src_rect.w / sprite->src_rect.h;
           normalHeight = sprite->dstn_rect.w  / aspectRatio;
           dst.h = normalHeight * vm->normalRect.w;
           computedNormalRect.h = normalHeight;
