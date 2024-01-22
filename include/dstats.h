@@ -16,6 +16,8 @@ struct DStats {
     float pipWidth;
     float checkerHeight;
     float checkerWidth;
+    float checkerRenderedHeight;
+    float checkerRenderedWidth;
 };
 
 void DStats_create(void);

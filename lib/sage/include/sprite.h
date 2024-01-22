@@ -19,6 +19,7 @@ struct Sprite {
   SDL_Texture* texture;
   SDL_FRect src_rect;
   SDL_FRect dstn_rect; // normalized
+  SDL_FRect rendered_rect; //normalized;
   bool normalized;
   bool visible;
   bool hovered;
@@ -86,3 +87,5 @@ void Sprite_setFrame(Sprite* sprite, uint32_t frame);
  * @brief Get the frame of the sprite
  */
 uint32_t Sprite_getFrame(Sprite* sprite);
+
+void Sprite_setYRelativeToBottom(Sprite* sprite, bool yRelativeToBottom);

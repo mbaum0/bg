@@ -45,16 +45,6 @@ int Sage_handleEvent(SDL_Event *event){
   return 0;
 }
 
-void Sage_run(Sage* s) {
-  while (processInput() == false) {
-    int32_t frameStart = SDL_GetTicks();
-    VM_draw(s->vm);
-    int32_t frameEnd = delayFrame(frameStart);
-    (void)frameEnd;
-    //stats.fps = 1000.0 / (frameEnd - frameStart);
-  }
-}
-
 SDL_Texture* Sage_loadTexture(char* path) {
   return MM_loadTexture(sage.mm, path);
 }

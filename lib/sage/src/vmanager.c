@@ -71,6 +71,11 @@ void VM_free(ViewManager* vm) {
   free(vm);
 }
 
+void drawSpriteBorder(ViewManager* vm, SDL_FRect border) {
+  SDL_SetRenderDrawColor(vm->renderer, 255, 0, 0, 255);
+  SDL_RenderRect(vm->renderer, &border);
+}
+
 void VM_draw(ViewManager* vm) {
   SDL_SetRenderDrawColor(vm->renderer, 255, 255, 255, 255);
   SDL_RenderClear(vm->renderer);
@@ -82,26 +87,32 @@ void VM_draw(ViewManager* vm) {
       fptr(vm, sprite, sprite->update_object, sprite->update_context);
     }
     if (sprite->visible) {
-      SDL_FRect normalDst = (SDL_FRect){ sprite->dstn_rect.x, sprite->dstn_rect.y, sprite->dstn_rect.w, sprite->dstn_rect.h };
+      SDL_FRect dst = sprite->dstn_rect;
+      SDL_FRect computedNormalRect = sprite->dstn_rect;
       if (sprite->normalized) {
-        normalDst.x = (sprite->dstn_rect.x * vm->normalRect.w) + vm->normalRect.x;
-        normalDst.y = (sprite->dstn_rect.y * vm->normalRect.h) + vm->normalRect.y;
-        normalDst.w = sprite->dstn_rect.w * vm->normalRect.w;
-        normalDst.h = sprite->dstn_rect.h * vm->normalRect.h;
+        dst.x = (sprite->dstn_rect.x * vm->normalRect.w) + vm->normalRect.x;
+        dst.y = (sprite->dstn_rect.y * vm->normalRect.h) + vm->normalRect.y;
+        dst.w = sprite->dstn_rect.w * vm->normalRect.w;
+        dst.h = sprite->dstn_rect.h * vm->normalRect.h;
 
         float normalHeight = sprite->dstn_rect.h;
         if (sprite->lockAspectRatio) {
           float aspectRatio = (float)sprite->src_rect.w / (float)sprite->src_rect.h;
           normalHeight = sprite->dstn_rect.w  / aspectRatio;
-          normalDst.h = normalHeight * vm->normalRect.w;
+          dst.h = normalHeight * vm->normalRect.w;
+          computedNormalRect.h = normalHeight;
         }
         if (sprite->yRelativeToBottom) {
           float normalY = 1.0 - sprite->dstn_rect.y;
-          normalDst.y = (normalY * vm->normalRect.h) + vm->normalRect.y - normalDst.h;
+          dst.y = (normalY * vm->normalRect.h) + vm->normalRect.y - dst.h;
+          computedNormalRect.y = normalY - normalHeight;
         }
       }
-      SDL_RenderTextureRotated(vm->renderer, sprite->texture, &sprite->src_rect, &normalDst, 0, NULL,
+
+      sprite->rendered_rect = computedNormalRect;
+      SDL_RenderTextureRotated(vm->renderer, sprite->texture, &sprite->src_rect, &dst, 0, NULL,
         sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
+      drawSpriteBorder(vm, dst);
     }
   }
   Snippet** snippets = *vm->snippets;
@@ -167,7 +178,7 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, float x, float y) {
     Sprite* sprite = sprites[i];
     if (sprite->visible) {
       SDL_FPoint p = { x, y };
-      if (SDL_PointInRectFloat(&p, &sprite->dstn_rect)) {
+      if (SDL_PointInRectFloat(&p, &sprite->rendered_rect)) {
         if (sprite->z > currentTopZ) {
           currentTopZ = sprite->z;
           topSprite = sprite;
@@ -183,7 +194,7 @@ Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite) {
   for (int32_t i = 0; i < arrlen(sprites); i++) {
     Sprite* other = sprites[i];
     if (other != sprite && other->visible) {
-      if (SDL_HasRectIntersectionFloat(&sprite->dstn_rect, &other->dstn_rect)) {
+      if (SDL_HasRectIntersectionFloat(&sprite->rendered_rect, &other->rendered_rect)) {
         return other;
       }
     }

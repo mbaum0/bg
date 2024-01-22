@@ -28,8 +28,6 @@ struct Sage {
  * @param title The title of the game
  * @param width The width of the window
  * @param height The height of the window
- *
- * @return Sage* The new SAGE engine
  */
 void Sage_init(char* title, int width, int height);
 
@@ -47,13 +45,6 @@ void Sage_setNormalRect(SDL_FRect rect);
  * @param s The SAGE engine
  */
 void Sage_destroy(void);
-
-/**
- * @brief Run the SAGE engine. This function will block until the user exits the game.
- *
- * @param s The SAGE engine
- */
-void Sage_run(Sage* s);
 
 void Sage_step(void);
 

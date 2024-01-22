@@ -11,7 +11,6 @@
 int SDL_AppInit(int argc, char **argv){
   (void)argc;
   (void)argv;
-  extern Sage sage;
   extern DStats stats;
   Sage_init("Backgammon!", WINDOW_W, WINDOW_H);
 
@@ -42,20 +41,3 @@ int SDL_AppEvent(const SDL_Event *event){
 void SDL_AppQuit(void){
   Sage_destroy();
 }
-
-// int main(int argc, char** argv) {
-//   Board_create(s);
-//   // for (int i = 1; i <= 24; i++) {
-//   //   Player p = i % 2 == 1 ? P_LIGHT : P_DARK;
-//   //   Checker_create(s, i, p);
-//   // }
-//   //Checker_create(s, 1, P_LIGHT);
-//   GameBoard* gb = GameBoard_create(s);
-
-//   DStats_create(s);
-
-//   Sage_run(s);
-//   GameBoard_destroy(gb);
-
-//   return 0;
-// }

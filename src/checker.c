@@ -50,11 +50,11 @@ float getCheckerY(Checker* checker) {
   int32_t pipIndex = checker->pipIndex;
   if (isBetween(pipIndex, 1, 12)) {
     offset = CHECKER_BOTTOM_Y_OFFSET_NORMAL;
-    offset -= (checker->pipOffset * CHECKER_H_OFFSET_NORMAL);
+    offset += (checker->pipOffset * CHECKER_H_NORMAL);
   }
   else {
     offset = CHECKER_TOP_Y_OFFSET_NORMAL;
-    offset += (checker->pipOffset * CHECKER_H_OFFSET_NORMAL);
+    offset += (checker->pipOffset * CHECKER_H_NORMAL);
   }
   return offset;
 }
@@ -112,6 +112,12 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
   float newY = getCheckerY(c);
   float x = Sprite_getX(sprite);
   float y = Sprite_getY(sprite);
+  if (isBetween(c->pipIndex, 1, 12)) {
+    Sprite_setYRelativeToBottom(sprite, true);
+  }
+  else {
+    Sprite_setYRelativeToBottom(sprite, false);
+  }
   if (!isEqual(x, newX, CHECKER_VELOCITY) || !isEqual(y, newY, CHECKER_VELOCITY)) {
     float xVel = getHorizontalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
     float yVel = getVerticalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
@@ -122,13 +128,15 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
   }
   stats.checkerWidth = sprite->dstn_rect.w;
   stats.checkerHeight = sprite->dstn_rect.h;
+  stats.checkerRenderedHeight = sprite->rendered_rect.h;
+  stats.checkerRenderedWidth = sprite->rendered_rect.w;
 }
 
 void GameBoard_destroy(GameBoard* board) {
   free(board);
 }
 
-void createCheckers(GameBoard* board){
+void createCheckers(GameBoard* board) {
   SDL_Texture* lightTexture = Sage_loadTexture("assets/light.png");
   SDL_Texture* darkTexture = Sage_loadTexture("assets/dark.png");
   SDL_FRect src_rect = { 0, 0, CHECKER_SRC_SIZE, CHECKER_SRC_SIZE };
@@ -174,7 +182,7 @@ void createCheckers(GameBoard* board){
   }
 }
 
-void createDice(GameBoard* board){
+void createDice(GameBoard* board) {
   board->die1 = 1;
   board->die2 = 1;
   SDL_Texture* diceTexture = Sage_loadTexture("assets/dice.png");

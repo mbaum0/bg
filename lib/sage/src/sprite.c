@@ -7,7 +7,7 @@
 #include "stb_ds.h"
 
 Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y, int32_t z) {
-  Sprite* sprite = malloc(sizeof(Sprite));
+  Sprite* sprite = calloc(1, sizeof(Sprite));
   sprite->id = 0;
   sprite->texture = texture;
   sprite->src_rect = src;
@@ -30,7 +30,7 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y,
 }
 
 Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect normDst, int32_t z, bool flip, bool normalized, bool lockAspectRatio, bool yRelativeToBottom){
-  Sprite* sprite = malloc(sizeof(Sprite));
+  Sprite* sprite = calloc(1, sizeof(Sprite));
   sprite->id = 0;
   sprite->texture = texture;
   sprite->src_rect = src;
@@ -55,6 +55,10 @@ Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect normDst, 
 void Sprite_setLocation(Sprite* sprite, float x, float y) {
   sprite->dstn_rect.x = x;
   sprite->dstn_rect.y = y;
+}
+
+void Sprite_setYRelativeToBottom(Sprite* sprite, bool yRelativeToBottom) {
+  sprite->yRelativeToBottom = yRelativeToBottom;
 }
 
 float Sprite_getX(Sprite* sprite) {
