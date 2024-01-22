@@ -1,35 +1,10 @@
 #include "sage.h"
 #include "board.h"
+#include "util.h"
 #include "checker.h"
 #include "dstats.h"
 #include "log.h"
-
-#define WINDOW_W (400)
-#define WINDOW_H (800)
-#define MAX_ASPECT_RATIO (1.4)
-#define MIN_ASPECT_RATIO (.7)
-#define MAX_BOARD_WIDTH_PCT (.9)
-
-void findDimensions(int w, int h, int* x, int* y) {
-  // Start from the maximum width which is 90% of w
-  for (int possibleX = (int)(MAX_BOARD_WIDTH_PCT * w); possibleX > 0; possibleX--) {
-    // For each width, find a height that maintains the aspect ratio
-    for (int possibleY = h; possibleY > 0; possibleY--) {
-      float aspectRatio = (float)possibleX / possibleY;
-      // Check if the aspect ratio is within the range
-      if (aspectRatio >= MIN_ASPECT_RATIO && aspectRatio <= MAX_ASPECT_RATIO) {
-        *x = possibleX;
-        *y = possibleY;
-        return;
-      }
-    }
-  }
-
-  // If no suitable dimensions are found, return 0
-  *x = 0;
-  *y = 0;
-}
-
+#include <SDL3/SDL_main.h>
 
 int main(int argc, char** argv) {
   (void)argc;

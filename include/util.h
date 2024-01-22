@@ -7,6 +7,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define WINDOW_W (1920)
+#define WINDOW_H (1080)
+#define MAX_ASPECT_RATIO (1.4)
+#define MIN_ASPECT_RATIO (.7)
+#define MAX_BOARD_WIDTH_PCT (.9)
+
 #define Z_BACKGROUND 0 
 #define Z_BOARD 1
 #define Z_PIPS 2
@@ -54,3 +60,4 @@
 
 bool isBetween(int32_t x, int32_t min, int32_t max);
 bool isEqual(float x, float y, float epsilon);
+void findDimensions(int w, int h, int* x, int* y);
