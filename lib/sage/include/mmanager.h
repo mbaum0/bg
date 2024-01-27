@@ -25,11 +25,9 @@ struct MediaManager {
  * @param title Title of the window
  * @param winWidth The width of the window
  * @param winHeight The height of the window
- * @param gameWidth The logical width of the game
- * @param gameHeight The logical height of the game
  * @return MediaManager instance
  */
-MediaManager* MM_init(char* title, int winWidth, int winHeight, int gameWidth, int gameHeight);
+MediaManager* MM_init(char* title, int winWidth, int winHeight);
 
 /**
  * @brief Cleans up all initialized game media
@@ -45,6 +43,8 @@ void MM_free(MediaManager* mm);
  * @return SDL_Texture* pointer to the texture, NULL if failed to load
  */
 SDL_Texture* MM_loadTexture(MediaManager* mm, char* path);
+
+SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int32_t height);
 
 /**
  * @brief Loads a font from a file

@@ -16,12 +16,10 @@ int32_t delayFrame(int32_t frameStart) {
   return SDL_GetTicks();
 }
 
-void Sage_init(char* title, int winWidth, int winHeight, int gameWidth, int gameHeight){
-  sage.mm = MM_init(title, winWidth, winHeight, gameWidth, gameHeight);
+void Sage_init(char* title, int winWidth, int winHeight){
+  sage.mm = MM_init(title, winWidth, winHeight);
   sage.vm = VM_init(sage.mm->renderer);
   sage.em = EM_init();
-  sage.width = gameWidth;
-  sage.height = gameHeight;
 }
 
 void Sage_destroy(void) {
@@ -43,6 +41,10 @@ int Sage_handleEvent(SDL_Event *event){
 
 SDL_Texture* Sage_loadTexture(char* path) {
   return MM_loadTexture(sage.mm, path);
+}
+
+SDL_Texture* Sage_loadSVGTexture(char* path, int32_t width, int32_t height){
+  return MM_loadSVGTexture(sage.mm, path, width, height);
 }
 
 TTF_Font* Sage_loadFont(char* path, int32_t size) {

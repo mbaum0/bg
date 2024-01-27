@@ -19,9 +19,6 @@ struct Sage {
   MediaManager* mm;
   ViewManager* vm;
   EventManager* em;
-  int width;
-  int height;
-  char scale[10];
 };
 
 /**
@@ -29,10 +26,8 @@ struct Sage {
  * @param title The title of the game
  * @param winWidth The width of the window
  * @param winHeight The height of the window
- * @param gameWidth The logical width of the game
- * @param gameHeight The logical height of the game
  */
-void Sage_init(char* title, int winWidth, int winHeight, int gameWidth, int gameHeight);
+void Sage_init(char* title, int winWidth, int winHeight);
 
 /**
  * @brief Destroy the SAGE engine and free all resources
@@ -53,6 +48,8 @@ int Sage_handleEvent(SDL_Event *event);
  * @return SDL_Texture* The loaded texture
  */
 SDL_Texture* Sage_loadTexture(char* path);
+
+SDL_Texture* Sage_loadSVGTexture(char* path, int32_t width, int32_t height);
 
 /**
  * @brief Load a font from a file

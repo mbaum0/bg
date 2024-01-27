@@ -6,7 +6,7 @@
 #include "mmanager.h"
 #include "stb_ds.h"
 
-bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, int gameWidth, int gameHeight) {
+bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     log_error("Couldn't initialize SDL: %s", SDL_GetError());
     return false;
@@ -26,9 +26,6 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, int gam
     return false;
   }
 
-  SDL_SetRenderLogicalPresentation(mm->renderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX, SDL_SCALEMODE_BEST);
-
-
   if (TTF_Init() < 0) {
     log_error("Couldn't initialize SDL_ttf: %s", TTF_GetError());
     return false;
@@ -42,9 +39,9 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, int gam
   return true;
 }
 
-MediaManager* MM_init(char* title, int winWidth, int winHeight, int gameWidth, int gameHeight) {
+MediaManager* MM_init(char* title, int winWidth, int winHeight) {
   MediaManager* mm = calloc(1, sizeof(MediaManager));
-  if (!initSDL(mm, title, winWidth, winHeight, gameWidth, gameHeight)) {
+  if (!initSDL(mm, title, winWidth, winHeight)) {
     log_error("Failed to initialize SDL");
     return NULL;
   }
@@ -95,6 +92,14 @@ SDL_Texture* MM_loadTexture(MediaManager* mm, char* path) {
   }
   arrput(*mm->textures, texture);
   return texture;
+}
+
+SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int32_t height){
+  SDL_RWops* f = SDL_RWFromFile(path, "rb");
+  SDL_Surface* s = IMG_LoadSizedSVG_RW(f, width, height);
+  SDL_Texture* t = SDL_CreateTextureFromSurface(mm->renderer, s);
+  SDL_DestroySurface(s);
+  return t;
 }
 
 TTF_Font* MM_loadFont(MediaManager* mm, char* path, int32_t size) {

@@ -21,11 +21,11 @@
 // #define BOARD_SRC_H 2195
 // #define FELT_SRC_W 1290
 // #define FELT_SRC_H 2796
-#define FELT_SRC_H 932
-#define FELT_SRC_W 430
+// #define FELT_SRC_H 932
+// #define FELT_SRC_W 430
 
-#define GAME_W FELT_SRC_W
-#define GAME_H FELT_SRC_H
+// #define GAME_W FELT_SRC_W
+// #define GAME_H FELT_SRC_H
 
 
 #define EPSILON 0.0001
