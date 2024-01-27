@@ -21,6 +21,7 @@ struct Sage {
   EventManager* em;
   int width;
   int height;
+  char scale[10];
 };
 
 /**
