@@ -7,6 +7,7 @@
 #include "checker.h"
 #include "dstats.h"
 #include "log.h"
+#include "pip.h"
 
 int SDL_AppInit(int argc, char **argv){
   (void)argc;
@@ -15,6 +16,7 @@ int SDL_AppInit(int argc, char **argv){
   Sage_init("Backgammon!", WINDOW_W, WINDOW_H, GAME_W, GAME_H);
   sprintf(sage.scale, "1x");
   Board_create();
+  Pips_create();
   GameBoard_create();
   DStats_create();
   return 0;

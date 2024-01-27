@@ -1,7 +1,7 @@
 /**
  * @file board.c
  * @author Michael Baumgarten
- * @brief Gameboard and trim objects
+ * @brief Gameboard objects
  */
 #include <SDL3/SDL.h>
 #include "sprite.h"
