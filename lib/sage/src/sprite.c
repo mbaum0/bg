@@ -11,7 +11,7 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y,
   sprite->id = 0;
   sprite->texture = texture;
   sprite->src_rect = src;
-  sprite->dstn_rect = (SDL_FRect){x, y, src.w, src.h};
+  sprite->dst_rect = (SDL_FRect){x, y, src.w, src.h};
   sprite->visible = true;
   sprite->hovered = false;
   sprite->update_fn = NULL;
@@ -21,20 +21,15 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y,
   sprite->click_object = NULL;
   sprite->click_context = NULL;
   sprite->z = z;
-  sprite->flip = false;
-  sprite->normalized = false;
-  sprite->lockAspectRatio = false;
-  sprite->yRelativeToBottom = false;
-  sprite->frame = 0;
   return sprite;
 }
 
-Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect normDst, int32_t z, bool flip, bool normalized, bool lockAspectRatio, bool yRelativeToBottom){
+Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect dst, int32_t z){
   Sprite* sprite = calloc(1, sizeof(Sprite));
   sprite->id = 0;
   sprite->texture = texture;
   sprite->src_rect = src;
-  sprite->dstn_rect = normDst;
+  sprite->dst_rect = dst;
   sprite->visible = true;
   sprite->hovered = false;
   sprite->update_fn = NULL;
@@ -44,29 +39,20 @@ Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect normDst, 
   sprite->click_object = NULL;
   sprite->click_context = NULL;
   sprite->z = z;
-  sprite->flip = flip;
-  sprite->normalized = normalized;
-  sprite->lockAspectRatio = lockAspectRatio;
-  sprite->yRelativeToBottom = yRelativeToBottom;
-  sprite->frame = 0;
   return sprite;
 }
 
 void Sprite_setLocation(Sprite* sprite, float x, float y) {
-  sprite->dstn_rect.x = x;
-  sprite->dstn_rect.y = y;
-}
-
-void Sprite_setYRelativeToBottom(Sprite* sprite, bool yRelativeToBottom) {
-  sprite->yRelativeToBottom = yRelativeToBottom;
+  sprite->dst_rect.x = x;
+  sprite->dst_rect.y = y;
 }
 
 float Sprite_getX(Sprite* sprite) {
-  return sprite->dstn_rect.x;
+  return sprite->dst_rect.x;
 }
 
 float Sprite_getY(Sprite* sprite) {
-  return sprite->dstn_rect.y;
+  return sprite->dst_rect.y;
 }
 
 void Sprite_setVisible(Sprite* sprite, bool visible) {
@@ -75,12 +61,4 @@ void Sprite_setVisible(Sprite* sprite, bool visible) {
 
 void Sprite_setSourceRect(Sprite* sprite, SDL_FRect src) {
   sprite->src_rect = src;
-}
-
-void Sprite_setFrame(Sprite* sprite, uint32_t frame) {
-  sprite->frame = frame;
-}
-
-uint32_t Sprite_getFrame(Sprite* sprite) {
-  return sprite->frame;
 }

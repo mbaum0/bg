@@ -26,18 +26,12 @@ struct Sage {
 /**
  * @brief Initialize the SAGE engine
  * @param title The title of the game
- * @param width The width of the window
- * @param height The height of the window
+ * @param winWidth The width of the window
+ * @param winHeight The height of the window
+ * @param gameWidth The logical width of the game
+ * @param gameHeight The logical height of the game
  */
-void Sage_init(char* title, int width, int height);
-
-/**
- * @brief Set the normalization rect on the view manager. This is used to normalize the coordinate system for sprites.
- * The default is (0, 0, 0, 0), which means that the coordinate system is not normalized.
- * @param s 
- * @param rect 
- */
-void Sage_setNormalRect(SDL_FRect rect);
+void Sage_init(char* title, int winWidth, int winHeight, int gameWidth, int gameHeight);
 
 /**
  * @brief Destroy the SAGE engine and free all resources

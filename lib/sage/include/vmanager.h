@@ -31,14 +31,6 @@ void VM_free(ViewManager* vm);
 void VM_draw(ViewManager* vm);
 
 /**
- * @brief Set the normalization rect on the view manager. This is used to normalize the coordinate system for sprites.
- * The default is (0, 0, 0, 0), which means that the coordinate system is not normalized.
- * x and y are used to determine the top left corner of the normalized coordinate system.
- * w and h are used to determine the width and height of the normalized coordinate system.
- */
-void VM_setNormalRect(ViewManager* vm, SDL_FRect rect);
-
-/**
  * @brief Register a Sprite with the ViewManager. Do not free Sprites directly once registered, as they are managed by
  * the ViewManager.
  *
@@ -88,6 +80,6 @@ void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void
  *
  * @return Sprite* The Sprite at the given coordinates, or NULL if no Sprite is found
  */
-Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, float x, float y);
+Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y);
 
 Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite);

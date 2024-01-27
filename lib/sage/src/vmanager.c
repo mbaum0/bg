@@ -14,7 +14,6 @@ struct ViewManager {
   SDL_Renderer* renderer;
   Sprite*** sprites;
   Snippet*** snippets;
-  SDL_FRect normalRect;
 };
 
 /**
@@ -30,8 +29,8 @@ int handleEvent(void* data, SDL_Event* event) {
   float mouseX, mouseY;
   switch (event->type) {
   case SDL_EVENT_MOUSE_BUTTON_UP:
-    mouseX = (float)(event->button.x - vm->normalRect.x) / (float)vm->normalRect.w;
-    mouseY = (float)(event->button.y - vm->normalRect.y) / (float)vm->normalRect.h;
+    mouseX = event->button.x;
+    mouseY = event->button.y;
     log_debug("mouse up at %f, %f", mouseX, mouseY);
     sprite = VM_findSpriteAtCoordinate(vm, mouseX, mouseY);
     if (sprite != NULL) {
@@ -55,12 +54,7 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
   vm->snippets = malloc(sizeof(Snippet**));
   *vm->snippets = NULL;
   SDL_AddEventWatch(handleEvent, vm);
-  vm->normalRect = (SDL_FRect){ 0, 0, 0, 0 };
   return vm;
-}
-
-void VM_setNormalRect(ViewManager* vm, SDL_FRect rect) {
-  vm->normalRect = rect;
 }
 
 void VM_free(ViewManager* vm) {
@@ -87,32 +81,8 @@ void VM_draw(ViewManager* vm) {
       fptr(vm, sprite, sprite->update_object, sprite->update_context);
     }
     if (sprite->visible) {
-      SDL_FRect dst = sprite->dstn_rect;
-      SDL_FRect computedNormalRect = sprite->dstn_rect;
-      if (sprite->normalized) { 
-        dst.x = (sprite->dstn_rect.x * vm->normalRect.w) + vm->normalRect.x;
-        dst.y = (sprite->dstn_rect.y * vm->normalRect.h) + vm->normalRect.y;
-        dst.w = sprite->dstn_rect.w * vm->normalRect.w;
-        dst.h = sprite->dstn_rect.h * vm->normalRect.h;
-
-        float normalHeight = sprite->dstn_rect.h;
-        if (sprite->lockAspectRatio) {
-          float aspectRatio = sprite->src_rect.w / sprite->src_rect.h;
-          normalHeight = sprite->dstn_rect.w  / aspectRatio;
-          dst.h = normalHeight * vm->normalRect.w;
-          computedNormalRect.h = normalHeight;
-        }
-        if (sprite->yRelativeToBottom) {
-          float normalY = 1.0 - sprite->dstn_rect.y;
-          dst.y = (normalY * vm->normalRect.h) + vm->normalRect.y - dst.h;
-          computedNormalRect.y = normalY - normalHeight;
-        }
-      }
-
-      sprite->rendered_rect = computedNormalRect;
-      SDL_RenderTextureRotated(vm->renderer, sprite->texture, &sprite->src_rect, &dst, 0, NULL,
-        sprite->flip ? SDL_FLIP_VERTICAL : SDL_FLIP_NONE);
-      drawSpriteBorder(vm, dst);
+      SDL_RenderTexture(vm->renderer, sprite->texture, &sprite->src_rect, &sprite->dst_rect);
+      drawSpriteBorder(vm, sprite->dst_rect);
     }
   }
   Snippet** snippets = *vm->snippets;
@@ -170,7 +140,7 @@ void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void
   snippet->update_data = data;
 }
 
-Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, float x, float y) {
+Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y) {
   Sprite** sprites = *vm->sprites;
   Sprite* topSprite = NULL;
   int32_t currentTopZ = -1;
@@ -178,7 +148,7 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, float x, float y) {
     Sprite* sprite = sprites[i];
     if (sprite->visible) {
       SDL_FPoint p = { x, y };
-      if (SDL_PointInRectFloat(&p, &sprite->rendered_rect)) {
+      if (SDL_PointInRectFloat(&p, &sprite->dst_rect)) {
         if (sprite->z > currentTopZ) {
           currentTopZ = sprite->z;
           topSprite = sprite;
@@ -194,7 +164,7 @@ Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite) {
   for (int32_t i = 0; i < arrlen(sprites); i++) {
     Sprite* other = sprites[i];
     if (other != sprite && other->visible) {
-      if (SDL_HasRectIntersectionFloat(&sprite->rendered_rect, &other->rendered_rect)) {
+      if (SDL_HasRectIntersectionFloat(&sprite->dst_rect, &other->dst_rect)) {
         return other;
       }
     }

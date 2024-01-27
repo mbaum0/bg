@@ -16,16 +16,12 @@ int32_t delayFrame(int32_t frameStart) {
   return SDL_GetTicks();
 }
 
-void Sage_init(char* title, int width, int height) {
-  sage.mm = MM_init(title, width, height);
+void Sage_init(char* title, int winWidth, int winHeight, int gameWidth, int gameHeight){
+  sage.mm = MM_init(title, winWidth, winHeight, gameWidth, gameHeight);
   sage.vm = VM_init(sage.mm->renderer);
   sage.em = EM_init();
-  sage.width = width;
-  sage.height = height;
-}
-
-void Sage_setNormalRect(SDL_FRect rect){
-  VM_setNormalRect(sage.vm, rect);
+  sage.width = gameWidth;
+  sage.height = gameHeight;
 }
 
 void Sage_destroy(void) {

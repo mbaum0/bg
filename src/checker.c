@@ -11,25 +11,27 @@
 #include "dstats.h"
 
 float getCheckerXFromPipLocation(int32_t pipIndex) {
-  float checkerX;
-  int32_t pipOffset;
-  if (isBetween(pipIndex, 1, 6)) {
-    pipOffset = (pipIndex - 1) % 6;
-    checkerX = CHECKER_RIGHT_OFFSET_NORMAL - (PIP_WIDTH_NORMAL * pipOffset);
-  }
-  else if (isBetween(pipIndex, 7, 12)) {
-    pipOffset = 5 - ((pipIndex - 1) % 6);
-    checkerX = CHECKER_LEFT_X_OFFSET_NORMAL + (PIP_WIDTH_NORMAL * pipOffset);
-  }
-  else if (isBetween(pipIndex, 13, 18)) {
-    pipOffset = (pipIndex - 13) % 6;
-    checkerX = CHECKER_LEFT_X_OFFSET_NORMAL + (PIP_WIDTH_NORMAL * pipOffset);
-  }
-  else {
-    pipOffset = 5 - ((pipIndex - 1) % 6);
-    checkerX = CHECKER_RIGHT_OFFSET_NORMAL - (PIP_WIDTH_NORMAL * pipOffset);
-  }
-  return checkerX;
+  (void)pipIndex;
+  //float checkerX;
+  //int32_t pipOffset;
+  // if (isBetween(pipIndex, 1, 6)) {
+  //   pipOffset = (pipIndex - 1) % 6;
+  //   checkerX = CHECKER_RIGHT_OFFSET_NORMAL - (PIP_WIDTH_NORMAL * pipOffset);
+  // }
+  // else if (isBetween(pipIndex, 7, 12)) {
+  //   pipOffset = 5 - ((pipIndex - 1) % 6);
+  //   checkerX = CHECKER_LEFT_X_OFFSET_NORMAL + (PIP_WIDTH_NORMAL * pipOffset);
+  // }
+  // else if (isBetween(pipIndex, 13, 18)) {
+  //   pipOffset = (pipIndex - 13) % 6;
+  //   checkerX = CHECKER_LEFT_X_OFFSET_NORMAL + (PIP_WIDTH_NORMAL * pipOffset);
+  // }
+  // else {
+  //   pipOffset = 5 - ((pipIndex - 1) % 6);
+  //   checkerX = CHECKER_RIGHT_OFFSET_NORMAL - (PIP_WIDTH_NORMAL * pipOffset);
+  // }
+  //return checkerX;
+  return 0;
 }
 
 int32_t getCheckersOnPip(int32_t pipIndex, GameBoard* board) {
@@ -106,30 +108,28 @@ void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) 
 void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   (void)vm;
   (void)context;
-  extern DStats stats;
-  Checker* c = (Checker*)object;
-  float newX = getCheckerXFromPipLocation(c->pipIndex);
-  float newY = getCheckerY(c);
-  float x = Sprite_getX(sprite);
-  float y = Sprite_getY(sprite);
-  if (isBetween(c->pipIndex, 1, 12)) {
-    Sprite_setYRelativeToBottom(sprite, true);
-  }
-  else {
-    Sprite_setYRelativeToBottom(sprite, false);
-  }
-  if (!isEqual(x, newX, CHECKER_VELOCITY) || !isEqual(y, newY, CHECKER_VELOCITY)) {
-    float xVel = getHorizontalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
-    float yVel = getVerticalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
-    Sprite_setLocation(sprite, x + xVel, y + yVel);
-  }
-  else {
-    Sprite_setLocation(sprite, newX, newY);
-  }
-  stats.checkerWidth = sprite->dstn_rect.w;
-  stats.checkerHeight = sprite->dstn_rect.h;
-  stats.checkerRenderedHeight = sprite->rendered_rect.h;
-  stats.checkerRenderedWidth = sprite->rendered_rect.w;
+  (void)sprite;
+  (void)object;
+  // extern DStats stats;
+  // Checker* c = (Checker*)object;
+  // float newX = getCheckerXFromPipLocation(c->pipIndex);
+  // float newY = getCheckerY(c);
+  // float x = Sprite_getX(sprite);
+  // float y = Sprite_getY(sprite);
+  // if (isBetween(c->pipIndex, 1, 12)) {
+  //   Sprite_setYRelativeToBottom(sprite, true);
+  // }
+  // else {
+  //   Sprite_setYRelativeToBottom(sprite, false);
+  // }
+  // if (!isEqual(x, newX, CHECKER_VELOCITY) || !isEqual(y, newY, CHECKER_VELOCITY)) {
+  //   float xVel = getHorizontalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
+  //   float yVel = getVerticalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
+  //   Sprite_setLocation(sprite, x + xVel, y + yVel);
+  // }
+  // else {
+  //   Sprite_setLocation(sprite, newX, newY);
+  // }
 }
 
 void GameBoard_destroy(GameBoard* board) {
@@ -164,7 +164,7 @@ void createCheckers(GameBoard* board) {
       float x = getCheckerXFromPipLocation(c->pipIndex);
       float y = getCheckerY(c);
       SDL_FRect dst_rect = { x, y, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
-      Sprite* s = Sprite_createEx(lightTexture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
+      Sprite* s = Sprite_createEx(lightTexture, src_rect, dst_rect, Z_CHECKERS);
       Sprite_registerUpdateFn(s, updateChecker, c, board);
       Sprite_registerClickFn(s, clickChecker, c, board);
       Sage_registerSprite(s);
@@ -174,7 +174,7 @@ void createCheckers(GameBoard* board) {
       float x = getCheckerXFromPipLocation(c->pipIndex);
       float y = getCheckerY(c);
       SDL_FRect dst_rect = { x, y, CHECKER_W_NORMAL, CHECKER_H_NORMAL };
-      Sprite* s = Sprite_createEx(darkTexture, src_rect, dst_rect, Z_CHECKERS, false, true, true, false);
+      Sprite* s = Sprite_createEx(darkTexture, src_rect, dst_rect, Z_CHECKERS);
       Sprite_registerUpdateFn(s, updateChecker, c, board);
       Sprite_registerClickFn(s, clickChecker, c, board);
       Sage_registerSprite(s);
@@ -182,26 +182,26 @@ void createCheckers(GameBoard* board) {
   }
 }
 
-void createDice(GameBoard* board) {
-  board->die1 = 1;
-  board->die2 = 1;
-  SDL_Texture* diceTexture = Sage_loadTexture("assets/dice.png");
-  SDL_FRect src_rect = { 0, 0, DIE_SRC_W, DIE_SRC_H };
+// void createDice(GameBoard* board) {
+//   board->die1 = 1;
+//   board->die2 = 1;
+//   SDL_Texture* diceTexture = Sage_loadTexture("assets/dice.png");
+//   SDL_FRect src_rect = { 0, 0, DIE_SRC_W, DIE_SRC_H };
 
-  for (int32_t i = 0; i < 2; i++) {
-    float x = DIE_R1_X_NORMAL + (i * DIE_W_NORMAL);
-    float y = DIE_Y_NORMAL;
-    SDL_FRect dst_rect = { x, y, DIE_W_NORMAL, DIE_H_NORMAL };
-    Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE, false, true, true, false);
-    Sage_registerSprite(s);
-  }
-}
+//   for (int32_t i = 0; i < 2; i++) {
+//     float x = DIE_R1_X_NORMAL + (i * DIE_W_NORMAL);
+//     float y = DIE_Y_NORMAL;
+//     SDL_FRect dst_rect = { x, y, DIE_W_NORMAL, DIE_H_NORMAL };
+//     Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
+//     Sage_registerSprite(s);
+//   }
+// }
 
 
 GameBoard* GameBoard_create(void) {
   GameBoard* board = calloc(1, sizeof(GameBoard));
   createCheckers(board);
-  createDice(board);
+  //createDice(board);
 
   return board;
 }

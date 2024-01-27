@@ -6,25 +6,28 @@
 #include "mmanager.h"
 #include "stb_ds.h"
 
-bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
+bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, int gameWidth, int gameHeight) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     log_error("Couldn't initialize SDL: %s", SDL_GetError());
     return false;
   }
 
-  mm->window = SDL_CreateWindow(title, width, height, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+  mm->window = SDL_CreateWindow(title, winWidth, winHeight, SDL_WINDOW_HIGH_PIXEL_DENSITY);
 
   if (!mm->window) {
-    log_error("Failed to open %d x %d window: %s", width, height, SDL_GetError());
+    log_error("Failed to open %d x %d window: %s", winWidth, winHeight, SDL_GetError());
     return false;
   }
 
-  mm->renderer = SDL_CreateRenderer(mm->window, NULL, SDL_RENDERER_ACCELERATED);
+  mm->renderer = SDL_CreateRenderer(mm->window, NULL, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
   if (!mm->renderer) {
     log_error("Failed to create renderer: %s", SDL_GetError());
     return false;
   }
+
+  SDL_SetRenderLogicalPresentation(mm->renderer, gameWidth, gameHeight, SDL_LOGICAL_PRESENTATION_LETTERBOX, SDL_SCALEMODE_BEST);
+
 
   if (TTF_Init() < 0) {
     log_error("Couldn't initialize SDL_ttf: %s", TTF_GetError());
@@ -39,9 +42,9 @@ bool initSDL(MediaManager* mm, char* title, int32_t width, int32_t height) {
   return true;
 }
 
-MediaManager* MM_init(char* title, int32_t width, int32_t height) {
+MediaManager* MM_init(char* title, int winWidth, int winHeight, int gameWidth, int gameHeight) {
   MediaManager* mm = calloc(1, sizeof(MediaManager));
-  if (!initSDL(mm, title, width, height)) {
+  if (!initSDL(mm, title, winWidth, winHeight, gameWidth, gameHeight)) {
     log_error("Failed to initialize SDL");
     return NULL;
   }

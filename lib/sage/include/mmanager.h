@@ -23,11 +23,13 @@ struct MediaManager {
 /**
  * @brief Initializes the renderer, window, fonts and textures
  * @param title Title of the window
- * @param width Width of the window
- * @param height Height of the window
+ * @param winWidth The width of the window
+ * @param winHeight The height of the window
+ * @param gameWidth The logical width of the game
+ * @param gameHeight The logical height of the game
  * @return MediaManager instance
  */
-MediaManager* MM_init(char* title, int32_t width, int32_t height);
+MediaManager* MM_init(char* title, int winWidth, int winHeight, int gameWidth, int gameHeight);
 
 /**
  * @brief Cleans up all initialized game media

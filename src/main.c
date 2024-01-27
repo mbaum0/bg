@@ -11,17 +11,7 @@
 int SDL_AppInit(int argc, char **argv){
   (void)argc;
   (void)argv;
-  extern DStats stats;
-  Sage_init("Backgammon!", WINDOW_W, WINDOW_H);
-
-  int w, h, x, y;
-  findDimensions(WINDOW_W, WINDOW_H, &w, &h);
-  x = (WINDOW_W - w) * .5;
-  y = (WINDOW_H - h) * .5;
-  SDL_FRect normal = { x, y, w, h };
-  Sage_setNormalRect(normal);
-  stats.gameWidth = w;
-  stats.gameHeight = h;
+  Sage_init("Backgammon!", WINDOW_W, WINDOW_H, GAME_W, GAME_H);
   Board_create();
   GameBoard_create();
   DStats_create();
