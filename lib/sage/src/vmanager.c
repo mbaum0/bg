@@ -26,12 +26,14 @@ struct ViewManager {
  */
 int handleEvent(void* data, SDL_Event* event) {
   ViewManager* vm = (ViewManager*)data;
+  SDL_Event cpy = *event;
+  SDL_ConvertEventToRenderCoordinates(vm->renderer, &cpy);
   Sprite* sprite = NULL;
   float mouseX, mouseY;
-  switch (event->type) {
+  switch (cpy.type) {
   case SDL_EVENT_MOUSE_BUTTON_UP:
-    mouseX = event->button.x;
-    mouseY = event->button.y;
+    mouseX = cpy.button.x;
+    mouseY = cpy.button.y;
     log_debug("mouse up at %f, %f", mouseX, mouseY);
     sprite = VM_findSpriteAtCoordinate(vm, mouseX, mouseY);
     if (sprite != NULL) {
