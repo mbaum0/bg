@@ -129,7 +129,7 @@ void GameBoard_destroy(GameBoard* board) {
 }
 
 void createCheckers(GameBoard* board) {
-  SDL_Texture* texture = Sage_loadTexture("assets/checkers.svg");
+  SDL_Texture* texture = Sage_loadSVGTexture("assets/checkers.svg", CHECKER_W*2, CHECKER_W);
   SDL_FRect s_lightRect = { 0, 0, CHECKER_W, CHECKER_W };
   SDL_FRect s_darkRect = { CHECKER_W, 0, CHECKER_W, CHECKER_W };
 

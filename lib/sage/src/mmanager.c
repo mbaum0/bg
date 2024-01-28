@@ -15,6 +15,8 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight) {
   const SDL_DisplayMode* dm = SDL_GetCurrentDisplayMode(did);
   mm->window = SDL_CreateWindow(title, dm->w, dm->h, SDL_WINDOW_HIGH_PIXEL_DENSITY);
 
+  mm->pixelScale = (dm->pixel_density * dm->w) / (float)winWidth;
+
   if (!mm->window) {
     log_error("Failed to open %d x %d window: %s", winWidth, winHeight, SDL_GetError());
     return false;
@@ -22,7 +24,7 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight) {
 
   mm->renderer = SDL_CreateRenderer(mm->window, NULL, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-  SDL_SetRenderLogicalPresentation(mm->renderer, 430, 932, SDL_LOGICAL_PRESENTATION_LETTERBOX, SDL_SCALEMODE_BEST);
+  //SDL_SetRenderLogicalPresentation(mm->renderer, 430, 932, SDL_LOGICAL_PRESENTATION_LETTERBOX, SDL_SCALEMODE_BEST);
 
   if (!mm->renderer) {
     log_error("Failed to create renderer: %s", SDL_GetError());
@@ -97,7 +99,7 @@ SDL_Texture* MM_loadTexture(MediaManager* mm, char* path) {
   return texture;
 }
 
-SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int32_t height){
+SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int32_t height) {
   SDL_RWops* f = SDL_RWFromFile(path, "rb");
   SDL_Surface* s = IMG_LoadSizedSVG_RW(f, width, height);
   SDL_Texture* t = SDL_CreateTextureFromSurface(mm->renderer, s);

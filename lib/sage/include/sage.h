@@ -51,6 +51,8 @@ SDL_Texture* Sage_loadTexture(char* path);
 
 SDL_Texture* Sage_loadSVGTexture(char* path, int32_t width, int32_t height);
 
+int32_t Sage_convertHighDPI(int32_t value);
+
 /**
  * @brief Load a font from a file
  * 

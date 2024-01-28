@@ -18,6 +18,7 @@ struct MediaManager {
   SDL_Window* window;
   SDL_Texture*** textures;
   TTF_Font*** fonts;
+  float pixelScale;
 };
 
 /**
