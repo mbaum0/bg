@@ -49,7 +49,13 @@
 #define CHECKER_PIP_19_X X(223) 
 #define CHECKER_PIP_19_Y X(50)
 
-#define CHECKER_VELOCITY X(5)
+#define DICE_W X(35)
+#define DICE_LEFT_X X(67)
+#define DICE_RIGHT_X X(284)
+#define DICE_GAP X(45)
+#define DICE_Y X(448)
+
+#define CHECKER_VELOCITY X(20)
 
 #define EPSILON 0.0001
 

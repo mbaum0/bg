@@ -107,8 +107,6 @@ void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) 
 void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   (void)vm;
   (void)context;
-  (void)sprite;
-  (void)object;
   Checker* c = (Checker*)object;
   float newX = getCheckerXFromPipLocation(c->pipIndex);
   float newY = getCheckerY(c);
@@ -176,26 +174,26 @@ void createCheckers(GameBoard* board) {
   }
 }
 
-// void createDice(GameBoard* board) {
-//   board->die1 = 1;
-//   board->die2 = 1;
-//   SDL_Texture* diceTexture = Sage_loadTexture("assets/dice.png");
-//   SDL_FRect src_rect = { 0, 0, DIE_SRC_W, DIE_SRC_H };
+void createDice(GameBoard* board) {
+  board->die1 = 1;
+  board->die2 = 1;
+  SDL_Texture* diceTexture = Sage_loadSVGTexture("assets/dice.svg", DICE_W*6, DICE_W);
+  SDL_FRect src_rect = { 0, 0, DICE_W, DICE_W };
 
-//   for (int32_t i = 0; i < 2; i++) {
-//     float x = DIE_R1_X_NORMAL + (i * DIE_W_NORMAL);
-//     float y = DIE_Y_NORMAL;
-//     SDL_FRect dst_rect = { x, y, DIE_W_NORMAL, DIE_H_NORMAL };
-//     Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
-//     Sage_registerSprite(s);
-//   }
-// }
+  SDL_FRect dst_rect = { DICE_RIGHT_X, DICE_Y, DICE_W, DICE_W };
+  Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
+  Sage_registerSprite(s);
+
+  dst_rect.x += DICE_GAP;
+  s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
+  Sage_registerSprite(s);
+}
 
 
 GameBoard* GameBoard_create(void) {
   GameBoard* board = calloc(1, sizeof(GameBoard));
   createCheckers(board);
-  //createDice(board);
+  createDice(board);
 
   return board;
 }
