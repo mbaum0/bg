@@ -16,8 +16,8 @@ int32_t delayFrame(int32_t frameStart) {
   return SDL_GetTicks();
 }
 
-void Sage_init(char* title, int winWidth, int winHeight){
-  sage.mm = MM_init(title, winWidth, winHeight);
+void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay){
+  sage.mm = MM_init(title, winWidth, winHeight, fillDisplay);
   sage.vm = VM_init(sage.mm->renderer);
   sage.em = EM_init();
 }

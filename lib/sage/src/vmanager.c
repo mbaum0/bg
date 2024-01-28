@@ -34,7 +34,6 @@ int handleEvent(void* data, SDL_Event* event) {
   case SDL_EVENT_MOUSE_BUTTON_UP:
     mouseX = cpy.button.x;
     mouseY = cpy.button.y;
-    log_debug("mouse up at %f, %f", mouseX, mouseY);
     sprite = VM_findSpriteAtCoordinate(vm, mouseX, mouseY);
     if (sprite != NULL) {
       if (sprite->click_fn != NULL) {

@@ -6,19 +6,28 @@
 #include "mmanager.h"
 #include "stb_ds.h"
 
-bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight) {
+bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fillDisplay) {
+  (void)winHeight;
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
     log_error("Couldn't initialize SDL: %s", SDL_GetError());
     return false;
   }
-  SDL_DisplayID did = SDL_GetPrimaryDisplay();
-  const SDL_DisplayMode* dm = SDL_GetCurrentDisplayMode(did);
-  mm->window = SDL_CreateWindow(title, dm->w, dm->h, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+  int w, h;
 
-  mm->pixelScale = (dm->pixel_density * dm->w) / (float)winWidth;
+  if (fillDisplay){
+    SDL_DisplayID did = SDL_GetPrimaryDisplay();
+    const SDL_DisplayMode* dm = SDL_GetCurrentDisplayMode(did);
+    w = dm->w;
+    h = dm->h;
+    mm->window = SDL_CreateWindow(title, w, h, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    mm->pixelScale = (dm->pixel_density * w) / (float)winWidth;
+  } else {
+    mm->window = SDL_CreateWindow(title, winWidth, winHeight, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    mm->pixelScale = 1;
+  }
 
   if (!mm->window) {
-    log_error("Failed to open %d x %d window: %s", winWidth, winHeight, SDL_GetError());
+    log_error("Failed to open %d x %d window: %s", w, h, SDL_GetError());
     return false;
   }
 
@@ -44,9 +53,9 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight) {
   return true;
 }
 
-MediaManager* MM_init(char* title, int winWidth, int winHeight) {
+MediaManager* MM_init(char* title, int winWidth, int winHeight, bool fillDisplay) {
   MediaManager* mm = calloc(1, sizeof(MediaManager));
-  if (!initSDL(mm, title, winWidth, winHeight)) {
+  if (!initSDL(mm, title, winWidth, winHeight, fillDisplay)) {
     log_error("Failed to initialize SDL");
     return NULL;
   }

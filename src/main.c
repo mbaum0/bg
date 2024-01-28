@@ -13,7 +13,7 @@ int SDL_AppInit(int argc, char **argv){
   (void)argc;
   (void)argv;
   extern Sage sage;
-  Sage_init("Backgammon!", WINDOW_W, WINDOW_H);
+  Sage_init("Backgammon!", WINDOW_W, WINDOW_H, false);
   Board_create();
   Pips_create();
   GameBoard_create();
