@@ -3,5 +3,8 @@
  * @author Michael Baumgarten (you@domain.com)
  * @brief 
  */
+#pragma once
 
-void createDiceSprites(void);
+#include <stdint.h>
+typedef int32_t GameDie;
+void createDiceSprites(GameDie* die1, GameDie* die2);

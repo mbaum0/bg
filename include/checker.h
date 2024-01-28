@@ -13,7 +13,8 @@ typedef enum { LIGHT, DARK} Color;
 
 struct Checker {
   int32_t pipIndex;
-  int32_t pipOffset;
+  int32_t pipYOffset;
+  int32_t pipXOffset;
   Color color;
 };
 

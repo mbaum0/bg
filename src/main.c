@@ -1,5 +1,6 @@
 #define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL_main.h>
+#include <stdlib.h>
 
 #include "sage.h"
 #include "util.h"
@@ -12,7 +13,8 @@ int SDL_AppInit(int argc, char **argv){
   (void)argc;
   (void)argv;
   extern Sage sage;
-  Sage_init("Backgammon!", WINDOW_W, WINDOW_H, false);
+  Sage_init("Backgammon!", WINDOW_W, WINDOW_H, true);
+  srand(0);
   GameBoard_create();
   return 0;
 }

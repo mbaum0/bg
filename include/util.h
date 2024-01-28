@@ -49,6 +49,11 @@
 #define CHECKER_PIP_19_X X(223) 
 #define CHECKER_PIP_19_Y X(50)
 
+#define CHECKER_TOP_HOME_X X(5)
+#define CHECKER_TOP_HOME_Y X(10)
+#define CHECKER_BOT_HOME_X X(5)
+#define CHECKER_BOT_HOME_Y X(660)
+
 #define DICE_W X(35)
 #define DICE_LEFT_X X(67)
 #define DICE_RIGHT_X X(284)
@@ -63,4 +68,4 @@
 
 bool isBetween(int32_t x, int32_t min, int32_t max);
 bool isEqual(float x, float y, float epsilon);
-
+int generateRandomNumber(int min, int max);

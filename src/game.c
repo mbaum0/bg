@@ -8,9 +8,11 @@
 #include "dice.h"
 #include "pip.h"
 #include "board.h"
+#include "util.h"
 
 extern uint32_t PipClickEventType;
 extern uint32_t CheckerClickEventType;
+extern uint32_t DiceClickEventType;
 
 int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex) {
     int32_t count = 0;
@@ -36,15 +38,15 @@ void moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     for (int32_t i = 0; i < 15; i++) {
         Checker* checker = &gb->lightCheckers[i];
         if (checker->pipIndex == pipIndex) {
-            if (checker->pipOffset > topIndex) {
-                topIndex = checker->pipOffset;
+            if (checker->pipYOffset > topIndex) {
+                topIndex = checker->pipYOffset;
                 c = checker;
             }
         }
         checker = &gb->darkCheckers[i];
         if (checker->pipIndex == pipIndex) {
-            if (checker->pipOffset > topIndex) {
-                topIndex = checker->pipOffset;
+            if (checker->pipYOffset > topIndex) {
+                topIndex = checker->pipYOffset;
                 c = &gb->darkCheckers[i];
             }
         }
@@ -55,10 +57,14 @@ void moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     }
 
     // move the checker
-    amount = amount * (c->color) ? 1 : -1;
+    int32_t direction = (c->color) ? 1 : -1;
+    amount *= direction;
     int32_t newIndex = c->pipIndex + amount;
     newIndex %= 25;
-    c->pipOffset = getNumCheckersOnPip(gb, newIndex);
+    if (newIndex <= 0){
+        newIndex = 0;
+    }
+    c->pipYOffset = getNumCheckersOnPip(gb, newIndex);
     c->pipIndex = newIndex;
     log_debug("moved checker from pip %d to pip %d", pipIndex, c->pipIndex);
 }
@@ -68,7 +74,7 @@ void handlePipClick(uint32_t eventType, SDL_Event* e, void* data) {
     GameBoard* gb = (GameBoard*)data;
     uint32_t pipIndex = e->user.code;
     log_debug("pip %d clicked", pipIndex);
-    moveChecker(gb, pipIndex, 1);
+    moveChecker(gb, pipIndex, gb->die1);
 }
 
 void handleCheckerClick(uint32_t eventType, SDL_Event* e, void* data) {
@@ -76,25 +82,34 @@ void handleCheckerClick(uint32_t eventType, SDL_Event* e, void* data) {
     GameBoard* gb = (GameBoard*)data;
     Checker* checker = (Checker*)e->user.data1;
     log_debug("checker on pip %d clicked", checker->pipIndex);
-    moveChecker(gb, checker->pipIndex, 1);
+    moveChecker(gb, checker->pipIndex, gb->die1);
+}
+
+void handleDiceClick(uint32_t eventType, SDL_Event* e, void* data){
+    (void)eventType;
+    (void)e;
+    GameBoard* gb = (GameBoard*)data;
+    log_debug("got dice click event");
+    gb->die1 = generateRandomNumber(1, 6);
+    gb->die2 = generateRandomNumber(1, 6);
 }
 
 
 void initCheckerSetup(GameBoard* gb) {
     int32_t lightSetup[] = { 1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19 };
     int32_t darkSetup[] = { 24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6 };
-    int32_t pipOffsets[] = { 0, 1, 0, 1, 2, 3, 4, 0, 1, 2, 0, 1, 2, 3, 4 };
+    int32_t pipYOffsets[] = { 0, 1, 0, 1, 2, 3, 4, 0, 1, 2, 0, 1, 2, 3, 4 };
 
     for (int32_t i = 0; i < 15; i++) {
         gb->lightCheckers[i].pipIndex = lightSetup[i];
-        gb->lightCheckers[i].pipOffset = pipOffsets[i];
+        gb->lightCheckers[i].pipYOffset = pipYOffsets[i];
         gb->lightCheckers[i].color = LIGHT;
         gb->pipCounts[lightSetup[i]]++;
     }
 
     for (int32_t i = 0; i < 15; i++) {
         gb->darkCheckers[i].pipIndex = darkSetup[i];
-        gb->darkCheckers[i].pipOffset = pipOffsets[i];
+        gb->darkCheckers[i].pipYOffset = pipYOffsets[i];
         gb->lightCheckers[i].color = DARK;
         gb->pipCounts[darkSetup[i] + 15]++;
     }
@@ -103,16 +118,20 @@ void initCheckerSetup(GameBoard* gb) {
 void initEventCallbacks(GameBoard* gb) {
     PipClickEventType = SDL_RegisterEvents(1);
     CheckerClickEventType = SDL_RegisterEvents(1);
+    DiceClickEventType = SDL_RegisterEvents(1);
     Sage_registerEventCallback(PipClickEventType, handlePipClick, gb);
     Sage_registerEventCallback(CheckerClickEventType, handleCheckerClick, gb);
+    Sage_registerEventCallback(DiceClickEventType, handleDiceClick, gb);
 }
 
 GameBoard* GameBoard_create(void) {
     GameBoard* gb = calloc(1, sizeof(GameBoard));
+    gb->die1 = 1;
+    gb->die2 = 2;
     initCheckerSetup(gb);
     createBoardSprites();
     createPipSprites();
-    createDiceSprites();
+    createDiceSprites(&gb->die1, &gb->die2);
     for (int32_t i = 0; i < 15; i++) {
         createCheckerSprite(&gb->lightCheckers[i]);
         createCheckerSprite(&gb->darkCheckers[i]);

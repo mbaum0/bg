@@ -16,6 +16,15 @@ int32_t getCheckerX(Checker* checker) {
   int32_t pipIndex = checker->pipIndex;
   int32_t pipOffset;
   int32_t checkerX;
+
+  if (pipIndex == 0){
+    if (checker->color == LIGHT){
+      return CHECKER_BOT_HOME_X + (checker->pipYOffset * CHECKER_W);
+    } else {
+      return CHECKER_TOP_HOME_X;
+    }
+  }
+
   if (isBetween(pipIndex, 1, 6)) {
     pipOffset = (6 - pipIndex);
     checkerX = CHECKER_PIP_6_X + (PIP_W * pipOffset);
@@ -38,13 +47,21 @@ int32_t getCheckerX(Checker* checker) {
 int32_t getCheckerY(Checker* checker) {
   int32_t offset;
   int32_t pipIndex = checker->pipIndex;
+
+  if (pipIndex == 0){
+    if (checker->color == LIGHT){
+      return CHECKER_BOT_HOME_Y;
+    } else {
+      return CHECKER_TOP_HOME_Y;
+    }
+  }
   if (isBetween(pipIndex, 1, 12)) {
     offset = CHECKER_PIP_12_Y;
-    offset -= (checker->pipOffset * CHECKER_W);
+    offset -= (checker->pipYOffset * CHECKER_W);
   }
   else {
     offset = CHECKER_PIP_13_Y;
-    offset += (checker->pipOffset * CHECKER_W);
+    offset += (checker->pipYOffset * CHECKER_W);
   }
   return offset;
 }
