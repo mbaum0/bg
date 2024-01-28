@@ -6,4 +6,4 @@
 #pragma once
 #include <stdint.h>
 
-void Board_create(void);
+void createBoardSprites(void);

@@ -63,7 +63,7 @@ void createPipSprite(SDL_Texture* texture, int32_t index) {
     Sage_registerSprite(pipSprite);
 }
 
-void Pips_create(void) {
+void createPipSprites(void) {
     int sheetWidth = PIP_W * 12;
     int sheetHeight = PIP_H * 2;
     SDL_Texture* texture = Sage_loadSVGTexture("assets/pips.svg", sheetWidth, sheetHeight);

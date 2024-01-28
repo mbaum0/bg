@@ -6,4 +6,4 @@
 #pragma once
 #include <stdint.h>
 
-void Pips_create(void);
+void createPipSprites(void);

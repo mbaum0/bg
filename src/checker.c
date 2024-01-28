@@ -10,8 +10,10 @@
 #include "vector.h"
 #include "dstats.h"
 
-int32_t getCheckerXFromPipLocation(int32_t pipIndex) {
-  (void)pipIndex;
+uint32_t CheckerClickEventType = 0;
+
+int32_t getCheckerX(Checker* checker) {
+  int32_t pipIndex = checker->pipIndex;
   int32_t pipOffset;
   int32_t checkerX;
   if (isBetween(pipIndex, 1, 6)) {
@@ -33,19 +35,6 @@ int32_t getCheckerXFromPipLocation(int32_t pipIndex) {
   return checkerX;
 }
 
-int32_t getCheckersOnPip(int32_t pipIndex, GameBoard* board) {
-  int32_t count = 0;
-  for (int32_t i = 0; i < 15; i++) {
-    if (board->lightCheckers[i].pipIndex == pipIndex) {
-      count++;
-    }
-    if (board->darkCheckers[i].pipIndex == pipIndex) {
-      count++;
-    }
-  }
-  return count;
-}
-
 int32_t getCheckerY(Checker* checker) {
   int32_t offset;
   int32_t pipIndex = checker->pipIndex;
@@ -60,55 +49,22 @@ int32_t getCheckerY(Checker* checker) {
   return offset;
 }
 
-void moveFromPip(int32_t pipIndex, GameBoard* board) {
-  // get the top checker on the pip
-  Checker* c = NULL;
-  int32_t topIndex = -1;
-
-  for (int32_t i = 0; i < 15; i++) {
-    Checker* checker = &board->lightCheckers[i];
-    if (checker->pipIndex == pipIndex) {
-      if (checker->pipOffset > topIndex) {
-        topIndex = checker->pipOffset;
-        c = checker;
-      }
-    }
-    checker = &board->darkCheckers[i];
-    if (checker->pipIndex == pipIndex) {
-      if (checker->pipOffset > topIndex) {
-        topIndex = checker->pipOffset;
-        c = &board->darkCheckers[i];
-      }
-    }
-  }
-  if (c == NULL) {
-    log_error("no checker found on pip %d", pipIndex);
-    return;
-  }
-
-  // move the checker
-  int32_t newIndex = c->pipIndex + 1;
-  if (newIndex > 24) {
-    newIndex = 1;
-  }
-  c->pipOffset = getCheckersOnPip(newIndex, board);
-  c->pipIndex = newIndex;
-  log_debug("moved checker from pip %d to pip %d", pipIndex, c->pipIndex);
-}
-
 void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   (void)vm;
   (void)sprite;
+  (void)context;
   Checker* checker = (Checker*)object;
-  GameBoard* board = (GameBoard*)context;
-  moveFromPip(checker->pipIndex, board);
+  SDL_Event e = { 0 };
+  e.type = CheckerClickEventType;
+  e.user.data1 = checker;
+  SDL_PushEvent(&e);
 }
 
 void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   (void)vm;
   (void)context;
   Checker* c = (Checker*)object;
-  float newX = getCheckerXFromPipLocation(c->pipIndex);
+  float newX = getCheckerX(c);
   float newY = getCheckerY(c);
   float x = Sprite_getX(sprite);
   float y = Sprite_getY(sprite);
@@ -122,77 +78,25 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
   }
 }
 
-void GameBoard_destroy(GameBoard* board) {
-  free(board);
-}
-
-void createCheckers(GameBoard* board) {
-  SDL_Texture* texture = Sage_loadSVGTexture("assets/checkers.svg", CHECKER_W*2, CHECKER_W);
+void createCheckerSprite(Checker* c) {
+  SDL_Texture* texture = Sage_loadSVGTexture("assets/checkers.svg", CHECKER_W * 2, CHECKER_W);
   SDL_FRect s_lightRect = { 0, 0, CHECKER_W, CHECKER_W };
   SDL_FRect s_darkRect = { CHECKER_W, 0, CHECKER_W, CHECKER_W };
 
-  int32_t lightSetup[] = { 1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19 };
-  int32_t darkSetup[] = { 24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6 };
-  int32_t pipOffsets[] = { 0, 1, 0, 1, 2, 3, 4, 0, 1, 2, 0, 1, 2, 3, 4 };
+  int32_t x = getCheckerX(c);
+  int32_t y = getCheckerY(c);
 
-  for (int32_t i = 0; i < 15; i++) {
-    board->lightCheckers[i].pipIndex = lightSetup[i];
-    board->lightCheckers[i].pipOffset = pipOffsets[i];
-    board->pipCounts[lightSetup[i]]++;
+  SDL_FRect dst = { x, y, CHECKER_W, CHECKER_W };
+  Sprite* s;
+  if (c->color == LIGHT) {
+    s = Sprite_createEx(texture, s_lightRect, dst, Z_CHECKERS);
   }
-
-  for (int32_t i = 0; i < 15; i++) {
-    board->darkCheckers[i].pipIndex = darkSetup[i];
-    board->darkCheckers[i].pipOffset = pipOffsets[i];
-    board->pipCounts[darkSetup[i] + 15]++;
+  else {
+    s = Sprite_createEx(texture, s_darkRect, dst, Z_CHECKERS);
   }
+  s->useViewport = true;
 
-  // create the checker sprites
-  for (int32_t i = 0; i < 30; i++) {
-    if (i < 15) {
-      Checker* c = &board->lightCheckers[i];
-      int32_t x = getCheckerXFromPipLocation(c->pipIndex);
-      int32_t y = getCheckerY(c);
-      SDL_FRect dst_rect = { x, y, CHECKER_W, CHECKER_W };
-      Sprite* s = Sprite_createEx(texture, s_lightRect, dst_rect, Z_CHECKERS);
-      s->useViewport = true;
-      Sprite_registerUpdateFn(s, updateChecker, c, board);
-      Sprite_registerClickFn(s, clickChecker, c, board);
-      Sage_registerSprite(s);
-    }
-    else {
-      Checker* c = &board->darkCheckers[i - 15];
-      int32_t x = getCheckerXFromPipLocation(c->pipIndex);
-      int32_t y = getCheckerY(c);
-      SDL_FRect dst_rect = { x, y, CHECKER_W, CHECKER_W };
-      Sprite* s = Sprite_createEx(texture, s_darkRect, dst_rect, Z_CHECKERS);
-      s->useViewport = true;
-      Sprite_registerUpdateFn(s, updateChecker, c, board);
-      Sprite_registerClickFn(s, clickChecker, c, board);
-      Sage_registerSprite(s);
-    }
-  }
-}
-
-void createDice(GameBoard* board) {
-  board->die1 = 1;
-  board->die2 = 1;
-  SDL_Texture* diceTexture = Sage_loadSVGTexture("assets/dice.svg", DICE_W*6, DICE_W);
-  SDL_FRect src_rect = { 0, 0, DICE_W, DICE_W };
-
-  SDL_FRect dst_rect = { DICE_RIGHT_X, DICE_Y, DICE_W, DICE_W };
-  Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
+  Sprite_registerUpdateFn(s, updateChecker, c, NULL);
+  Sprite_registerClickFn(s, clickChecker, c, NULL);
   Sage_registerSprite(s);
-
-  dst_rect.x += DICE_GAP;
-  s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
-  Sage_registerSprite(s);
-}
-
-
-GameBoard* GameBoard_create(void) {
-  GameBoard* board = calloc(1, sizeof(GameBoard));
-  createCheckers(board);
-  createDice(board);
-  return board;
 }
