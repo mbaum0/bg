@@ -194,6 +194,5 @@ GameBoard* GameBoard_create(void) {
   GameBoard* board = calloc(1, sizeof(GameBoard));
   createCheckers(board);
   createDice(board);
-
   return board;
 }

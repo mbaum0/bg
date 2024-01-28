@@ -19,7 +19,6 @@ EventManager* EM_init(void) {
   EventManager* em = malloc(sizeof(EventManager));
   em->callbacks = malloc(sizeof(EventCallback**));
   *em->callbacks = NULL;
-  SDL_AddEventWatch(EM_handleEvent, em);
   return em;
 }
 

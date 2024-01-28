@@ -59,5 +59,8 @@
 
 #define EPSILON 0.0001
 
+#define INT2VOIDP(i) (void*)(uintptr_t)(i)
+
 bool isBetween(int32_t x, int32_t min, int32_t max);
 bool isEqual(float x, float y, float epsilon);
+
