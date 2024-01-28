@@ -20,6 +20,9 @@ typedef struct ViewManager ViewManager;
  */
 ViewManager* VM_init(SDL_Renderer* renderer);
 
+
+void VM_setViewport(ViewManager* vm, SDL_FRect viewport);
+
 /**
  * @brief Free memory allocated by the ViewManager, including Sprites
  */

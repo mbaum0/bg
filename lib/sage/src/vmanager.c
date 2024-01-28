@@ -14,6 +14,7 @@ struct ViewManager {
   SDL_Renderer* renderer;
   Sprite*** sprites;
   Snippet*** snippets;
+  SDL_FRect viewport;
 };
 
 /**
@@ -47,7 +48,7 @@ int handleEvent(void* data, SDL_Event* event) {
 }
 
 ViewManager* VM_init(SDL_Renderer* renderer) {
-  ViewManager* vm = malloc(sizeof(ViewManager));
+  ViewManager* vm = calloc(1, sizeof(ViewManager));
   vm->renderer = renderer;
   vm->sprites = malloc(sizeof(Sprite**));
   *vm->sprites = NULL;
@@ -63,6 +64,10 @@ void VM_free(ViewManager* vm) {
   arrfree(*vm->snippets);
   free(vm->snippets);
   free(vm);
+}
+
+void VM_setViewport(ViewManager* vm, SDL_FRect viewport){
+  vm->viewport = viewport;
 }
 
 void drawSpriteBorder(ViewManager* vm, SDL_FRect border) {
@@ -81,8 +86,13 @@ void VM_draw(ViewManager* vm) {
       fptr(vm, sprite, sprite->update_object, sprite->update_context);
     }
     if (sprite->visible) {
-      SDL_RenderTexture(vm->renderer, sprite->texture, &sprite->src_rect, &sprite->dst_rect);
-      drawSpriteBorder(vm, sprite->dst_rect);
+      SDL_FRect newDst = sprite->dst_rect;
+      if (sprite->useViewport){
+        newDst.x += vm->viewport.x;
+        newDst.y += vm->viewport.y;
+      }
+      SDL_RenderTexture(vm->renderer, sprite->texture, &sprite->src_rect, &newDst);
+      //drawSpriteBorder(vm, newDst);
     }
   }
   Snippet** snippets = *vm->snippets;
@@ -148,7 +158,12 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y) {
     Sprite* sprite = sprites[i];
     if (sprite->visible) {
       SDL_FPoint p = { x, y };
-      if (SDL_PointInRectFloat(&p, &sprite->dst_rect)) {
+      SDL_FRect dst = sprite->dst_rect;
+      if (sprite->useViewport){
+        dst.x += vm->viewport.x;
+        dst.y += vm->viewport.y;
+      }
+      if (SDL_PointInRectFloat(&p, &dst)) {
         if (sprite->z > currentTopZ) {
           currentTopZ = sprite->z;
           topSprite = sprite;

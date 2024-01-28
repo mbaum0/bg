@@ -39,6 +39,10 @@ int Sage_handleEvent(SDL_Event *event){
   return 0;
 }
 
+void Sage_setViewport(SDL_FRect viewport){
+  VM_setViewport(sage.vm, viewport);
+}
+
 SDL_Texture* Sage_loadTexture(char* path) {
   return MM_loadTexture(sage.mm, path);
 }

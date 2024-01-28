@@ -1,7 +1,7 @@
 /**
  * @file pip.c
  * @author Michael Baumgarten (you@domain.com)
- * @brief 
+ * @brief
  */
 #include <SDL3/SDL.h>
 #include <stdint.h>
@@ -10,38 +10,46 @@
 #include "sage.h"
 #include "util.h"
 
-void Pips_create(void){
-    // extern Sage sage;
-    // SDL_Texture* pipTexture = Sage_loadTexture(path);
-    // int textureW, textureH;
-    // float pipW, pipH;
-    // SDL_QueryTexture(pipTexture, NULL, NULL, &textureW, &textureH);
-    // pipW = (float)textureW / 12;
-    // pipH = (float)textureH / 2;
 
-    // SDL_FRect pipSrc = {0, 0, pipW, pipH};
-    // SDL_FRect pipDst = pipSrc;
-    // float sideOffset = pipW / 4;
-    // float bottomOffset = pipW * 17.4;
-    // float topOffset = pipH * 0.9;
-    // float gapOffset = pipW * 0.4;
-    // Sprite* pipSprite;
-    // for (int32_t i = 0; i < 12; i++){
-    //     pipSrc.x = (i * pipW);
-    //     pipSrc.y = 0;
-    //     pipDst.x = (i * pipW) + sideOffset;
-    //     if (i >= 6) {
-    //         pipDst.x += gapOffset;
-    //     }
-        
-    //     pipDst.y = topOffset;
-    //     pipSprite = Sprite_createEx(pipTexture, pipSrc, pipDst, Z_PIPS);
-    //     Sage_registerSprite(pipSprite);
+void createPipSprite(SDL_Texture* texture, int index) {
+    SDL_FRect pipSrc = { 0, 0, PIP_W, PIP_H };
+    SDL_FRect pipDst = pipSrc;
+    if (isBetween(index, 0, 5)) {
+        pipSrc.x = (index * PIP_W);
+        pipSrc.y = 0;
+        pipDst.x = PIP_13_X + (index * PIP_W);
+        pipDst.y = PIP_13_Y;
 
-    //     pipSrc.y = pipH;
-    //     pipDst.y = bottomOffset;
-    //     pipSprite = Sprite_createEx(pipTexture, pipSrc, pipDst, Z_PIPS);
-    //     Sage_registerSprite(pipSprite);
-    // }
-    return;
+    } else if (isBetween(index, 6, 11)){
+        pipSrc.x = (index) * PIP_W;
+        pipSrc.y = 0;
+        pipDst.x = PIP_19_X + ((index-6) * PIP_W);
+        pipDst.y = PIP_19_Y;
+
+    } else if (isBetween(index, 12, 17)){
+        pipSrc.x = (index-12) * PIP_W;
+        pipSrc.y = PIP_H;
+        pipDst.x = PIP_12_X + ((index-12) * PIP_W);
+        pipDst.y = PIP_12_Y; 
+    } else if (isBetween(index, 18, 23)){
+        pipSrc.x = (index-12) * PIP_W;
+        pipSrc.y = PIP_H;
+        pipDst.x = PIP_6_X + ((index-18) * PIP_W);
+        pipDst.y = PIP_6_Y; 
+    }
+    Sprite* pipSprite;
+    pipSprite = Sprite_createEx(texture, pipSrc, pipDst, Z_PIPS);
+    pipSprite->useViewport = true;
+    Sage_registerSprite(pipSprite);
+    
+}
+
+void Pips_create(void) {
+    extern Sage sage;
+    int sheetWidth = PIP_W * 12;
+    int sheetHeight = PIP_H * 2;
+    SDL_Texture* texture = Sage_loadSVGTexture("assets/pips.svg", sheetWidth, sheetHeight);
+    for (int32_t i = 0; i < 24; i++){
+        createPipSprite(texture, i);
+    }
 }

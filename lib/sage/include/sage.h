@@ -87,3 +87,5 @@ void Sage_registerSnippet(Snippet* snippet);
  * @param data data to pass to the callback function
  */
 void Sage_registerEventCallback(uint32_t eventType, EventCallback_fn callback_fn, void* data);
+
+void Sage_setViewport(SDL_FRect viewport);

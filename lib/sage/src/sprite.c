@@ -21,6 +21,7 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y,
   sprite->click_object = NULL;
   sprite->click_context = NULL;
   sprite->z = z;
+  sprite->useViewport = false;
   return sprite;
 }
 
@@ -39,6 +40,7 @@ Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect dst, int3
   sprite->click_object = NULL;
   sprite->click_context = NULL;
   sprite->z = z;
+  sprite->useViewport = false;
   return sprite;
 }
 
