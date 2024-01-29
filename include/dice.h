@@ -6,5 +6,12 @@
 #pragma once
 
 #include <stdint.h>
-typedef int32_t GameDie;
+typedef struct GameDie GameDie;
+
+struct GameDie {
+    int32_t value;
+    int32_t index;
+    int32_t side;
+};
+
 void createDiceSprites(GameDie* die1, GameDie* die2);

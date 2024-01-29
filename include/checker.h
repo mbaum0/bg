@@ -9,12 +9,11 @@
 #include "board.h"
 
 typedef struct Checker Checker;
-typedef enum { LIGHT, DARK} Color;
+typedef enum { LIGHT, DARK } Color;
 
 struct Checker {
   int32_t pipIndex;
-  int32_t pipYOffset;
-  int32_t pipXOffset;
+  int32_t pipOffset;
   Color color;
 };
 
