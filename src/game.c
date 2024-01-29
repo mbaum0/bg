@@ -35,6 +35,10 @@ void moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     Checker* c = NULL;
     int32_t topIndex = -1;
 
+    if (pipIndex == 0){
+        return;
+    }
+
     for (int32_t i = 0; i < 15; i++) {
         Checker* checker = &gb->lightCheckers[i];
         if (checker->pipIndex == pipIndex) {
@@ -57,15 +61,16 @@ void moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     }
 
     // move the checker
-    int32_t direction = (c->color) ? 1 : -1;
+    int32_t direction = (c->color == LIGHT) ? 1 : -1;
     amount *= direction;
     int32_t newIndex = c->pipIndex + amount;
-    newIndex %= 25;
-    if (newIndex <= 0){
+    if (newIndex <= 0 || newIndex >= 25){
         newIndex = 0;
     }
-    c->pipYOffset = getNumCheckersOnPip(gb, newIndex);
+    c->pipYOffset = gb->pipCounts[newIndex];
     c->pipIndex = newIndex;
+    gb->pipCounts[newIndex]++;
+    gb->pipCounts[pipIndex]--;
     log_debug("moved checker from pip %d to pip %d", pipIndex, c->pipIndex);
 }
 
@@ -98,20 +103,23 @@ void handleDiceClick(uint32_t eventType, SDL_Event* e, void* data){
 void initCheckerSetup(GameBoard* gb) {
     int32_t lightSetup[] = { 1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19 };
     int32_t darkSetup[] = { 24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6 };
-    int32_t pipYOffsets[] = { 0, 1, 0, 1, 2, 3, 4, 0, 1, 2, 0, 1, 2, 3, 4 };
+    //int32_t pipYOffsets[] = { 0, 1, 0, 1, 2, 3, 4, 0, 1, 2, 0, 1, 2, 3, 4 };
 
+    int32_t pipIndex;
     for (int32_t i = 0; i < 15; i++) {
-        gb->lightCheckers[i].pipIndex = lightSetup[i];
-        gb->lightCheckers[i].pipYOffset = pipYOffsets[i];
+        pipIndex = lightSetup[i];
+        gb->lightCheckers[i].pipIndex = pipIndex;
+        gb->lightCheckers[i].pipYOffset = gb->pipCounts[pipIndex];
         gb->lightCheckers[i].color = LIGHT;
-        gb->pipCounts[lightSetup[i]]++;
+        gb->pipCounts[pipIndex]++;
     }
 
     for (int32_t i = 0; i < 15; i++) {
-        gb->darkCheckers[i].pipIndex = darkSetup[i];
-        gb->darkCheckers[i].pipYOffset = pipYOffsets[i];
-        gb->lightCheckers[i].color = DARK;
-        gb->pipCounts[darkSetup[i] + 15]++;
+        pipIndex = darkSetup[i];
+        gb->darkCheckers[i].pipIndex = pipIndex;
+        gb->darkCheckers[i].pipYOffset = gb->pipCounts[pipIndex];
+        gb->darkCheckers[i].color = DARK;
+        gb->pipCounts[pipIndex]++;
     }
 }
 

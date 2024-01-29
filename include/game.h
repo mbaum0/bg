@@ -12,7 +12,7 @@ typedef struct GameBoard GameBoard;
 struct GameBoard {
   Checker lightCheckers[15];
   Checker darkCheckers[15];
-  int32_t pipCounts[30];     // number of checkers on each pip
+  int32_t pipCounts[25];     // number of checkers on each pip
   GameDie die1;
   GameDie die2;
 };

@@ -19,9 +19,9 @@ int32_t getCheckerX(Checker* checker) {
 
   if (pipIndex == 0){
     if (checker->color == LIGHT){
-      return CHECKER_BOT_HOME_X + (checker->pipYOffset * CHECKER_W);
+      return CHECKER_TOP_HOME_X + (checker->pipYOffset * CHECKER_W);
     } else {
-      return CHECKER_TOP_HOME_X;
+      return CHECKER_BOT_HOME_X + (checker->pipYOffset * CHECKER_W);
     }
   }
 
@@ -50,9 +50,9 @@ int32_t getCheckerY(Checker* checker) {
 
   if (pipIndex == 0){
     if (checker->color == LIGHT){
-      return CHECKER_BOT_HOME_Y;
-    } else {
       return CHECKER_TOP_HOME_Y;
+    } else {
+      return CHECKER_BOT_HOME_Y;
     }
   }
   if (isBetween(pipIndex, 1, 12)) {
