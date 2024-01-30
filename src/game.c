@@ -96,13 +96,13 @@ Color getPipOwner(GameBoard* gb, int32_t pipIndex) {
     return NONE;
 }
 
-// Whether the move was successful
+// return whether the move was successful
 bool moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     // get the top checker on the pip
     Checker* c = NULL;
     int32_t topIndex = -1;
 
-    if (pipIndex == 0) {
+    if (pipIndex == LIGHT_HOME || pipIndex == DARK_HOME) {
         return false;
     }
 
@@ -131,12 +131,12 @@ bool moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     int32_t direction = (c->color == LIGHT) ? 1 : -1;
     amount *= direction;
     int32_t newIndex = c->pipIndex + amount;
-    if (newIndex <= 0 || newIndex >= 25) {
+    if (newIndex <= LIGHT_HOME || newIndex >= DARK_HOME) {
         if (c->color == LIGHT) {
-            newIndex = 0;
+            newIndex = LIGHT_HOME;
         }
         else {
-            newIndex = 25;
+            newIndex = DARK_HOME;
         }
     }
 
