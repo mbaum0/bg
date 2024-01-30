@@ -81,13 +81,29 @@ Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex) {
     return topChecker;
 }
 
-void moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
+Color getPipOwner(GameBoard* gb, int32_t pipIndex) {
+    Checker* c = NULL;
+    for (int32_t i = 0; i < 15; i++) {
+        c = &gb->lightCheckers[i];
+        if (c->pipIndex == pipIndex) {
+            return c->color;
+        }
+        c = &gb->darkCheckers[i];
+        if (c->pipIndex == pipIndex) {
+            return c->color;
+        }
+    }
+    return NONE;
+}
+
+// Whether the move was successful
+bool moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     // get the top checker on the pip
     Checker* c = NULL;
     int32_t topIndex = -1;
 
     if (pipIndex == 0) {
-        return;
+        return false;
     }
 
     for (int32_t i = 0; i < 15; i++) {
@@ -108,7 +124,7 @@ void moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     }
     if (c == NULL) {
         log_error("no checker found on pip %d", pipIndex);
-        return;
+        return false;
     }
 
     // move the checker
@@ -116,17 +132,25 @@ void moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     amount *= direction;
     int32_t newIndex = c->pipIndex + amount;
     if (newIndex <= 0 || newIndex >= 25) {
-        if (c->color == LIGHT){
+        if (c->color == LIGHT) {
             newIndex = 0;
-        } else {
+        }
+        else {
             newIndex = 25;
         }
     }
+
+    Color pipOwner = getPipOwner(gb, newIndex);
+    if (pipOwner != c->color && pipOwner != NONE) {
+        return false;
+    }
+
     c->pipOffset = gb->pipCounts[newIndex];
     c->pipIndex = newIndex;
     gb->pipCounts[newIndex]++;
     gb->pipCounts[pipIndex]--;
     log_debug("moved checker from pip %d to pip %d", pipIndex, c->pipIndex);
+    return true;
 }
 
 void handlePipClick(uint32_t eventType, SDL_Event* e, void* data) {
@@ -175,22 +199,30 @@ void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
     int32_t pipIndex = c->pipIndex;
     if (c->color == LIGHT) {
         if (gb->state == LIGHT_MOVE_ONE) {
-            moveChecker(gb, pipIndex, gb->die1.value);
-            updateGameState(gb, LIGHT_MOVE_TWO);
+            if (moveChecker(gb, pipIndex, gb->die1.value)) {
+                updateGameState(gb, LIGHT_MOVE_TWO);
+            }
+
         }
         else if (gb->state == LIGHT_MOVE_TWO) {
-            moveChecker(gb, pipIndex, gb->die2.value);
-            updateGameState(gb, DARK_DICE_ROLL);
+            if (moveChecker(gb, pipIndex, gb->die2.value)) {
+                updateGameState(gb, DARK_DICE_ROLL);
+            }
+
         }
     }
     else {
         if (gb->state == DARK_MOVE_ONE) {
-            moveChecker(gb, pipIndex, gb->die1.value);
-            updateGameState(gb, DARK_MOVE_TWO);
+            if (moveChecker(gb, pipIndex, gb->die1.value)) {
+                updateGameState(gb, DARK_MOVE_TWO);
+            }
+
         }
         else if (gb->state == DARK_MOVE_TWO) {
-            moveChecker(gb, pipIndex, gb->die2.value);
-            updateGameState(gb, LIGHT_DICE_ROLL);
+            if (moveChecker(gb, pipIndex, gb->die2.value)) {
+                updateGameState(gb, LIGHT_DICE_ROLL);
+            }
+
         }
     }
 }
