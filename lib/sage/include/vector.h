@@ -31,4 +31,4 @@ float getHorizontalVelocity(float velocity, float x0, float y0, float x1, float 
 
 float getVelocityFromAcceleration(float acceleration, float velocity, float x0, float x1, float y0, float y1, float* h, float* v);
 
-
+void getNextCoordinatesCircle(float radius, float velocity, float h, float k, float x, float y, float* nextX, float* nextY);

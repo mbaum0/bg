@@ -15,6 +15,7 @@ extern uint32_t CheckerClickEventType;
 extern uint32_t DiceClickEventType;
 
 void rollDiceIfPossible(GameBoard* gb);
+void swapDiceIfPossible(GameBoard* gb);
 void updateGameState(GameBoard* gb, GameState state);
 void moveCheckerIfPossible(GameBoard* gb, Checker* c);
 
@@ -173,13 +174,15 @@ void handleCheckerClick(uint32_t eventType, SDL_Event* e, void* data) {
     moveCheckerIfPossible(gb, checker);
 }
 
+
+
 void handleDiceClick(uint32_t eventType, SDL_Event* e, void* data) {
     (void)eventType;
     (void)e;
     GameBoard* gb = (GameBoard*)data;
     log_debug("got dice click event");
+    swapDiceIfPossible(gb);
     rollDiceIfPossible(gb);
-
 }
 
 void rollDiceIfPossible(GameBoard* gb) {
@@ -195,17 +198,27 @@ void rollDiceIfPossible(GameBoard* gb) {
     }
 }
 
+void swapDiceIfPossible(GameBoard* gb) {
+    if (gb->state == LIGHT_MOVE_ONE || gb->state == DARK_MOVE_ONE) {
+        int32_t index1 = gb->die1.index;
+        gb->die1.index = gb->die2.index;
+        gb->die2.index = index1;
+    }
+}
+
 void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
     int32_t pipIndex = c->pipIndex;
+    int32_t firstDie = (gb->die1.index == 0) ? gb->die1.value : gb->die2.value;
+    int32_t secondDie = (gb->die2.index == 1) ? gb->die2.value : gb->die1.value;
     if (c->color == LIGHT) {
         if (gb->state == LIGHT_MOVE_ONE) {
-            if (moveChecker(gb, pipIndex, gb->die1.value)) {
+            if (moveChecker(gb, pipIndex, firstDie)) {
                 updateGameState(gb, LIGHT_MOVE_TWO);
             }
 
         }
         else if (gb->state == LIGHT_MOVE_TWO) {
-            if (moveChecker(gb, pipIndex, gb->die2.value)) {
+            if (moveChecker(gb, pipIndex, secondDie)) {
                 updateGameState(gb, DARK_DICE_ROLL);
             }
 
@@ -213,13 +226,13 @@ void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
     }
     else {
         if (gb->state == DARK_MOVE_ONE) {
-            if (moveChecker(gb, pipIndex, gb->die1.value)) {
+            if (moveChecker(gb, pipIndex, firstDie)) {
                 updateGameState(gb, DARK_MOVE_TWO);
             }
 
         }
         else if (gb->state == DARK_MOVE_TWO) {
-            if (moveChecker(gb, pipIndex, gb->die2.value)) {
+            if (moveChecker(gb, pipIndex, secondDie)) {
                 updateGameState(gb, LIGHT_DICE_ROLL);
             }
 

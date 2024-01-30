@@ -6,7 +6,7 @@
 #pragma once
 #include <stdint.h>
 
-#define DARK_HOME 0
-#define LIGHT_HOME 25
+#define DARK_HOME 25
+#define LIGHT_HOME 0
 
 void createPipSprites(void);

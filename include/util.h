@@ -61,6 +61,7 @@
 #define DICE_Y X(448)
 
 #define CHECKER_VELOCITY X(20)
+#define DICE_VELOCITY X(5)
 
 #define EPSILON 0.0001
 
