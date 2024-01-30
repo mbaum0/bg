@@ -26,9 +26,13 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: LIGHT_DICE_ROLL");
         gb->die1.side = 0;
         gb->die2.side = 0;
+        gb->die1.animation = DICE_MOVE;
+        gb->die2.animation = DICE_MOVE;
         break;
     case LIGHT_MOVE_ONE:
         log_debug("Entered state: LIGHT_MOVE_ONE");
+        gb->die1.animation = DICE_SWAP;
+        gb->die2.animation = DICE_SWAP;
         break;
     case LIGHT_MOVE_TWO:
         log_debug("Entered state: LIGHT_MOVE_TWO");
@@ -37,9 +41,13 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: DARK_DICE_ROLL");
         gb->die1.side = 1;
         gb->die2.side = 1;
+        gb->die1.animation = DICE_MOVE;
+        gb->die2.animation = DICE_MOVE;
         break;
     case DARK_MOVE_ONE:
         log_debug("Entered state: DARK_MOVE_ONE");
+        gb->die1.animation = DICE_SWAP;
+        gb->die2.animation = DICE_SWAP;
         break;
     case DARK_MOVE_TWO:
         log_debug("Entered state: DARK_MOVE_TWO");
@@ -275,8 +283,8 @@ void initEventCallbacks(GameBoard* gb) {
 
 GameBoard* GameBoard_create(void) {
     GameBoard* gb = calloc(1, sizeof(GameBoard));
-    gb->die1 = (GameDie){ 1, 0, 1 };
-    gb->die2 = (GameDie){ 2, 1, 1 };
+    gb->die1 = (GameDie){ 1, 0, 1, DICE_NONE };
+    gb->die2 = (GameDie){ 2, 1, 1, DICE_NONE };
     initCheckerSetup(gb);
     createBoardSprites();
     createPipSprites();

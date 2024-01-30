@@ -33,19 +33,24 @@ void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   newX = (die->side == 0) ? DICE_LEFT_X : DICE_RIGHT_X;
   if (die->index == 1) { newX += DICE_GAP; }
 
-  if (!isEqual(dst.x, newX, DICE_VELOCITY) || !isEqual(dst.y, newY, DICE_VELOCITY)){
-    //float xVel = getHorizontalVelocity(CHECKER_VELOCITY, dst.x, dst.y, newX, newY);
-    //float yVel = getVerticalVelocity(CHECKER_VELOCITY, dst.x, dst.y, newX, newY);
-    //Sprite_setLocation(sprite, dst.x + xVel, dst.y + yVel);
-    float nextX, nextY;
-    float radius = (DICE_GAP / 2);
-    float sideX = (die->side == 0) ? DICE_LEFT_X : DICE_RIGHT_X;
-    float centerX = sideX + (DICE_GAP / 2);
-    float centerY = DICE_Y;
-    getNextCoordinatesCircle(radius, DICE_VELOCITY, centerX, centerY, dst.x, dst.y, &nextX, &nextY);
-    Sprite_setLocation(sprite, nextX, nextY);
-    
-  } else {
+  if (!isEqual(dst.x, newX, DICE_VELOCITY) || !isEqual(dst.y, newY, DICE_VELOCITY)) {
+    if (die->animation == DICE_SWAP) {
+      float nextX, nextY;
+      float radius = (DICE_GAP / 2);
+      float sideX = (die->side == 0) ? DICE_LEFT_X : DICE_RIGHT_X;
+      float centerX = sideX + (DICE_GAP / 2);
+      float centerY = DICE_Y;
+      getNextCoordinatesCircle(radius, DICE_VELOCITY, centerX, centerY, dst.x, dst.y, &nextX, &nextY);
+      Sprite_setLocation(sprite, nextX, nextY);
+
+    }
+    else if (die->animation == DICE_MOVE) {
+      float xVel = getHorizontalVelocity(CHECKER_VELOCITY, dst.x, dst.y, newX, newY);
+      float yVel = getVerticalVelocity(CHECKER_VELOCITY, dst.x, dst.y, newX, newY);
+      Sprite_setLocation(sprite, dst.x + xVel, dst.y + yVel);
+    }
+  }
+  else {
     Sprite_setLocation(sprite, newX, newY);
   }
 }
