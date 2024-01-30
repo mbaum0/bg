@@ -18,6 +18,10 @@ void rollDiceIfPossible(GameBoard* gb);
 void swapDiceIfPossible(GameBoard* gb);
 void updateGameState(GameBoard* gb, GameState state);
 void moveCheckerIfPossible(GameBoard* gb, Checker* c);
+bool isValidMove(GameBoard* gb, Color player, Checker* checker, int32_t amount);
+Color getPipOwner(GameBoard* gb, int32_t pipIndex);
+bool playerHasAllCheckersHome(GameBoard* gb, Color player);
+bool playerHasValidMoves(GameBoard* gb, Color player);
 
 void updateGameState(GameBoard* gb, GameState state) {
     switch (state)
@@ -56,6 +60,41 @@ void updateGameState(GameBoard* gb, GameState state) {
         break;
     }
     gb->state = state;
+}
+
+Color getPipOwner(GameBoard* gb, int32_t pipIndex){
+    if (pipIndex == DARK_HOME){
+        return DARK;
+    }
+    if (pipIndex == LIGHT_HOME){
+        return LIGHT;
+    }
+    Checker* c = getTopCheckerOnPip(gb, pipIndex);
+    if (c == NULL){
+        return NONE;
+    }
+    int32_t numCheckers = getNumCheckersOnPip(gb, pipIndex);
+    if (numCheckers == 1){
+        return BLOT;
+    }
+    if (c->color == DARK){
+        return DARK;
+    }
+    if (c->color == LIGHT){
+        return LIGHT;
+    }
+    return NONE;
+}
+
+/**
+ * @brief Returns true if the player has any valid moves
+ * 
+ * @param gb 
+ * @return true 
+ * @return false 
+ */
+bool playerHasValidMoves(GameBoard* gb, Color player){
+return false;
 }
 
 int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex) {
@@ -103,6 +142,21 @@ Color getPipOwner(GameBoard* gb, int32_t pipIndex) {
         }
     }
     return NONE;
+}
+
+// returns true if a move is valid
+bool isValidMove(GameBoard* gb, Color player, Checker* c, int32_t amount){
+    if (c->color != player){
+        return false;
+    }
+    int32_t direction = (c->color == LIGHT) ? 1 : -1;
+    int32_t newPipIndex = c->pipIndex + (amount * direction);
+
+    Color newOwner = getPipOwner(gb, newPipIndex);
+    if (newOwner == player || newOwner == NONE || newOwner == BLOT){
+        return true;
+    }
+    return false;
 }
 
 // return whether the move was successful
