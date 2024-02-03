@@ -22,7 +22,7 @@ bool isValidMove(GameBoard* gb, Color player, Checker* checker, int32_t amount);
 Color getPipOwner(GameBoard* gb, int32_t pipIndex);
 bool playerHasAllCheckersHome(GameBoard* gb, Color player);
 bool playerHasMoves(GameBoard* gb, Color player);
-void endPlayerTurnIfNoMoves(GameBoard* gb, Color player);
+void endPlayerTurnIfNoMoves(GameBoard* gb);
 Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex);
 int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex);
 
@@ -40,11 +40,11 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: LIGHT_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
-        endPlayerTurnIfNoMoves(gb, LIGHT);
+        endPlayerTurnIfNoMoves(gb);
         break;
     case LIGHT_MOVE_TWO:
         log_debug("Entered state: LIGHT_MOVE_TWO");
-        endPlayerTurnIfNoMoves(gb, LIGHT);
+        endPlayerTurnIfNoMoves(gb);
         break;
     case DARK_DICE_ROLL:
         log_debug("Entered state: DARK_DICE_ROLL");
@@ -57,11 +57,11 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: DARK_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
-        endPlayerTurnIfNoMoves(gb, DARK);
+        endPlayerTurnIfNoMoves(gb);
         break;
     case DARK_MOVE_TWO:
         log_debug("Entered state: DARK_MOVE_TWO");
-        endPlayerTurnIfNoMoves(gb, DARK);
+        endPlayerTurnIfNoMoves(gb);
         break;
     default:
         break;
@@ -316,11 +316,22 @@ void swapDiceIfPossible(GameBoard* gb) {
 /**
  * @brief Skip to next player's dice roll if the player has no moves
  */
-void endPlayerTurnIfNoMoves(GameBoard* gb, Color player) {
+void endPlayerTurnIfNoMoves(GameBoard* gb) {
+    Color player = NONE;
+    if (gb->state == DARK_MOVE_ONE || gb->state == DARK_MOVE_TWO){
+        player = DARK;
+    } else if (gb->state == LIGHT_MOVE_ONE || gb->state == LIGHT_MOVE_TWO){
+        player = LIGHT;
+    } else {
+        return;
+    }
+
     if (!playerHasMoves(gb, player)) {
         if (player == LIGHT){
+            log_debug("LIGHT has no moves!");
             updateGameState(gb, DARK_DICE_ROLL);
         } else {
+            log_debug("DARK has no moves!");
             updateGameState(gb, LIGHT_DICE_ROLL);
         }
     }
