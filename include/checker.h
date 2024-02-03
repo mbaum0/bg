@@ -11,6 +11,8 @@
 typedef struct Checker Checker;
 typedef enum { LIGHT, DARK, NONE, BLOT } Color;
 
+#define OPPONENT_COLOR(c) (c == LIGHT ? DARK : LIGHT)
+
 struct Checker {
   int32_t pipIndex;
   int32_t pipOffset;

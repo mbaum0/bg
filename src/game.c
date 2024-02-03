@@ -22,6 +22,9 @@ bool isValidMove(GameBoard* gb, Color player, Checker* checker, int32_t amount);
 Color getPipOwner(GameBoard* gb, int32_t pipIndex);
 bool playerHasAllCheckersHome(GameBoard* gb, Color player);
 bool playerHasMoves(GameBoard* gb, Color player);
+void endPlayerTurnIfNoMoves(GameBoard* gb, Color player);
+Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex);
+int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex);
 
 void updateGameState(GameBoard* gb, GameState state) {
     switch (state)
@@ -33,17 +36,15 @@ void updateGameState(GameBoard* gb, GameState state) {
         gb->die1.animation = DICE_MOVE;
         gb->die2.animation = DICE_MOVE;
         break;
-    case CHECK_LIGHT_MOVES:
-        log_debug("Entered state: CHECK_LIGHT_MOVES");
-        break;
-
     case LIGHT_MOVE_ONE:
         log_debug("Entered state: LIGHT_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
+        endPlayerTurnIfNoMoves(gb, LIGHT);
         break;
     case LIGHT_MOVE_TWO:
         log_debug("Entered state: LIGHT_MOVE_TWO");
+        endPlayerTurnIfNoMoves(gb, LIGHT);
         break;
     case DARK_DICE_ROLL:
         log_debug("Entered state: DARK_DICE_ROLL");
@@ -56,9 +57,11 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: DARK_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
+        endPlayerTurnIfNoMoves(gb, DARK);
         break;
     case DARK_MOVE_TWO:
         log_debug("Entered state: DARK_MOVE_TWO");
+        endPlayerTurnIfNoMoves(gb, DARK);
         break;
     default:
         break;
@@ -91,6 +94,29 @@ Color getPipOwner(GameBoard* gb, int32_t pipIndex) {
 }
 
 /**
+ * @brief Returns true if all of the players checkers are home
+ */
+bool playerHasAllCheckersHome(GameBoard* gb, Color player) {
+    Checker checker;
+    for (int32_t i = 0; i < 15; i++) {
+        if (player == LIGHT) {
+            checker = gb->lightCheckers[i];
+        }
+        else {
+            checker = gb->darkCheckers[i];
+        }
+
+        if (player == LIGHT && checker.pipIndex > LIGHT_HOME_START) {
+            return false;
+        }
+        if (player == DARK && checker.pipIndex < DARK_HOME_START) {
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
  * @brief Returns true if the player has any valid moves
  *
  * @param gb
@@ -98,20 +124,41 @@ Color getPipOwner(GameBoard* gb, int32_t pipIndex) {
  * @return false
  */
 bool playerHasMoves(GameBoard* gb, Color player) {
+    bool allCheckersHome = playerHasAllCheckersHome(gb, player);
     int32_t direction = (player == LIGHT) ? 1 : -1;
     for (int32_t i = 0; i < 25;i++) {
         if (getPipOwner(gb, i) == player) {
             int32_t newIndex = i + (gb->die1.value * direction);
-            Color newIndexOwner = getPipOwner(gb, newIndex);
-            if (newIndexOwner == player || newIndexOwner == NONE || newIndexOwner == BLOT) {
-                return true;
+            newIndex = CAP_PIP_INDEX(newIndex);
+
+            if (newIndex == PLAYER_HOME(player)) {
+                // if this is the players home, they must have all checkers home
+                if (allCheckersHome) {
+                    return true;
+                }
+            }
+            else {
+                Color newIndexOwner = getPipOwner(gb, newIndex);
+                if (newIndexOwner != OPPONENT_COLOR(player) && newIndexOwner != BLOT) {
+                    return true;
+                }
             }
             // try the other die
             newIndex = i + (gb->die2.value * direction);
-            newIndexOwner = getPipOwner(gb, newIndex);
-            if (newIndexOwner == player || newIndexOwner == NONE || newIndexOwner == BLOT) {
-                return true;
+            newIndex = CAP_PIP_INDEX(newIndex);
+
+            if (newIndex == PLAYER_HOME(player)) {
+                if (allCheckersHome) {
+                    return true;
+                }
             }
+            else {
+                Color newIndexOwner = getPipOwner(gb, newIndex);
+                if (newIndexOwner != OPPONENT_COLOR(player) && newIndexOwner != BLOT) {
+                    return true;
+                }
+            }
+
         }
     }
     return false;
@@ -147,21 +194,6 @@ Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex) {
         }
     }
     return topChecker;
-}
-
-Color getPipOwner(GameBoard* gb, int32_t pipIndex) {
-    Checker* c = NULL;
-    for (int32_t i = 0; i < 15; i++) {
-        c = &gb->lightCheckers[i];
-        if (c->pipIndex == pipIndex) {
-            return c->color;
-        }
-        c = &gb->darkCheckers[i];
-        if (c->pipIndex == pipIndex) {
-            return c->color;
-        }
-    }
-    return NONE;
 }
 
 // returns true if a move is valid
@@ -214,17 +246,10 @@ bool moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     int32_t direction = (c->color == LIGHT) ? 1 : -1;
     amount *= direction;
     int32_t newIndex = c->pipIndex + amount;
-    if (newIndex <= LIGHT_HOME || newIndex >= DARK_HOME) {
-        if (c->color == LIGHT) {
-            newIndex = LIGHT_HOME;
-        }
-        else {
-            newIndex = DARK_HOME;
-        }
-    }
+    newIndex = CAP_PIP_INDEX(newIndex);
 
     Color pipOwner = getPipOwner(gb, newIndex);
-    if (pipOwner != c->color && pipOwner != NONE) {
+    if (pipOwner == OPPONENT_COLOR(c->color) || pipOwner == BLOT) {
         return false;
     }
 
@@ -271,12 +296,12 @@ void rollDiceIfPossible(GameBoard* gb) {
     if (gb->state == LIGHT_DICE_ROLL) {
         gb->die1.value = generateRandomNumber(1, 6);
         gb->die2.value = generateRandomNumber(1, 6);
-        updateGameState(gb, CHECK_LIGHT_MOVES);
+        updateGameState(gb, LIGHT_MOVE_ONE);
     }
     else if (gb->state == DARK_DICE_ROLL) {
         gb->die1.value = generateRandomNumber(1, 6);
         gb->die2.value = generateRandomNumber(1, 6);
-        updateGameState(gb, CHECK_DARK_MOVES);
+        updateGameState(gb, DARK_MOVE_ONE);
     }
 }
 
@@ -289,37 +314,10 @@ void swapDiceIfPossible(GameBoard* gb) {
 }
 
 /**
- * @brief Progresses the game to the next state if the player has a move. Otherwise,
- * skip to the next player's turn
+ * @brief Skip to next player's dice roll if the player has no moves
  */
-void startPlayerMoveIfPossible(GameBoard* gb, Color player, int32_t turn) {
-    if (playerHasMoves(gb, player)) {
-        if (player == LIGHT) {
-            switch (turn)
-            {
-            case 1:
-                updategameState(gb, LIGHT_MOVE_ONE);
-                break;
-            case 2:
-                updateGameState(gb, LIGHT_MOVE_TWO);
-                break;
-            default:
-                break;
-            }
-        }
-        else if (player == DARK) {
-            switch (turn) {
-            case 1:
-                updateGameState(gb, DARK_MOVE_ONE);
-                break;
-            case 2:
-                updateGameState(gb, DARK_MOVE_TWO);
-                break;
-            default:
-                break;
-            }
-        }
-    } else {
+void endPlayerTurnIfNoMoves(GameBoard* gb, Color player) {
+    if (!playerHasMoves(gb, player)) {
         if (player == LIGHT){
             updateGameState(gb, DARK_DICE_ROLL);
         } else {
