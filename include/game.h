@@ -8,7 +8,7 @@
 #include "dice.h"
 
 typedef struct GameBoard GameBoard;
-typedef enum { LIGHT_DICE_ROLL, LIGHT_MOVE_ONE, LIGHT_MOVE_TWO, DARK_DICE_ROLL, DARK_MOVE_ONE, DARK_MOVE_TWO } GameState;
+typedef enum { LIGHT_DICE_ROLL, CHECK_LIGHT_MOVES, LIGHT_MOVE_ONE, LIGHT_MOVE_TWO, DARK_DICE_ROLL, CHECK_DARK_MOVES, DARK_MOVE_ONE, DARK_MOVE_TWO } GameState;
 
 
 struct GameBoard {

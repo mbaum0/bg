@@ -8,7 +8,7 @@
 
 bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fillDisplay) {
   (void)winHeight;
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
     log_error("Couldn't initialize SDL: %s", SDL_GetError());
     return false;
   }
