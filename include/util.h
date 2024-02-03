@@ -53,6 +53,9 @@
 #define CHECKER_TOP_HOME_Y X(10)
 #define CHECKER_BOT_HOME_X X(5)
 #define CHECKER_BOT_HOME_Y X(660)
+#define CHECKER_BAR_X X(200)
+#define CHECKER_BAR_TOP_Y X(431)
+#define CHECKER_BAR_BOT_Y X(471)
 
 #define DICE_W X(35)
 #define DICE_LEFT_X X(67)
