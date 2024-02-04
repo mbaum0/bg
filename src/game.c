@@ -332,6 +332,7 @@ bool moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
     }
 
     if (!isValidMove(gb, c, amount)) {
+        log_debug("invalid move");
         return false;
     }
 
