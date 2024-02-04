@@ -32,6 +32,7 @@ void saveCheckerState(GameBoard* gb);
 void loadCheckerState(GameBoard* gb);
 void confirmIfPossible(GameBoard* gb);
 void undoIfPossible(GameBoard* gb);
+void setDiceUsed(GameBoard* gb, int32_t diceUsed);
 
 void updateGameState(GameBoard* gb, GameState state) {
     switch (state)
@@ -42,8 +43,7 @@ void updateGameState(GameBoard* gb, GameState state) {
         gb->die2.side = 0;
         gb->die1.animation = DICE_MOVE;
         gb->die2.animation = DICE_MOVE;
-        gb->die1.used = false;
-        gb->die2.used = false;
+        setDiceUsed(gb, 0);
         gb->confirm.visible = false;
         gb->undo.visible = false;
         break;
@@ -51,8 +51,7 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: LIGHT_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
-        gb->die1.used = false;
-        gb->die2.used = false;
+        setDiceUsed(gb, 0);
         gb->confirm.visible = false;
         gb->undo.visible = false;
         saveCheckerState(gb);
@@ -60,12 +59,12 @@ void updateGameState(GameBoard* gb, GameState state) {
         break;
     case LIGHT_MOVE_TWO:
         log_debug("Entered state: LIGHT_MOVE_TWO");
-        gb->die1.used = true;
+        setDiceUsed(gb, 1);
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
         break;
     case LIGHT_CONFIRM:
         log_debug("Entered state: LIGHT_CONFIRM");
-        gb->die2.used = true;
+        setDiceUsed(gb, 2);
         gb->confirm.visible = true;
         gb->confirm.side = 0;
         gb->undo.visible = true;
@@ -77,8 +76,7 @@ void updateGameState(GameBoard* gb, GameState state) {
         gb->die2.side = 1;
         gb->die1.animation = DICE_MOVE;
         gb->die2.animation = DICE_MOVE;
-        gb->die1.used = false;
-        gb->die2.used = false;
+        setDiceUsed(gb, 0);
         gb->confirm.visible = false;
         gb->undo.visible = false;
         break;
@@ -88,19 +86,18 @@ void updateGameState(GameBoard* gb, GameState state) {
         gb->die2.animation = DICE_SWAP;
         gb->confirm.visible = false;
         gb->undo.visible = false;
-        gb->die1.used = false;
-        gb->die2.used = false;
+        setDiceUsed(gb, 0);
         saveCheckerState(gb);
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
         break;
     case DARK_MOVE_TWO:
         log_debug("Entered state: DARK_MOVE_TWO");
-        gb->die1.used = true;
+        setDiceUsed(gb, 1);
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
         break;
     case DARK_CONFIRM:
         log_debug("Entered state: DARK_CONFIRM");
-        gb->die2.used = true;
+        setDiceUsed(gb, 2);
         gb->confirm.visible = true;
         gb->confirm.side = 1;
         gb->undo.visible = true;
@@ -110,6 +107,27 @@ void updateGameState(GameBoard* gb, GameState state) {
         break;
     }
     gb->state = state;
+}
+
+void setDiceUsed(GameBoard* gb, int32_t diceUsed) {
+    if (diceUsed == 0) {
+        gb->die1.used = false;
+        gb->die2.used = false;
+    }
+    else if (diceUsed == 1) {
+        if (gb->die1.index == 0) {
+            gb->die1.used = true;
+            gb->die2.used = false;
+        }
+        else {
+            gb->die1.used = false;
+            gb->die2.used = true;
+        }
+    }
+    else {
+        gb->die1.used = true;
+        gb->die2.used = true;
+    }
 }
 
 void saveCheckerState(GameBoard* gb) {
@@ -584,8 +602,8 @@ GameBoard* GameBoard_create(void) {
     GameBoard* gb = calloc(1, sizeof(GameBoard));
     gb->die1 = (GameDie){ 1, 0, 1, DICE_NONE, false };
     gb->die2 = (GameDie){ 2, 1, 1, DICE_NONE, false };
-    gb->confirm = (GameButton){CONFIRM_BTN, false, 1};
-    gb->undo = (GameButton){UNDO_BTN, false, 1};
+    gb->confirm = (GameButton){ CONFIRM_BTN, false, 1 };
+    gb->undo = (GameButton){ UNDO_BTN, false, 1 };
     initCheckerSetup(gb);
     createBoardSprites();
     createPipSprites();
