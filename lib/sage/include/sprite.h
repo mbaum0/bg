@@ -29,6 +29,8 @@ struct Sprite {
   void* click_context;
   bool useViewport;
   int32_t z;
+  uint8_t alpha;
+  SDL_Color outline;
 };
 
 /**
@@ -80,3 +82,7 @@ void Sprite_setFrame(Sprite* sprite, uint32_t frame);
  * @brief Get the frame of the sprite
  */
 uint32_t Sprite_getFrame(Sprite* sprite);
+
+void Sprite_setAlpha(Sprite* sprite, uint8_t alpha);
+
+void Sprite_setOutline(Sprite* sprite, SDL_Color color);

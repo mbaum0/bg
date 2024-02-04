@@ -71,8 +71,9 @@ void VM_setViewport(ViewManager* vm, SDL_FRect viewport){
   vm->viewport = viewport;
 }
 
-void drawSpriteBorder(ViewManager* vm, SDL_FRect border) {
-  SDL_SetRenderDrawColor(vm->renderer, 255, 0, 0, 255);
+void drawSpriteBorder(ViewManager* vm, SDL_FRect border, SDL_Color color) {
+  SDL_SetRenderDrawBlendMode(vm->renderer, SDL_BLENDMODE_BLEND);
+  SDL_SetRenderDrawColor(vm->renderer, color.r, color.g, color.b, color.a);
   SDL_RenderRect(vm->renderer, &border);
 }
 
@@ -92,8 +93,9 @@ void VM_draw(ViewManager* vm) {
         newDst.x += vm->viewport.x;
         newDst.y += vm->viewport.y;
       }
+      SDL_SetTextureAlphaMod(sprite->texture, sprite->alpha);
       SDL_RenderTexture(vm->renderer, sprite->texture, &sprite->src_rect, &newDst);
-      //drawSpriteBorder(vm, newDst);
+      drawSpriteBorder(vm, newDst, sprite->outline);
     }
   }
   Snippet** snippets = *vm->snippets;

@@ -33,8 +33,6 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
 
   mm->renderer = SDL_CreateRenderer(mm->window, NULL, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
-  //SDL_SetRenderLogicalPresentation(mm->renderer, 430, 932, SDL_LOGICAL_PRESENTATION_LETTERBOX, SDL_SCALEMODE_BEST);
-
   if (!mm->renderer) {
     log_error("Failed to create renderer: %s", SDL_GetError());
     return false;
