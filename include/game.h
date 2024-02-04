@@ -6,6 +6,7 @@
 #pragma once
 #include "checker.h"
 #include "dice.h"
+#include "buttons.h"
 
 typedef struct GameBoard GameBoard;
 typedef enum { LIGHT_DICE_ROLL, LIGHT_MOVE_ONE, LIGHT_MOVE_TWO, LIGHT_CONFIRM, DARK_DICE_ROLL, DARK_MOVE_ONE, DARK_MOVE_TWO, DARK_CONFIRM } GameState;
@@ -20,6 +21,8 @@ struct GameBoard {
   GameDie die1;
   GameDie die2;
   GameState state;
+  GameButton confirm;
+  GameButton undo;
 };
 
 GameBoard* GameBoard_create(void);

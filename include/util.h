@@ -16,6 +16,7 @@
 #define Z_TRIM 3
 #define Z_CHECKERS 4
 #define Z_DICE 5
+#define Z_BUTTONS 6
 
 #define X(x) (Sage_convertHighDPI(x))
 
@@ -62,6 +63,12 @@
 #define DICE_RIGHT_X X(284)
 #define DICE_GAP X(45)
 #define DICE_Y X(448)
+
+#define BTN_W DICE_W
+#define BTN_LEFT_X DICE_LEFT_X
+#define BTN_RIGHT_X DICE_RIGHT_X
+#define BTN_GAP DICE_GAP
+#define BTN_Y DICE_Y
 
 #define CHECKER_VELOCITY X(20)
 #define DICE_VELOCITY X(5)

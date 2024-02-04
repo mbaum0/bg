@@ -13,6 +13,7 @@
 extern uint32_t PipClickEventType;
 extern uint32_t CheckerClickEventType;
 extern uint32_t DiceClickEventType;
+extern uint32_t ButtonClickEventType;
 
 void rollDiceIfPossible(GameBoard* gb);
 void swapDiceIfPossible(GameBoard* gb);
@@ -29,6 +30,8 @@ bool playerHasCheckersOnBar(GameBoard* gb, Color player);
 int32_t getNextPipIndex(Checker* c, int32_t amount);
 void saveCheckerState(GameBoard* gb);
 void loadCheckerState(GameBoard* gb);
+void confirmIfPossible(GameBoard* gb);
+void undoIfPossible(GameBoard* gb);
 
 void updateGameState(GameBoard* gb, GameState state) {
     switch (state)
@@ -39,11 +42,15 @@ void updateGameState(GameBoard* gb, GameState state) {
         gb->die2.side = 0;
         gb->die1.animation = DICE_MOVE;
         gb->die2.animation = DICE_MOVE;
+        gb->confirm.visible = false;
+        gb->undo.visible = false;
         break;
     case LIGHT_MOVE_ONE:
         log_debug("Entered state: LIGHT_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
+        gb->confirm.visible = false;
+        gb->undo.visible = false;
         saveCheckerState(gb);
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
         break;
@@ -53,6 +60,10 @@ void updateGameState(GameBoard* gb, GameState state) {
         break;
     case LIGHT_CONFIRM:
         log_debug("Entered state: LIGHT_CONFIRM");
+        gb->confirm.visible = true;
+        gb->confirm.side = 0;
+        gb->undo.visible = true;
+        gb->undo.side = 0;
         break;
     case DARK_DICE_ROLL:
         log_debug("Entered state: DARK_DICE_ROLL");
@@ -60,11 +71,15 @@ void updateGameState(GameBoard* gb, GameState state) {
         gb->die2.side = 1;
         gb->die1.animation = DICE_MOVE;
         gb->die2.animation = DICE_MOVE;
+        gb->confirm.visible = false;
+        gb->undo.visible = false;
         break;
     case DARK_MOVE_ONE:
         log_debug("Entered state: DARK_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
+        gb->confirm.visible = false;
+        gb->undo.visible = false;
         saveCheckerState(gb);
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
         break;
@@ -74,6 +89,10 @@ void updateGameState(GameBoard* gb, GameState state) {
         break;
     case DARK_CONFIRM:
         log_debug("Entered state: DARK_CONFIRM");
+        gb->confirm.visible = true;
+        gb->confirm.side = 1;
+        gb->undo.visible = true;
+        gb->undo.side = 1;
         break;
     default:
         break;
@@ -343,6 +362,40 @@ void handlePipClick(uint32_t eventType, SDL_Event* e, void* data) {
 
 }
 
+void confirmIfPossible(GameBoard* gb) {
+    if (gb->state == LIGHT_CONFIRM) {
+        updateGameState(gb, DARK_DICE_ROLL);
+    }
+    else if (gb->state == DARK_CONFIRM) {
+        updateGameState(gb, LIGHT_DICE_ROLL);
+    }
+}
+
+void undoIfPossible(GameBoard* gb) {
+    if (gb->state == LIGHT_MOVE_TWO || gb->state == LIGHT_CONFIRM) {
+        loadCheckerState(gb);
+        updateGameState(gb, LIGHT_MOVE_ONE);
+    }
+    else if (gb->state == DARK_MOVE_TWO || gb->state == DARK_CONFIRM) {
+        loadCheckerState(gb);
+        updateGameState(gb, DARK_MOVE_ONE);
+    }
+}
+
+void handleButtonClick(uint32_t eventType, SDL_Event* e, void* data) {
+    (void)eventType;
+    GameBoard* gb = (GameBoard*)data;
+    GameButtonType btnType = e->user.code;
+    if (btnType == CONFIRM_BTN) {
+        log_debug("confirm btn clicked");
+        confirmIfPossible(gb);
+    }
+    else if (btnType == UNDO_BTN) {
+        log_debug("undo btn clicked");
+        undoIfPossible(gb);
+    }
+}
+
 void handleCheckerClick(uint32_t eventType, SDL_Event* e, void* data) {
     (void)eventType;
     GameBoard* gb = (GameBoard*)data;
@@ -350,7 +403,6 @@ void handleCheckerClick(uint32_t eventType, SDL_Event* e, void* data) {
     log_debug("checker on pip %d clicked", checker->pipIndex);
     moveCheckerIfPossible(gb, checker);
 }
-
 
 
 void handleDiceClick(uint32_t eventType, SDL_Event* e, void* data) {
@@ -366,22 +418,10 @@ void handleKeyPress(uint32_t eventType, SDL_Event* e, void* data) {
     (void)eventType;
     GameBoard* gb = (GameBoard*)data;
     if (e->key.keysym.sym == SDLK_SPACE) {
-        if (gb->state == LIGHT_CONFIRM) {
-            updateGameState(gb, DARK_DICE_ROLL);
-        }
-        else if (gb->state == DARK_CONFIRM) {
-            updateGameState(gb, LIGHT_DICE_ROLL);
-        }
+        confirmIfPossible(gb);
     }
     else if (e->key.keysym.sym == SDLK_u) {
-        if (gb->state == LIGHT_MOVE_TWO || gb->state == LIGHT_CONFIRM) {
-            loadCheckerState(gb);
-            updateGameState(gb, LIGHT_MOVE_ONE);
-        }
-        else if (gb->state == DARK_MOVE_TWO || gb->state == DARK_CONFIRM) {
-            loadCheckerState(gb);
-            updateGameState(gb, DARK_MOVE_ONE);
-        }
+        undoIfPossible(gb);
     }
 }
 
@@ -519,20 +559,25 @@ void initEventCallbacks(GameBoard* gb) {
     PipClickEventType = SDL_RegisterEvents(1);
     CheckerClickEventType = SDL_RegisterEvents(1);
     DiceClickEventType = SDL_RegisterEvents(1);
+    ButtonClickEventType = SDL_RegisterEvents(1);
     Sage_registerEventCallback(PipClickEventType, handlePipClick, gb);
     Sage_registerEventCallback(CheckerClickEventType, handleCheckerClick, gb);
     Sage_registerEventCallback(DiceClickEventType, handleDiceClick, gb);
     Sage_registerEventCallback(SDL_EVENT_KEY_DOWN, handleKeyPress, gb);
+    Sage_registerEventCallback(ButtonClickEventType, handleButtonClick, gb);
 }
 
 GameBoard* GameBoard_create(void) {
     GameBoard* gb = calloc(1, sizeof(GameBoard));
     gb->die1 = (GameDie){ 1, 0, 1, DICE_NONE };
     gb->die2 = (GameDie){ 2, 1, 1, DICE_NONE };
+    gb->confirm = (GameButton){CONFIRM_BTN, false, 1};
+    gb->undo = (GameButton){UNDO_BTN, false, 1};
     initCheckerSetup(gb);
     createBoardSprites();
     createPipSprites();
     createDiceSprites(&gb->die1, &gb->die2);
+    createButtonSprites(&gb->undo, &gb->confirm);
     for (int32_t i = 0; i < 15; i++) {
         createCheckerSprite(&gb->lightCheckers[i]);
         createCheckerSprite(&gb->darkCheckers[i]);
