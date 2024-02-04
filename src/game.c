@@ -22,12 +22,13 @@ bool isValidMove(GameBoard* gb, Checker* checker, int32_t amount);
 Color getPipOwner(GameBoard* gb, int32_t pipIndex);
 bool playerHasAllCheckersHome(GameBoard* gb, Color player);
 bool playerHasMoves(GameBoard* gb, Color player, bool bothDice);
-void endPlayerTurnIfNoMoves(GameBoard* gb);
 uint32_t handleTimerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx);
 Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex);
 int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex);
 bool playerHasCheckersOnBar(GameBoard* gb, Color player);
 int32_t getNextPipIndex(Checker* c, int32_t amount);
+void saveCheckerState(GameBoard* gb);
+void loadCheckerState(GameBoard* gb);
 
 void updateGameState(GameBoard* gb, GameState state) {
     switch (state)
@@ -43,6 +44,7 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: LIGHT_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
+        saveCheckerState(gb);
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
         break;
     case LIGHT_MOVE_TWO:
@@ -63,6 +65,7 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: DARK_MOVE_ONE");
         gb->die1.animation = DICE_SWAP;
         gb->die2.animation = DICE_SWAP;
+        saveCheckerState(gb);
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
         break;
     case DARK_MOVE_TWO:
@@ -76,6 +79,16 @@ void updateGameState(GameBoard* gb, GameState state) {
         break;
     }
     gb->state = state;
+}
+
+void saveCheckerState(GameBoard* gb) {
+    memcpy(gb->lightCheckersSave, gb->lightCheckers, sizeof(gb->lightCheckersSave));
+    memcpy(gb->darkCheckersSave, gb->darkCheckers, sizeof(gb->darkCheckersSave));
+}
+
+void loadCheckerState(GameBoard* gb) {
+    memcpy(gb->lightCheckers, gb->lightCheckersSave, sizeof(gb->lightCheckers));
+    memcpy(gb->darkCheckers, gb->darkCheckersSave, sizeof(gb->darkCheckers));
 }
 
 Color getPipOwner(GameBoard* gb, int32_t pipIndex) {
@@ -258,15 +271,12 @@ bool isValidMove(GameBoard* gb, Checker* c, int32_t amount) {
 }
 
 void barChecker(GameBoard* gb, Checker* c) {
-    gb->pipCounts[c->pipIndex]--;
     if (c->color == DARK) {
-        c->pipOffset = gb->pipCounts[DARK_BAR];
-        gb->pipCounts[DARK_BAR]++;
+        c->pipOffset = getNumCheckersOnPip(gb, DARK_BAR);
         c->pipIndex = DARK_BAR;
     }
     else {
-        c->pipOffset = gb->pipCounts[LIGHT_BAR];
-        gb->pipCounts[LIGHT_BAR]++;
+        c->pipOffset = getNumCheckersOnPip(gb, LIGHT_BAR);
         c->pipIndex = LIGHT_BAR;
     }
 }
@@ -315,10 +325,8 @@ bool moveChecker(GameBoard* gb, int32_t pipIndex, int32_t amount) {
         barChecker(gb, topChecker);
     }
 
-    c->pipOffset = gb->pipCounts[newIndex];
+    c->pipOffset = getNumCheckersOnPip(gb, newIndex);
     c->pipIndex = newIndex;
-    gb->pipCounts[newIndex]++;
-    gb->pipCounts[pipIndex]--;
     log_debug("moved checker from pip %d to pip %d", pipIndex, c->pipIndex);
     return true;
 }
@@ -363,6 +371,16 @@ void handleKeyPress(uint32_t eventType, SDL_Event* e, void* data) {
         }
         else if (gb->state == DARK_CONFIRM) {
             updateGameState(gb, LIGHT_DICE_ROLL);
+        }
+    }
+    else if (e->key.keysym.sym == SDLK_u) {
+        if (gb->state == LIGHT_MOVE_TWO || gb->state == LIGHT_CONFIRM) {
+            loadCheckerState(gb);
+            updateGameState(gb, LIGHT_MOVE_ONE);
+        }
+        else if (gb->state == DARK_MOVE_TWO || gb->state == DARK_CONFIRM) {
+            loadCheckerState(gb);
+            updateGameState(gb, DARK_MOVE_ONE);
         }
     }
 }
@@ -484,18 +502,16 @@ void initCheckerSetup(GameBoard* gb) {
     int32_t pipIndex;
     for (int32_t i = 0; i < 15; i++) {
         pipIndex = lightSetup[i];
+        gb->lightCheckers[i].pipOffset = getNumCheckersOnPip(gb, pipIndex);
         gb->lightCheckers[i].pipIndex = pipIndex;
-        gb->lightCheckers[i].pipOffset = gb->pipCounts[pipIndex];
         gb->lightCheckers[i].color = LIGHT;
-        gb->pipCounts[pipIndex]++;
     }
 
     for (int32_t i = 0; i < 15; i++) {
         pipIndex = darkSetup[i];
+        gb->darkCheckers[i].pipOffset = getNumCheckersOnPip(gb, pipIndex);
         gb->darkCheckers[i].pipIndex = pipIndex;
-        gb->darkCheckers[i].pipOffset = gb->pipCounts[pipIndex];
         gb->darkCheckers[i].color = DARK;
-        gb->pipCounts[pipIndex]++;
     }
 }
 

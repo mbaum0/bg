@@ -14,8 +14,9 @@ typedef enum { LIGHT_DICE_ROLL, LIGHT_MOVE_ONE, LIGHT_MOVE_TWO, LIGHT_CONFIRM, D
 
 struct GameBoard {
   Checker lightCheckers[15];
+  Checker lightCheckersSave[15];
   Checker darkCheckers[15];
-  int32_t pipCounts[28];
+  Checker darkCheckersSave[15];
   GameDie die1;
   GameDie die2;
   GameState state;
