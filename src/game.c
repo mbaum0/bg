@@ -3,7 +3,7 @@
  * @author Michael Baumgarten (you@domain.com)
  * @brief
  */
-#include "stdlib.h"
+#include <stdlib.h>
 #include "game.h"
 #include "dice.h"
 #include "pip.h"
@@ -21,7 +21,7 @@ void moveCheckerIfPossible(GameBoard* gb, Checker* c);
 bool isValidMove(GameBoard* gb, Checker* checker, int32_t amount);
 Color getPipOwner(GameBoard* gb, int32_t pipIndex);
 bool playerHasAllCheckersHome(GameBoard* gb, Color player);
-bool playerHasMoves(GameBoard* gb, Color player);
+bool playerHasMoves(GameBoard* gb, Color player, bool bothDice);
 void endPlayerTurnIfNoMoves(GameBoard* gb);
 uint32_t handleTimerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx);
 Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex);
@@ -49,6 +49,9 @@ void updateGameState(GameBoard* gb, GameState state) {
         log_debug("Entered state: LIGHT_MOVE_TWO");
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
         break;
+    case LIGHT_CONFIRM:
+        log_debug("Entered state: LIGHT_CONFIRM");
+        break;
     case DARK_DICE_ROLL:
         log_debug("Entered state: DARK_DICE_ROLL");
         gb->die1.side = 1;
@@ -65,6 +68,9 @@ void updateGameState(GameBoard* gb, GameState state) {
     case DARK_MOVE_TWO:
         log_debug("Entered state: DARK_MOVE_TWO");
         SDL_AddTimer(1000, handleTimerEndPlayerTurnIfNoMoves, gb);
+        break;
+    case DARK_CONFIRM:
+        log_debug("Entered state: DARK_CONFIRM");
         break;
     default:
         break;
@@ -145,23 +151,24 @@ bool playerHasAllCheckersHome(GameBoard* gb, Color player) {
  * @return true
  * @return false
  */
-bool playerHasMoves(GameBoard* gb, Color player) {
-    bool allCheckersHome = playerHasAllCheckersHome(gb, player);
-    bool checkersOnBar = playerHasCheckersOnBar(gb, player);
-    int32_t oldPip, newPip;
-
+bool playerHasMoves(GameBoard* gb, Color player, bool bothDice) {
     Checker* c;
-    for (int32_t i= 0; i < 15; i++){
-        if (player == DARK){
+    for (int32_t i = 0; i < 15; i++) {
+        if (player == DARK) {
             c = &gb->darkCheckers[i];
-        } else {
+        }
+        else {
             c = &gb->lightCheckers[i];
         }
-        oldPip = c.pipIndex;
-        newPip = getNextPipIndex(c, gb->die1.value);
-        
-        // if player has checkers on bar and this isn't one of them, it can't be moved
-        CHECKER_IS_BARRED(c)
+        if (bothDice) {
+            if (isValidMove(gb, c, gb->die1.value)) {
+                return true;
+            }
+        }
+
+        if (isValidMove(gb, c, gb->die2.value)) {
+            return true;
+        }
     }
     return false;
 }
@@ -347,6 +354,19 @@ void handleDiceClick(uint32_t eventType, SDL_Event* e, void* data) {
     rollDiceIfPossible(gb);
 }
 
+void handleKeyPress(uint32_t eventType, SDL_Event* e, void* data) {
+    (void)eventType;
+    GameBoard* gb = (GameBoard*)data;
+    if (e->key.keysym.sym == SDLK_SPACE) {
+        if (gb->state == LIGHT_CONFIRM) {
+            updateGameState(gb, DARK_DICE_ROLL);
+        }
+        else if (gb->state == DARK_CONFIRM) {
+            updateGameState(gb, LIGHT_DICE_ROLL);
+        }
+    }
+}
+
 void rollDiceIfPossible(GameBoard* gb) {
     if (gb->state == LIGHT_DICE_ROLL) {
         gb->die1.value = generateRandomNumber(1, 6);
@@ -373,54 +393,53 @@ uint32_t handleTimerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx) {
     (void)interval;
     GameBoard* gb = (GameBoard*)ctx;
     Color player = NONE;
-    if (gb->state == DARK_MOVE_ONE || gb->state == DARK_MOVE_TWO) {
-        player = DARK;
-    }
-    else if (gb->state == LIGHT_MOVE_ONE || gb->state == LIGHT_MOVE_TWO) {
+    bool hasBothDiceLeft = false;
+
+    switch (gb->state)
+    {
+    case LIGHT_MOVE_ONE:
         player = LIGHT;
-    }
-    else {
+        hasBothDiceLeft = true;
+        break;
+    case LIGHT_MOVE_TWO:
+        player = LIGHT;
+        hasBothDiceLeft = false;
+        break;
+    case DARK_MOVE_ONE:
+        player = DARK;
+        hasBothDiceLeft = true;
+        break;
+    case DARK_MOVE_TWO:
+        player = DARK;
+        hasBothDiceLeft = false;
+        break;
+    default:
         return 0;
+        break;
     }
 
-    if (!playerHasMoves(gb, player)) {
+    if (!playerHasMoves(gb, player, hasBothDiceLeft)) {
         if (player == LIGHT) {
             log_debug("LIGHT has no moves!");
-            updateGameState(gb, DARK_DICE_ROLL);
+            if (hasBothDiceLeft) {
+                updateGameState(gb, DARK_DICE_ROLL);
+            }
+            else {
+                updateGameState(gb, LIGHT_CONFIRM);
+            }
+
         }
         else {
             log_debug("DARK has no moves!");
-            updateGameState(gb, LIGHT_DICE_ROLL);
+            if (hasBothDiceLeft) {
+                updateGameState(gb, LIGHT_DICE_ROLL);
+            }
+            else {
+                updateGameState(gb, DARK_CONFIRM);
+            }
         }
     }
     return 0;
-}
-
-/**
- * @brief Skip to next player's dice roll if the player has no moves
- */
-void endPlayerTurnIfNoMoves(GameBoard* gb) {
-    Color player = NONE;
-    if (gb->state == DARK_MOVE_ONE || gb->state == DARK_MOVE_TWO) {
-        player = DARK;
-    }
-    else if (gb->state == LIGHT_MOVE_ONE || gb->state == LIGHT_MOVE_TWO) {
-        player = LIGHT;
-    }
-    else {
-        return;
-    }
-
-    if (!playerHasMoves(gb, player)) {
-        if (player == LIGHT) {
-            log_debug("LIGHT has no moves!");
-            updateGameState(gb, DARK_DICE_ROLL);
-        }
-        else {
-            log_debug("DARK has no moves!");
-            updateGameState(gb, LIGHT_DICE_ROLL);
-        }
-    }
 }
 
 void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
@@ -436,7 +455,7 @@ void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
         }
         else if (gb->state == LIGHT_MOVE_TWO) {
             if (moveChecker(gb, pipIndex, secondDie)) {
-                updateGameState(gb, DARK_DICE_ROLL);
+                updateGameState(gb, LIGHT_CONFIRM);
             }
 
         }
@@ -450,7 +469,7 @@ void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
         }
         else if (gb->state == DARK_MOVE_TWO) {
             if (moveChecker(gb, pipIndex, secondDie)) {
-                updateGameState(gb, LIGHT_DICE_ROLL);
+                updateGameState(gb, DARK_CONFIRM);
             }
 
         }
@@ -487,6 +506,7 @@ void initEventCallbacks(GameBoard* gb) {
     Sage_registerEventCallback(PipClickEventType, handlePipClick, gb);
     Sage_registerEventCallback(CheckerClickEventType, handleCheckerClick, gb);
     Sage_registerEventCallback(DiceClickEventType, handleDiceClick, gb);
+    Sage_registerEventCallback(SDL_EVENT_KEY_DOWN, handleKeyPress, gb);
 }
 
 GameBoard* GameBoard_create(void) {
