@@ -58,11 +58,16 @@
 #define CHECKER_BAR_TOP_Y X(431)
 #define CHECKER_BAR_BOT_Y X(471)
 
-#define DICE_W X(35)
-#define DICE_LEFT_X X(67)
-#define DICE_RIGHT_X X(284)
-#define DICE_GAP X(45)
-#define DICE_Y X(448)
+//#define DICE_W X(35)
+//#define DICE_LEFT_X X(67)
+//#define DICE_RIGHT_X X(284)
+//#define DICE_GAP X(45)
+//#define DICE_Y X(448)
+#define DICE_W X(45)
+#define DICE_LEFT_X X(57)
+#define DICE_RIGHT_X X(274)
+#define DICE_GAP X(50)
+#define DICE_Y X(453)
 
 #define BTN_W DICE_W
 #define BTN_LEFT_X DICE_LEFT_X

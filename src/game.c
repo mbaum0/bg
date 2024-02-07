@@ -33,6 +33,7 @@ void loadCheckerState(GameBoard* gb);
 void confirmIfPossible(GameBoard* gb);
 void undoIfPossible(GameBoard* gb);
 void setDiceUsed(GameBoard* gb, int32_t diceUsed);
+void checkForWinner(GameBoard* gb);
 
 void updateGameState(GameBoard* gb, GameState state) {
     switch (state)
@@ -103,10 +104,15 @@ void updateGameState(GameBoard* gb, GameState state) {
         gb->undo.visible = true;
         gb->undo.side = 1;
         break;
+    case GAME_OVER:
+        log_debug("Entered state: GAME_OVER");
+        log_debug("Player %d wins!", gb->winner);
+        return;
     default:
         break;
     }
     gb->state = state;
+    checkForWinner(gb);
 }
 
 void setDiceUsed(GameBoard* gb, int32_t diceUsed) {
@@ -196,14 +202,37 @@ bool playerHasAllCheckersHome(GameBoard* gb, Color player) {
             checker = gb->darkCheckers[i];
         }
 
-        if (player == LIGHT && isBetween(checker.pipIndex, LIGHT_HOME_START, LIGHT_HOME_END)) {
+        if (player == LIGHT && !isBetween(checker.pipIndex, LIGHT_HOME_START, LIGHT_HOME_END)) {
             return false;
         }
-        if (player == DARK && isBetween(checker.pipIndex, DARK_HOME_START, DARK_HOME_END)) {
+        if (player == DARK && !isBetween(checker.pipIndex, DARK_HOME_START, DARK_HOME_END)) {
             return false;
         }
     }
     return true;
+}
+
+void checkForWinner(GameBoard* gb){
+    int32_t numLightHome = 0;
+    int32_t numDarkHome = 0;
+    for (int32_t i = 0; i < 15; i++){
+        if (gb->lightCheckers[i].pipIndex == LIGHT_HOME){
+            numLightHome++;
+        }
+        if (gb->darkCheckers[i].pipIndex == DARK_HOME){
+            numDarkHome++;
+        }
+    }
+    if (numLightHome == 15){
+        gb->winner = LIGHT;
+        updateGameState(gb, GAME_OVER);
+        return;
+    }
+    if (numDarkHome == 15){
+        gb->winner = DARK;
+        updateGameState(gb, GAME_OVER);
+        return;
+    }
 }
 
 /**
@@ -215,6 +244,8 @@ bool playerHasAllCheckersHome(GameBoard* gb, Color player) {
  */
 bool playerHasMoves(GameBoard* gb, Color player, bool bothDice) {
     Checker* c;
+    int32_t firstDie = FIRST_DIE_VALUE(gb);
+    int32_t secondDie = SECOND_DIE_VALUE(gb);
     for (int32_t i = 0; i < 15; i++) {
         if (player == DARK) {
             c = &gb->darkCheckers[i];
@@ -223,12 +254,12 @@ bool playerHasMoves(GameBoard* gb, Color player, bool bothDice) {
             c = &gb->lightCheckers[i];
         }
         if (bothDice) {
-            if (isValidMove(gb, c, gb->die1.value)) {
+            if (isValidMove(gb, c, firstDie)) {
                 return true;
             }
         }
 
-        if (isValidMove(gb, c, gb->die2.value)) {
+        if (isValidMove(gb, c, secondDie)) {
             return true;
         }
     }
@@ -533,8 +564,8 @@ uint32_t handleTimerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx) {
 
 void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
     int32_t pipIndex = c->pipIndex;
-    int32_t firstDie = (gb->die1.index == 0) ? gb->die1.value : gb->die2.value;
-    int32_t secondDie = (gb->die2.index == 1) ? gb->die2.value : gb->die1.value;
+    int32_t firstDie = FIRST_DIE_VALUE(gb);
+    int32_t secondDie = SECOND_DIE_VALUE(gb);
     if (c->color == LIGHT) {
         if (gb->state == LIGHT_MOVE_ONE) {
             if (moveChecker(gb, pipIndex, firstDie)) {
@@ -568,7 +599,8 @@ void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
 
 void initCheckerSetup(GameBoard* gb) {
     int32_t lightSetup[] = { 1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19 };
-    int32_t darkSetup[] = { 24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6 };
+    //int32_t darkSetup[] = { 24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6 };
+    int32_t darkSetup[] =   { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
 
     int32_t pipIndex;
     for (int32_t i = 0; i < 15; i++) {
@@ -604,6 +636,7 @@ GameBoard* GameBoard_create(void) {
     gb->die2 = (GameDie){ 2, 1, 1, DICE_NONE, false };
     gb->confirm = (GameButton){ CONFIRM_BTN, false, 1 };
     gb->undo = (GameButton){ UNDO_BTN, false, 1 };
+    gb->winner = NONE;
     initCheckerSetup(gb);
     createBoardSprites();
     createPipSprites();
