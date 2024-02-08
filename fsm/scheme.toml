@@ -1,0 +1,11 @@
+[FSM]
+name = "StopWatchData"
+
+[STOPPED]
+events = ["START", "RESET"]
+
+[RUNNING]
+events = ["STOP", "RESET"]
+
+[RESET]
+events = []
