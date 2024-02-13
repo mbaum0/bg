@@ -8,28 +8,30 @@ void fsm_init(FiniteStateMachine *fsm) {
     fsm->state_functions[STOPPED_STATE] = stopped_state_function;
     fsm->state_functions[RUNNING_STATE] = running_state_function;
     fsm->current_state = STOPPED_STATE;
+    fsm->eventQueue.front = 0;
+    fsm->eventQueue.rear = 0;
 }
 
-void fsm_enqueue_event(EventQueue* queue, Event event) {
-    if ((queue->rear + 1) % MAX_EVENTS == queue->front) {
+void fsm_enqueue_event(FiniteStateMachine *fsm, Event event) {
+    if ((fsm->eventQueue.rear + 1) % MAX_EVENTS == fsm->eventQueue.front) {
         // event queue overflow
         return;
     }
-    queue->events[queue->rear].event_type = event;
-    queue->rear = (queue->rear + 1) % MAX_EVENTS;
+    fsm->eventQueue.events[fsm->eventQueue.rear].event_type = event;
+    fsm->eventQueue.rear = (fsm->eventQueue.rear + 1) % MAX_EVENTS;
 }
 
-bool fsm_dequeue_event(EventQueue* queue, EventData* event) {
-    if (queue->front == queue->rear) {
+bool fsm_dequeue_event(FiniteStateMachine *fsm, EventData* event) {
+    if (fsm->eventQueue.front == fsm->eventQueue.rear) {
         return false; // Event queue is empty
     }
-    *event = queue->events[queue->front];
-    queue->front = (queue->front + 1) % MAX_EVENTS;
+    *event = fsm->eventQueue.events[fsm->eventQueue.front];
+    fsm->eventQueue.front = (fsm->eventQueue.front + 1) % MAX_EVENTS;
     return true;
 }
 
-void fsm_step(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx) {
-    fsm->state_functions[fsm->current_state](fsm, event_queue, ctx);
+void fsm_step(FiniteStateMachine* fsm, void* ctx) {
+    fsm->state_functions[fsm->current_state](fsm, ctx);
 }
 
 void fsm_transition(FiniteStateMachine *fsm, State next_state) {

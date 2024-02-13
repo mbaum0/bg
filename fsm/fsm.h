@@ -27,17 +27,19 @@ typedef struct {
 
 typedef struct FiniteStateMachine {
     State current_state;
-    void (*state_functions[NUM_STATES])(struct FiniteStateMachine*, EventQueue*, void*);
+    EventQueue eventQueue;
+    void (*state_functions[NUM_STATES])(struct FiniteStateMachine*, void*);
+    void (*state_init_functions[NUM_STATES])(struct FiniteStateMachine*, void*);
 } FiniteStateMachine;
 
 void fsm_init(FiniteStateMachine* fsm);
-void fsm_enqueue_event(EventQueue* queue, Event event);
-bool fsm_dequeue_event(EventQueue* queue, EventData* event);
-void fsm_step(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);
+void fsm_enqueue_event(FiniteStateMachine* fsm, Event event);
+bool fsm_dequeue_event(FiniteStateMachine* fsm, EventData* event);
+void fsm_step(FiniteStateMachine* fsm, void* ctx);
 void fsm_transition(FiniteStateMachine *fsm, State next_state);
 
 typedef struct {
     int counter;
 } StopWatchData;
-void stopped_state_function(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);
-void running_state_function(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);
+void stopped_state_function(FiniteStateMachine* fsm, void* ctx);
+void running_state_function(FiniteStateMachine* fsm, void* ctx);

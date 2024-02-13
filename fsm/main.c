@@ -7,11 +7,8 @@
 
 int main(void) {
     FiniteStateMachine fsm;
-    EventQueue event_queue;
     StopWatchData swd;
     fsm_init(&fsm);
-    event_queue.front = 0;
-    event_queue.rear = 0;
 
     printf("Enter '1' to start, '2' to stop, '3' to reset, and '4' to step the stopwatch.\n");
 
@@ -21,23 +18,23 @@ int main(void) {
 
         switch (input) {
             case '1':
-                fsm_enqueue_event(&event_queue, START_EVENT);
+                fsm_enqueue_event(&fsm, START_EVENT);
                 break;
             case '2':
-                fsm_enqueue_event(&event_queue, STOP_EVENT);
+                fsm_enqueue_event(&fsm, STOP_EVENT);
                 break;
             case '3':
-                fsm_enqueue_event(&event_queue, RESET_EVENT);
+                fsm_enqueue_event(&fsm, RESET_EVENT);
                 break;
             case '4':
-                fsm_enqueue_event(&event_queue, STEP_EVENT);
+                fsm_enqueue_event(&fsm, STEP_EVENT);
                 break;
             default:
                 printf("Invalid input. Please enter '1', '2', '3', or '4'.\n");
                 continue;
         }
 
-        fsm_step(&fsm, &event_queue, &swd);
+        fsm_step(&fsm, &swd);
     }
 
     return 0;

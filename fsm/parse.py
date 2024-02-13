@@ -49,14 +49,16 @@ def gen_fsm_struct(context_name):
     template = """
         typedef struct FiniteStateMachine {
             State current_state;
+            EventQueue eventQueue;
             void (*state_functions[NUM_STATES])(struct FiniteStateMachine*, EventQueue*, void*);
+            void (*state_init_functions[NUM_STATES])(struct FiniteStateMachine*, void*);
         } FiniteStateMachine;
 
         void fsm_init(FiniteStateMachine* fsm);
-        void fsm_enqueue_event(EventQueue* queue, Event event);
-        bool fsm_dequeue_event(EventQueue* queue, EventData* event);
-        void fsm_step(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);
-        void fsm_transition(FiniteStateMachine *fsm, State next_state);
+        void fsm_enqueue_event(FiniteStateMachine* fsm, Event event);
+        bool fsm_dequeue_event(FiniteStateMachine* fsm, EventData* event);
+        void fsm_step(FiniteStateMachine* fsm, void* ctx);
+        void fsm_transition(FiniteStateMachine *fsm, State next_state, void* ctx);
 
         typedef struct {} {{ context_name }};
         """
@@ -66,7 +68,7 @@ def gen_fsm_struct(context_name):
 def gen_state_fxs(states, context_name):
     template = """
         {% for s in states -%}
-        void {{ s.lower() }}_state_function(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);
+        void {{ s.lower() }}_state_function(FiniteStateMachine* fsm, void* ctx);
         {% endfor -%}
         """
     template = dedent(template)
@@ -89,15 +91,15 @@ def gen_state_file(state, events, context_name):
     result += '#include <stdio.h>'
 
     template = """
-        void {{ state.lower() }}_state_function(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx) {
+        void {{ state.lower() }}_state_function(FiniteStateMachine* fsm, void* ctx) {
             {{ context_name }}* {{ context_name.lower() }} = ({{ context_name }}*)ctx;
             {%- if events | length > 0 %}
             EventData event;
-            while (fsm_dequeue_event(event_queue, &event)) {
+            while (fsm_dequeue_event(fsm, &event)) {
                 {% for e in events -%}
                 if (event.event_type == {{ e }}_EVENT) {
                     // Transition to a different state here
-                    // fsm_transition(fsm, NEW_STATE);
+                    // fsm_transition(fsm, NEW_STATE, ctx);
                 }
                 {% endfor %}
             }
@@ -123,34 +125,35 @@ def gen_fsm_file(states, context_name):
                 fsm->current_state = {{ states[0] }}_STATE;
             }
 
-            void fsm_enqueue_event(EventQueue* queue, Event event) {
-                if ((queue->rear + 1) % MAX_EVENTS == queue->front) {
+            void fsm_enqueue_event(FiniteStateMachine *fsm, Event event) {
+                if ((fsm->eventQueue.rear + 1) % MAX_EVENTS == fsm->eventQueue.front) {
                     // event queue overflow
                     return;
                 }
-                queue->events[queue->rear].event_type = event;
-                queue->rear = (queue->rear + 1) % MAX_EVENTS;
+                fsm->eventQueue.events[fsm->eventQueue.rear].event_type = event;
+                fsm->eventQueue.rear = (fsm->eventQueue.rear + 1) % MAX_EVENTS;
             }
 
-            bool fsm_dequeue_event(EventQueue* queue, EventData* event) {
-                if (queue->front == queue->rear) {
+            bool fsm_dequeue_event(FiniteStateMachine *fsm, EventData* event) {
+                if (fsm->eventQueue.front == fsm->eventQueue.rear) {
                     return false; // Event queue is empty
                 }
-                *event = queue->events[queue->front];
-                queue->front = (queue->front + 1) % MAX_EVENTS;
+                *event = fsm->eventQueue.events[fsm->eventQueue.front];
+                fsm->eventQueue.front = (fsm->eventQueue.front + 1) % MAX_EVENTS;
                 return true;
             }
 
-            void fsm_step(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx) {
-                fsm->state_functions[fsm->current_state](fsm, event_queue, ctx);
+            void fsm_step(FiniteStateMachine* fsm, void* ctx) {
+                fsm->state_functions[fsm->current_state](fsm, ctx);
             }
 
-            void fsm_transition(FiniteStateMachine *fsm, State next_state) {
+            void fsm_transition(FiniteStateMachine *fsm, State next_state, void* ctx) {
                 // Here you can add any transition logic if needed
                 // For now, we'll simply update the current state
                 // based on the next state provided
                 // You may want to add additional logic here
                 // such as handling state entry/exit actions
+                fsm->state_init_functions[next_state](fsm, ctx);
                 fsm->current_state = next_state;
             }
         """
