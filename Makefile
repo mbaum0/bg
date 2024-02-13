@@ -5,7 +5,7 @@ BUILD_DIR = build
 OBJ_NAME = bg
 BUILD_TARGET = $(BUILD_DIR)/$(OBJ_NAME)
 
-SRC_FILES = $(wildcard $(SRC_DIR)/*.c)
+SRC_FILES = $(shell find $(SRC_DIR) -type f \( -name '*.c' \))
 HEADER_FILES = $(wildcard $(INC_DIR)/*.h)
 LIB_SRC_FILES = $(shell find $(LIB_DIR) -name '*.c')
 LIB_HEADER_FILES = $(shell find $(LIB_DIR) -name '*.h')
