@@ -39,7 +39,7 @@ void Sage_destroy(void);
 
 void Sage_step(void);
 
-int Sage_handleEvent(SDL_Event *event);
+int Sage_handleEvent(SDL_Event* event);
 
 /**
  * @brief Load a texture from a file
@@ -56,11 +56,11 @@ int32_t Sage_convertHighDPI(int32_t value);
 
 /**
  * @brief Load a font from a file
- * 
+ *
  * @param s The SAGE engine
  * @param path The path to the font file
  * @param size Font size
- * @return TTF_Font* 
+ * @return TTF_Font*
  */
 TTF_Font* Sage_loadFont(char* path, int32_t size);
 
@@ -75,7 +75,7 @@ int32_t Sage_registerSprite(Sprite* sprite);
 
 /**
  * @brief Register a snippet with the SAGE engine
- * 
+ *
  * @param s The SAGE engine
  * @param snippet Snippet to register
  */

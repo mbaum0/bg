@@ -1,7 +1,7 @@
 /**
  * @file game.h
  * @author Michael Baumgarten (you@domain.com)
- * @brief 
+ * @brief
  */
 #pragma once
 #include "fsm.h"
@@ -85,7 +85,6 @@ void updateBoardForDiceRoll(GameBoard* gb);
  */
 void updateBoardForConfirm(GameBoard* gb);
 
-
 /**
  * @brief Returns true if the given pip is occupied by a single
  * opponent checker. Opponent is the non-active player.
@@ -118,3 +117,8 @@ void saveCheckerState(GameBoard* gb);
  * the gameboard state
  */
 void loadCheckerState(GameBoard* gb);
+
+/**
+ * @brief Returns true if the active player has any valid moves
+ */
+bool playerHasMoves(GameBoard* gb, bool bothDice);

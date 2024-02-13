@@ -3,10 +3,10 @@
  * @author Michael Baumgarten
  * @brief Simply-Another-Game-Engine (SAGE)
  */
-#include <stdlib.h>
 #include "sage.h"
+#include <stdlib.h>
 
-Sage sage = { 0 };
+Sage sage = {0};
 
 int32_t delayFrame(int32_t frameStart) {
   int32_t frameTime = SDL_GetTicks() - frameStart;
@@ -16,7 +16,7 @@ int32_t delayFrame(int32_t frameStart) {
   return SDL_GetTicks();
 }
 
-void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay){
+void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay) {
   sage.mm = MM_init(title, winWidth, winHeight, fillDisplay);
   sage.vm = VM_init(sage.mm->renderer);
   sage.em = EM_init();
@@ -27,19 +27,19 @@ void Sage_destroy(void) {
   MM_free(sage.mm);
 }
 
-void Sage_step(void){
+void Sage_step(void) {
   VM_draw(sage.vm);
 }
 
-int Sage_handleEvent(SDL_Event *event){
+int Sage_handleEvent(SDL_Event* event) {
   EM_handleEvent(sage.em, event);
-  if (event->type == SDL_EVENT_QUIT){
+  if (event->type == SDL_EVENT_QUIT) {
     return 1;
   }
   return 0;
 }
 
-void Sage_setViewport(SDL_FRect viewport){
+void Sage_setViewport(SDL_FRect viewport) {
   VM_setViewport(sage.vm, viewport);
 }
 
@@ -47,11 +47,11 @@ SDL_Texture* Sage_loadTexture(char* path) {
   return MM_loadTexture(sage.mm, path);
 }
 
-SDL_Texture* Sage_loadSVGTexture(char* path, int32_t width, int32_t height){
+SDL_Texture* Sage_loadSVGTexture(char* path, int32_t width, int32_t height) {
   return MM_loadSVGTexture(sage.mm, path, width, height);
 }
 
-int32_t Sage_convertHighDPI(int32_t value){
+int32_t Sage_convertHighDPI(int32_t value) {
   return sage.mm->pixelScale * value;
 }
 

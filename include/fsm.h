@@ -1,56 +1,45 @@
 #pragma once
+#include "buttons.h"
 #include "checker.h"
 #include "dice.h"
-#include "buttons.h"
 #include <stdbool.h>
 
 typedef struct GameBoard GameBoard;
 
 struct GameBoard {
-    Checker lightCheckers[15];
-    Checker lightCheckersSave[15];
-    Checker darkCheckers[15];
-    Checker darkCheckersSave[15];
-    GameDie die1;
-    GameDie die2;
-    GameButton confirm;
-    GameButton undo;
-    Color activePlayer;
+  Checker lightCheckers[15];
+  Checker lightCheckersSave[15];
+  Checker darkCheckers[15];
+  Checker darkCheckersSave[15];
+  GameDie die1;
+  GameDie die2;
+  GameButton confirm;
+  GameButton undo;
+  Color activePlayer;
 };
 
-typedef enum {
-    CONFIRMED_MOVE_EVENT,
-    UNDO_MOVE_EVENT,
-    DICE_CLICKED_EVENT,
-    PIP_CLICKED_EVENT
-} FSMEventType;
+typedef enum { CONFIRMED_MOVE_EVENT, UNDO_MOVE_EVENT, DICE_CLICKED_EVENT, PIP_CLICKED_EVENT } FSMEventType;
 
 typedef struct {
-    FSMEventType etype;
-    void* ctx;
+  FSMEventType etype;
+  void* ctx;
 } FSMEvent;
 
-typedef enum {
-    WAIT_FOR_ROLL_STATE,
-    PLAYER_MOVE_STATE,
-    MOVE_CONFIRM_STATE,
-    GAME_OVER_STATE,
-    NUM_STATES
-} State;
+typedef enum { WAIT_FOR_ROLL_STATE, PLAYER_MOVE_STATE, MOVE_CONFIRM_STATE, GAME_OVER_STATE, NUM_STATES } State;
 
 // Define event queue
 #define MAX_EVENTS 10
 typedef struct {
-    FSMEvent events[MAX_EVENTS];
-    int front, rear;
+  FSMEvent events[MAX_EVENTS];
+  int front, rear;
 } EventQueue;
 
 typedef struct FiniteStateMachine {
-    State current_state;
-    EventQueue eventQueue;
-    GameBoard gb;
-    void (*state_functions[NUM_STATES])(struct FiniteStateMachine*);
-    void (*state_init_functions[NUM_STATES])(struct FiniteStateMachine*);
+  State current_state;
+  EventQueue eventQueue;
+  GameBoard gb;
+  void (*state_functions[NUM_STATES])(struct FiniteStateMachine*);
+  void (*state_init_functions[NUM_STATES])(struct FiniteStateMachine*);
 } FiniteStateMachine;
 
 void fsm_init(void);

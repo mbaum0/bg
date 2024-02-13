@@ -45,7 +45,6 @@ struct Sprite {
  */
 Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y, int32_t z);
 
-
 Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect dst, int32_t z);
 
 /**

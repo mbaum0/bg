@@ -4,13 +4,13 @@
  * @brief Utility functions
  */
 #pragma once
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
-#define WINDOW_W (430) 
-#define WINDOW_H (932) 
+#define WINDOW_W (430)
+#define WINDOW_H (932)
 
-#define Z_BACKGROUND 0 
+#define Z_BACKGROUND 0
 #define Z_BOARD 1
 #define Z_PIPS 2
 #define Z_TRIM 3
@@ -32,22 +32,22 @@
 #define PIP_H X(160)
 
 #define PIP_6_X X(221)
-#define PIP_6_Y X(490) 
+#define PIP_6_Y X(490)
 #define PIP_12_X X(5)
 #define PIP_12_Y X(490)
 #define PIP_13_X X(5)
 #define PIP_13_Y X(50)
-#define PIP_19_X X(221) 
-#define PIP_19_Y X(50) 
+#define PIP_19_X X(221)
+#define PIP_19_Y X(50)
 
 #define CHECKER_W X(30)
 #define CHECKER_PIP_6_X X(223)
-#define CHECKER_PIP_6_Y X(620) 
+#define CHECKER_PIP_6_Y X(620)
 #define CHECKER_PIP_12_X X(7)
-#define CHECKER_PIP_12_Y X(620) 
+#define CHECKER_PIP_12_Y X(620)
 #define CHECKER_PIP_13_X X(7)
 #define CHECKER_PIP_13_Y X(50)
-#define CHECKER_PIP_19_X X(223) 
+#define CHECKER_PIP_19_X X(223)
 #define CHECKER_PIP_19_Y X(50)
 
 #define CHECKER_TOP_HOME_X X(5)
@@ -58,11 +58,11 @@
 #define CHECKER_BAR_TOP_Y X(431)
 #define CHECKER_BAR_BOT_Y X(471)
 
-//#define DICE_W X(35)
-//#define DICE_LEFT_X X(67)
-//#define DICE_RIGHT_X X(284)
-//#define DICE_GAP X(45)
-//#define DICE_Y X(448)
+// #define DICE_W X(35)
+// #define DICE_LEFT_X X(67)
+// #define DICE_RIGHT_X X(284)
+// #define DICE_GAP X(45)
+// #define DICE_Y X(448)
 #define DICE_W X(45)
 #define DICE_LEFT_X X(57)
 #define DICE_RIGHT_X X(274)

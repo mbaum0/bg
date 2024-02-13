@@ -11,7 +11,7 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y,
   sprite->id = 0;
   sprite->texture = texture;
   sprite->src_rect = src;
-  sprite->dst_rect = (SDL_FRect){ x, y, src.w, src.h };
+  sprite->dst_rect = (SDL_FRect){x, y, src.w, src.h};
   sprite->visible = true;
   sprite->hovered = false;
   sprite->update_fn = NULL;
@@ -23,7 +23,7 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, int32_t x, int32_t y,
   sprite->z = z;
   sprite->alpha = 255;
   sprite->useViewport = false;
-  sprite->outline = (SDL_Color){ 0,0,0,0 };
+  sprite->outline = (SDL_Color){0, 0, 0, 0};
   return sprite;
 }
 
@@ -44,7 +44,7 @@ Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect dst, int3
   sprite->z = z;
   sprite->alpha = 255;
   sprite->useViewport = false;
-  sprite->outline = (SDL_Color){ 0,0,0,0 };
+  sprite->outline = (SDL_Color){0, 0, 0, 0};
   return sprite;
 }
 

@@ -20,7 +20,6 @@ typedef struct ViewManager ViewManager;
  */
 ViewManager* VM_init(SDL_Renderer* renderer);
 
-
 void VM_setViewport(ViewManager* vm, SDL_FRect viewport);
 
 /**
@@ -53,7 +52,6 @@ int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite);
  */
 int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet);
 
-
 /**
  * @brief Sprite update functions are called every frame to update the Sprite's state.
  */
@@ -63,7 +61,6 @@ typedef void (*SpriteUpdate_fn)(ViewManager* vm, Sprite* sprite, void* object, v
  * @brief Snippet update functions are called every frame to update the Snippet's state.
  */
 typedef void (*SnippetUpdate_fn)(ViewManager* vm, Snippet* snippet, void* data);
-
 
 /**
  * @brief Sprite click functions are called when the Sprite is clicked.

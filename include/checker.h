@@ -4,9 +4,9 @@
  * @brief
  */
 #pragma once
-#include <stdint.h>
-#include "sage.h"
 #include "board.h"
+#include "sage.h"
+#include <stdint.h>
 
 typedef struct Checker Checker;
 typedef enum { LIGHT, DARK, NONE } Color;
@@ -21,7 +21,8 @@ typedef enum { LIGHT, DARK, NONE } Color;
 #define DARK_BAR 27
 
 #define OPPONENT_COLOR(c) (c == LIGHT ? DARK : LIGHT)
-#define CHECKER_IS_BARRED(c) ((c->color == DARK && c->pipIndex == DARK_BAR) || (c->color == LIGHT && c->pipIndex == LIGHT_BAR))
+#define CHECKER_IS_BARRED(c)                                                                                           \
+  ((c->color == DARK && c->pipIndex == DARK_BAR) || (c->color == LIGHT && c->pipIndex == LIGHT_BAR))
 
 struct Checker {
   int32_t pipIndex;

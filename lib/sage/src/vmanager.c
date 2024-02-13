@@ -3,12 +3,11 @@
  * @author Michael Baumgarten
  * @brief ViewManager implementation
  */
-#include <math.h>
 #include "vmanager.h"
+#include "log.h"
 #include "stb_ds.h"
-#include "log.h"
 #include "util.h"
-#include "log.h"
+#include <math.h>
 
 struct ViewManager {
   SDL_Renderer* renderer;
@@ -67,7 +66,7 @@ void VM_free(ViewManager* vm) {
   free(vm);
 }
 
-void VM_setViewport(ViewManager* vm, SDL_FRect viewport){
+void VM_setViewport(ViewManager* vm, SDL_FRect viewport) {
   vm->viewport = viewport;
 }
 
@@ -89,7 +88,7 @@ void VM_draw(ViewManager* vm) {
     }
     if (sprite->visible) {
       SDL_FRect newDst = sprite->dst_rect;
-      if (sprite->useViewport){
+      if (sprite->useViewport) {
         newDst.x += vm->viewport.x;
         newDst.y += vm->viewport.y;
       }
@@ -122,8 +121,7 @@ int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
   }
   if (zindex == -1) {
     arrput(*vm->sprites, sprite);
-  }
-  else {
+  } else {
     arrins(*vm->sprites, zindex, sprite);
   }
   return sprite->id;
@@ -160,9 +158,9 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y) {
   for (int32_t i = 0; i < arrlen(sprites); i++) {
     Sprite* sprite = sprites[i];
     if (sprite->visible) {
-      SDL_FPoint p = { x, y };
+      SDL_FPoint p = {x, y};
       SDL_FRect dst = sprite->dst_rect;
-      if (sprite->useViewport){
+      if (sprite->useViewport) {
         dst.x += vm->viewport.x;
         dst.y += vm->viewport.y;
       }

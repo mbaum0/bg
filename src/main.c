@@ -2,15 +2,15 @@
 #include <SDL3/SDL_main.h>
 #include <stdlib.h>
 
-#include "sage.h"
-#include "util.h"
 #include "checker.h"
 #include "dstats.h"
-#include "log.h"
-#include "game.h"
 #include "fsm.h"
+#include "game.h"
+#include "log.h"
+#include "sage.h"
+#include "util.h"
 
-int SDL_AppInit(int argc, char **argv){
+int SDL_AppInit(int argc, char** argv) {
   (void)argc;
   (void)argv;
   extern Sage sage;
@@ -21,17 +21,17 @@ int SDL_AppInit(int argc, char **argv){
   return 0;
 }
 
-int SDL_AppIterate(void){
+int SDL_AppIterate(void) {
   Sage_step();
   fsm_step();
   return 0;
 }
 
-int SDL_AppEvent(const SDL_Event *event){
+int SDL_AppEvent(const SDL_Event* event) {
   SDL_Event e = *event;
   return Sage_handleEvent(&e);
 }
 
-void SDL_AppQuit(void){
+void SDL_AppQuit(void) {
   Sage_destroy();
 }

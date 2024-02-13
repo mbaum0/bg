@@ -14,7 +14,7 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
   }
   int w, h;
 
-  if (fillDisplay){
+  if (fillDisplay) {
     SDL_DisplayID did = SDL_GetPrimaryDisplay();
     const SDL_DisplayMode* dm = SDL_GetCurrentDisplayMode(did);
     w = dm->w;
