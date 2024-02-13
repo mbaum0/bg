@@ -7,15 +7,15 @@
 typedef struct GameBoard GameBoard;
 
 struct GameBoard {
-  Checker lightCheckers[15];
-  Checker lightCheckersSave[15];
-  Checker darkCheckers[15];
-  Checker darkCheckersSave[15];
-  GameDie die1;
-  GameDie die2;
-  GameButton confirm;
-  GameButton undo;
-  Color activePlayer;
+    Checker lightCheckers[15];
+    Checker lightCheckersSave[15];
+    Checker darkCheckers[15];
+    Checker darkCheckersSave[15];
+    GameDie die1;
+    GameDie die2;
+    GameButton confirm;
+    GameButton undo;
+    Color activePlayer;
 };
 
 typedef enum {
@@ -23,11 +23,12 @@ typedef enum {
     UNDO_MOVE_EVENT,
     DICE_ROLL_EVENT,
     DICE_CLICKED_EVENT,
-    PIP_SELECTED_EVENT
+    PIP_CLICKED_EVENT
 } Event;
 
 typedef struct {
     Event event_type;
+    void* ctx;
 } EventData;
 
 typedef enum {
@@ -37,6 +38,7 @@ typedef enum {
     GAME_OVER_STATE,
     NUM_STATES
 } State;
+
 // Define event queue
 #define MAX_EVENTS 10
 typedef struct {
@@ -58,11 +60,11 @@ bool fsm_dequeue_event(EventData* event);
 void fsm_step(void);
 void fsm_transition(State next_state);
 
-void wait_for_roll_state(void);
-void wait_for_roll_init_state(void);
-void player_move_state(void);
-void player_move_init_state(void);
-void move_confirm_state(void);
-void move_confirm_init_state(void);
-void game_over_state(void);
-void game_over_init_state(void);
+void wait_for_roll_state(FiniteStateMachine* fsm);
+void wait_for_roll_init_state(FiniteStateMachine* fsm);
+void player_move_state(FiniteStateMachine* fsm);
+void player_move_init_state(FiniteStateMachine* fsm);
+void move_confirm_state(FiniteStateMachine* fsm);
+void move_confirm_init_state(FiniteStateMachine* fsm);
+void game_over_state(FiniteStateMachine* fsm);
+void game_over_init_state(FiniteStateMachine* fsm);

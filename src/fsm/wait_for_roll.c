@@ -1,17 +1,27 @@
+/**
+ * @file wait_for_roll.c
+ * @author Michael Baumgarten (you@domain.com)
+ * @brief 
+ */
 #include "fsm.h"
+#include "game.h"
 #include <stdio.h>
-void wait_for_roll_state(FiniteStateMachine* fsm, void* ctx) {
-    GameBoard* gameboard = (GameBoard*)ctx;
+
+extern FiniteStateMachine FSM;
+
+void wait_for_roll_state(FiniteStateMachine* fsm) {
+    GameBoard* gb = &fsm->gb;
     EventData event;
-    while (fsm_dequeue_event(fsm, &event)) {
+    while (fsm_dequeue_event(&event)) {
         if (event.event_type == DICE_ROLL_EVENT) {
-            // Transition to a different state here
-            // fsm_transition(fsm, NEW_STATE, ctx);
+            rollDice(gb);
+            fsm_transition(PLAYER_MOVE_STATE);
         }
     }
     
 }
-void wait_for_roll_init_state(FiniteStateMachine* fsm, void* ctx) {
-    GameBoard* gameboard = (GameBoard*)ctx;
-    // this is called when the wait_for_roll state is first entered
+void wait_for_roll_init_state(FiniteStateMachine* fsm) {
+    GameBoard* gb = &fsm->gb;
+    log_debug("Entered state: WAIT_FOR_ROLL");
+    updateBoardForDiceRoll(gb);
 }

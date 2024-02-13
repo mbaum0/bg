@@ -1,22 +1,50 @@
+/**
+ * @file player_move.c
+ * @author Michael Baumgarten (you@domain.com)
+ * @brief 
+ */
 #include "fsm.h"
+#include "game.h"
 #include <stdio.h>
-void player_move_state(FiniteStateMachine* fsm, void* ctx) {
-    GameBoard* gameboard = (GameBoard*)ctx;
-    EventData event;
-    while (fsm_dequeue_event(fsm, &event)) {
-        if (event.event_type == PIP_SELECTED_EVENT) {
-            // Transition to a different state here
-            // fsm_transition(fsm, NEW_STATE, ctx);
-        }
-        if (event.event_type == DICE_CLICKED_EVENT) {
-            // Transition to a different state here
-            // fsm_transition(fsm, NEW_STATE, ctx);
-        }
-        
+
+void doPlayerMove(GameBoard* gb, int32_t pipIndex){
+    int32_t movesLeft = 0;
+    Checker* c = getTopCheckerOnPip(gb, pipIndex);
+    if (c == NULL){
+        return;
     }
-    
+
+    int32_t dieValue = getNextDieValue(gb);
+    if (isValidMove(gb, c, dieValue)){
+        moveChecker(gb, c, dieValue);
+        movesLeft = incrementMoveCount(gb);
+    }
+
+    if (movesLeft == 0){
+        fsm_transition(MOVE_CONFIRM_STATE);
+    }
 }
-void player_move_init_state(FiniteStateMachine* fsm, void* ctx) {
-    GameBoard* gameboard = (GameBoard*)ctx;
-    // this is called when the player_move state is first entered
+
+void doDiceSwap(GameBoard* gb){
+    swapDiceIfAllowed(gb);
+}
+
+void player_move_state(FiniteStateMachine* fsm) {
+    GameBoard* gb = &fsm->gb;
+    EventData event;
+    while (fsm_dequeue_event(&event)) {
+        if (event.event_type == PIP_CLICKED_EVENT) {
+            uint32_t pipIndex = (uintptr_t)event.ctx;
+            doPlayerMove(gb, pipIndex);
+        }
+
+        if (event.event_type == DICE_CLICKED_EVENT) {
+            doDiceSwap(gb);
+        }   
+    }
+}
+void player_move_init_state(FiniteStateMachine* fsm) {
+    GameBoard* gb = &fsm->gb;
+    log_debug("Entered state: PLAYER_TURN");
+    updateBoardForPlayerMove(gb);
 }

@@ -14,7 +14,7 @@ struct GameDie {
     int32_t value;
     int32_t index;
     int32_t side;
-    bool used;
+    int32_t uses; // int instead of bool to account for doubles
     DiceAnimation animation;
 };
 

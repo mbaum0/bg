@@ -33,7 +33,7 @@ void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   newX = (die->side == 0) ? DICE_LEFT_X : DICE_RIGHT_X;
   if (die->index == 1) { newX += DICE_GAP; }
 
-  if (die->used){
+  if (die->uses == 1){
     Sprite_setAlpha(sprite, 128);
   } else {
     Sprite_setAlpha(sprite, 255);
