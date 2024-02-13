@@ -68,8 +68,8 @@ def gen_fsm_struct(context_name):
 def gen_state_fxs(states, context_name):
     template = """
         {% for s in states -%}
-        void {{ s.lower() }}_state_function(FiniteStateMachine* fsm, void* ctx);
-        void {{ s.lower() }}_init_state_function(FiniteStateMachine* fsm, void* ctx);
+        void {{ s.lower() }}_state(FiniteStateMachine* fsm, void* ctx);
+        void {{ s.lower() }}_init_state(FiniteStateMachine* fsm, void* ctx);
         {% endfor -%}
         """
     template = dedent(template)
@@ -92,7 +92,7 @@ def gen_state_file(state, events, context_name):
     result += '#include <stdio.h>'
 
     template = """
-        void {{ state.lower() }}_state_function(FiniteStateMachine* fsm, void* ctx) {
+        void {{ state.lower() }}_state(FiniteStateMachine* fsm, void* ctx) {
             {{ context_name }}* {{ context_name.lower() }} = ({{ context_name }}*)ctx;
             {%- if events | length > 0 %}
             EventData event;
@@ -106,7 +106,7 @@ def gen_state_file(state, events, context_name):
             }
             {% endif %}
         }
-        void {{ state.lower() }}_init_state_function(FiniteStateMachine* fsm, void* ctx) {
+        void {{ state.lower() }}_init_state(FiniteStateMachine* fsm, void* ctx) {
             {{ context_name }}* {{ context_name.lower() }} = ({{ context_name }}*)ctx;
             // this is called when the {{ state.lower() }} state is first entered
         }
@@ -125,8 +125,8 @@ def gen_fsm_file(states, context_name):
 
             void fsm_init(FiniteStateMachine *fsm) {
                 {% for s in states %}
-                fsm->state_functions[{{ s }}_STATE] = {{ s.lower() }}_state_function;
-                fsm->state_init_functions[{{ s }}_STATE] = {{ s.lower() }}_init_state_function;
+                fsm->state_functions[{{ s }}_STATE] = {{ s.lower() }}_state;
+                fsm->state_init_functions[{{ s }}_STATE] = {{ s.lower() }}_init_state;
                 {%- endfor %}
                 fsm->current_state = {{ states[0] }}_STATE;
                 fsm->eventQueue.front = 0;

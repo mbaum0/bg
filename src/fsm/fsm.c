@@ -5,11 +5,15 @@
 
 void fsm_init(FiniteStateMachine *fsm) {
     
-    fsm->state_functions[STOPPED_STATE] = stopped_state_function;
-    fsm->state_init_functions[STOPPED_STATE] = stopped_init_state_function;
-    fsm->state_functions[RUNNING_STATE] = running_state_function;
-    fsm->state_init_functions[RUNNING_STATE] = running_init_state_function;
-    fsm->current_state = STOPPED_STATE;
+    fsm->state_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_state;
+    fsm->state_init_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_init_state;
+    fsm->state_functions[PLAYER_MOVE_STATE] = player_move_state;
+    fsm->state_init_functions[PLAYER_MOVE_STATE] = player_move_init_state;
+    fsm->state_functions[MOVE_CONFIRM_STATE] = move_confirm_state;
+    fsm->state_init_functions[MOVE_CONFIRM_STATE] = move_confirm_init_state;
+    fsm->state_functions[GAME_OVER_STATE] = game_over_state;
+    fsm->state_init_functions[GAME_OVER_STATE] = game_over_init_state;
+    fsm->current_state = WAIT_FOR_ROLL_STATE;
     fsm->eventQueue.front = 0;
     fsm->eventQueue.rear = 0;
 }

@@ -1,8 +1,14 @@
 [FSM]
-name = "StopWatchData"
+name = "GameBoard"
 
-[STOPPED]
-events = ["START", "RESET"]
+[WAIT_FOR_ROLL]
+events = ["DICE_ROLL"]
 
-[RUNNING]
-events = ["STOP", "RESET", "STEP"]
+[PLAYER_MOVE]
+events = ["PIP_SELECTED", "DICE_CLICKED"]
+
+[MOVE_CONFIRM]
+events = ["CONFIRMED_MOVE", "UNDO_MOVE"]
+
+[GAME_OVER]
+events = []
