@@ -91,6 +91,7 @@ def gen_state_file(state, events, context_name):
     template = """
         void {{ state.lower() }}_state_function(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx) {
             {{ context_name }}* {{ context_name.lower() }} = ({{ context_name }}*)ctx;
+            {%- if events | length > 0 %}
             EventData event;
             while (fsm_dequeue_event(event_queue, &event)) {
                 {% for e in events -%}
@@ -98,8 +99,9 @@ def gen_state_file(state, events, context_name):
                     // Transition to a different state here
                     // fsm_transition(fsm, NEW_STATE);
                 }
-                {% endfor -%}
+                {% endfor %}
             }
+            {% endif %}
         }
         """
     template = dedent(template)

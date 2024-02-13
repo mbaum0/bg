@@ -5,7 +5,7 @@ typedef enum {
     START_EVENT,
     RESET_EVENT,
     STOP_EVENT,
-    RESET_EVENT
+    STEP_EVENT
 } Event;
 
 typedef struct {
@@ -36,7 +36,8 @@ bool fsm_dequeue_event(EventQueue* queue, EventData* event);
 void fsm_step(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);
 void fsm_transition(FiniteStateMachine *fsm, State next_state);
 
-typedef struct {} StopWatchData;
+typedef struct {
+    int counter;
+} StopWatchData;
 void stopped_state_function(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);
 void running_state_function(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);
-void reset_state_function(FiniteStateMachine* fsm, EventQueue* event_queue, void* ctx);

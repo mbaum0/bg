@@ -7,7 +7,6 @@ void fsm_init(FiniteStateMachine *fsm) {
     
     fsm->state_functions[STOPPED_STATE] = stopped_state_function;
     fsm->state_functions[RUNNING_STATE] = running_state_function;
-    fsm->state_functions[RESET_STATE] = reset_state_function;
     fsm->current_state = STOPPED_STATE;
 }
 

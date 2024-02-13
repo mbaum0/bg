@@ -5,7 +5,4 @@ name = "StopWatchData"
 events = ["START", "RESET"]
 
 [RUNNING]
-events = ["STOP", "RESET"]
-
-[RESET]
-events = []
+events = ["STOP", "RESET", "STEP"]
