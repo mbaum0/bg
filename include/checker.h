@@ -9,7 +9,7 @@
 #include "board.h"
 
 typedef struct Checker Checker;
-typedef enum { LIGHT, DARK, NONE, BLOT } Color;
+typedef enum { LIGHT, DARK, NONE } Color;
 
 #define LIGHT_HOME_START 19
 #define LIGHT_HOME_END 25

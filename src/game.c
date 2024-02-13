@@ -134,15 +134,15 @@ extern FiniteStateMachine FSM;
 //     }
 // }
 
-// void saveCheckerState(GameBoard* gb) {
-//     memcpy(gb->lightCheckersSave, gb->lightCheckers, sizeof(gb->lightCheckersSave));
-//     memcpy(gb->darkCheckersSave, gb->darkCheckers, sizeof(gb->darkCheckersSave));
-// }
+void saveCheckerState(GameBoard* gb) {
+    memcpy(gb->lightCheckersSave, gb->lightCheckers, sizeof(gb->lightCheckersSave));
+    memcpy(gb->darkCheckersSave, gb->darkCheckers, sizeof(gb->darkCheckersSave));
+}
 
-// void loadCheckerState(GameBoard* gb) {
-//     memcpy(gb->lightCheckers, gb->lightCheckersSave, sizeof(gb->lightCheckers));
-//     memcpy(gb->darkCheckers, gb->darkCheckersSave, sizeof(gb->darkCheckers));
-// }
+void loadCheckerState(GameBoard* gb) {
+    memcpy(gb->lightCheckers, gb->lightCheckersSave, sizeof(gb->lightCheckers));
+    memcpy(gb->darkCheckers, gb->darkCheckersSave, sizeof(gb->darkCheckers));
+}
 
 bool isPipOpponentBlot(GameBoard* gb, int32_t pipIndex) {
     Color opponent = OPPONENT_COLOR(gb->activePlayer);
@@ -155,30 +155,6 @@ bool isPipOpponentBlot(GameBoard* gb, int32_t pipIndex) {
     return false;
 }
 
-// Color getPipOwner(GameBoard* gb, int32_t pipIndex) {
-//     if (pipIndex == DARK_HOME) {
-//         return DARK;
-//     }
-//     if (pipIndex == LIGHT_HOME) {
-//         return LIGHT;
-//     }
-//     Checker* c = getTopCheckerOnPip(gb, pipIndex);
-//     if (c == NULL) {
-//         return NONE;
-//     }
-//     int32_t numCheckers = getNumCheckersOnPip(gb, pipIndex);
-//     if (numCheckers == 1) {
-//         return BLOT;
-//     }
-//     if (c->color == DARK) {
-//         return DARK;
-//     }
-//     if (c->color == LIGHT) {
-//         return LIGHT;
-//     }
-//     return NONE;
-// }
-
 bool playerHasCheckersOnBar(GameBoard* gb) {
     if (gb->activePlayer == LIGHT) {
         return getNumCheckersOnPip(gb, LIGHT_BAR) > 0;
@@ -189,8 +165,8 @@ bool playerHasCheckersOnBar(GameBoard* gb) {
 }
 
 int32_t getNextDieValue(GameBoard* gb) {
-    GameDie die1 = FIRST_DIE(gb);
-    GameDie die2 = SECOND_DIE(gb);
+    GameDie die1 = *FIRST_DIE(gb);
+    GameDie die2 = *SECOND_DIE(gb);
     if (DOUBLES_ROLLED(gb)) {
         // if we have doubles, uses max at 2
         if (die1.uses < 2) {
@@ -339,6 +315,10 @@ bool isValidMove(GameBoard* gb, Checker* c, int32_t amount) {
     int32_t oldPip = c->pipIndex;
     int32_t newPip = getNextPip(c, amount);
 
+    if (player != gb->activePlayer){
+        return false;
+    }
+
     // not valid if moving home piece that is already home
     if (oldPip == LIGHT_HOME || oldPip == DARK_HOME) {
         return false;
@@ -484,23 +464,25 @@ void swapDiceIfAllowed(GameBoard* gb) {
 }
 
 int32_t incrementMoveCount(GameBoard* gb) {
+    GameDie* die1 = FIRST_DIE(gb);
+    GameDie* die2 = SECOND_DIE(gb);
     if (DOUBLES_ROLLED(gb)) {
-        if (gb->die1.uses < 2) {
-            gb->die1.uses++;
-            return (4 - gb->die1.uses);
+        if (die1->uses < 2) {
+            die1->uses++;
+            return (4 - die1->uses);
         }
-        if (gb->die2.uses < 2) {
-            gb->die2.uses++;
-            return (2 - gb->die2.uses);
+        if (die2->uses < 2) {
+            die2->uses++;
+            return (2 - die2->uses);
         }
     }
 
-    if (gb->die1.uses == 0) {
-        gb->die1.uses++;
+    if (die1->uses == 0) {
+        die1->uses++;
         return 1;
     }
-    if (gb->die2.uses == 0) {
-        gb->die2.uses++;
+    if (die2->uses == 0) {
+        die2->uses++;
         return 0;
     }
     return 0;
@@ -511,9 +493,21 @@ void updateBoardForPlayerMove(GameBoard* gb) {
     gb->die2.uses = 0;
     gb->die1.animation = DICE_SWAP;
     gb->die2.animation = DICE_SWAP;
+    gb->confirm.visible = false;
+    gb->undo.visible = false;
+    if (gb->activePlayer == LIGHT) {
+        gb->die1.side = 0;
+        gb->die2.side = 0;
+    }
+    else {
+        gb->die1.side = 1;
+        gb->die2.side = 1;
+    }
 }
 
 void updateBoardForDiceRoll(GameBoard* gb) {
+    gb->die1.uses = 0;
+    gb->die2.uses = 0;
     gb->die1.animation = DICE_MOVE;
     gb->die2.animation = DICE_MOVE;
     gb->confirm.visible = false;
@@ -644,8 +638,8 @@ void initCheckerSetup(void) {
 // }
 
 void gameboard_init(void) {
-    FSM.gb.die1 = (GameDie){ 1, 0, 1, DICE_NONE, false };
-    FSM.gb.die2 = (GameDie){ 2, 1, 1, DICE_NONE, false };
+    FSM.gb.die1 = (GameDie){ 1, 0, 0, 0, DICE_NONE };
+    FSM.gb.die2 = (GameDie){ 2, 1, 0, 0, DICE_NONE };
     FSM.gb.confirm = (GameButton){ CONFIRM_BTN, false, 1 };
     FSM.gb.undo = (GameButton){ UNDO_BTN, false, 1 };
     FSM.gb.activePlayer = LIGHT;

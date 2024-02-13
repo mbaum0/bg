@@ -20,16 +20,16 @@ void fsm_init(void) {
     FSM.eventQueue.rear = 0;
 }
 
-void fsm_enqueue_event(Event event) {
+void fsm_enqueue_event(FSMEvent event) {
     if ((FSM.eventQueue.rear + 1) % MAX_EVENTS == FSM.eventQueue.front) {
         // event queue overflow
         return;
     }
-    FSM.eventQueue.events[FSM.eventQueue.rear].event_type = event;
+    FSM.eventQueue.events[FSM.eventQueue.rear] = event;
     FSM.eventQueue.rear = (FSM.eventQueue.rear + 1) % MAX_EVENTS;
 }
 
-bool fsm_dequeue_event(EventData* event) {
+bool fsm_dequeue_event(FSMEvent* event) {
     if (FSM.eventQueue.front == FSM.eventQueue.rear) {
         return false; // Event queue is empty
     }

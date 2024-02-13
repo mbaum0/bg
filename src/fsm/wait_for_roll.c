@@ -11,9 +11,9 @@ extern FiniteStateMachine FSM;
 
 void wait_for_roll_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
-    EventData event;
+    FSMEvent event;
     while (fsm_dequeue_event(&event)) {
-        if (event.event_type == DICE_ROLL_EVENT) {
+        if (event.etype == DICE_CLICKED_EVENT) {
             rollDice(gb);
             fsm_transition(PLAYER_MOVE_STATE);
         }

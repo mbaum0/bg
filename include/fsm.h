@@ -21,15 +21,14 @@ struct GameBoard {
 typedef enum {
     CONFIRMED_MOVE_EVENT,
     UNDO_MOVE_EVENT,
-    DICE_ROLL_EVENT,
     DICE_CLICKED_EVENT,
     PIP_CLICKED_EVENT
-} Event;
+} FSMEventType;
 
 typedef struct {
-    Event event_type;
+    FSMEventType etype;
     void* ctx;
-} EventData;
+} FSMEvent;
 
 typedef enum {
     WAIT_FOR_ROLL_STATE,
@@ -42,7 +41,7 @@ typedef enum {
 // Define event queue
 #define MAX_EVENTS 10
 typedef struct {
-    EventData events[MAX_EVENTS];
+    FSMEvent events[MAX_EVENTS];
     int front, rear;
 } EventQueue;
 
@@ -55,8 +54,8 @@ typedef struct FiniteStateMachine {
 } FiniteStateMachine;
 
 void fsm_init(void);
-void fsm_enqueue_event(Event event);
-bool fsm_dequeue_event(EventData* event);
+void fsm_enqueue_event(FSMEvent event);
+bool fsm_dequeue_event(FSMEvent* event);
 void fsm_step(void);
 void fsm_transition(State next_state);
 

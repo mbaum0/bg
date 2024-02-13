@@ -1,31 +1,29 @@
 /**
  * @file move_confirm.c
  * @author Michael Baumgarten (you@domain.com)
- * @brief 
+ * @brief
  */
 #include "fsm.h"
 #include "game.h"
 #include <stdio.h>
 
-void doConfirmMove(GameBoard* gb){
+void doConfirmMove(GameBoard* gb) {
     gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
 }
 void move_confirm_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
-    EventData event;
+    FSMEvent event;
     while (fsm_dequeue_event(&event)) {
-        if (event.event_type == CONFIRMED_MOVE_EVENT) {
-            // Transition to a different state here
+        if (event.etype == CONFIRMED_MOVE_EVENT) {
             doConfirmMove(gb);
             fsm_transition(WAIT_FOR_ROLL_STATE);
         }
-        if (event.event_type == UNDO_MOVE_EVENT) {
-            // Transition to a different state here
-            // fsm_transition(fsm, NEW_STATE, ctx);
+        if (event.etype == UNDO_MOVE_EVENT) {
+            loadCheckerState(gb);
+            fsm_transition(PLAYER_MOVE_STATE);
         }
-        
     }
-    
+
 }
 void move_confirm_init_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;

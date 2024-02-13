@@ -7,17 +7,15 @@
 #include "sage.h"
 #include "util.h"
 #include "vector.h"
-
-uint32_t DiceClickEventType = 0;
+#include "fsm.h"
 
 void clickDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
   (void)vm;
   (void)sprite;
   (void)context;
   (void)object;
-  SDL_Event e = { 0 };
-  e.type = DiceClickEventType;
-  SDL_PushEvent(&e);
+  FSMEvent e = {DICE_CLICKED_EVENT, NULL};
+  fsm_enqueue_event(e);
 }
 
 void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {

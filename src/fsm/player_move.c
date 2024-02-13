@@ -18,6 +18,8 @@ void doPlayerMove(GameBoard* gb, int32_t pipIndex){
     if (isValidMove(gb, c, dieValue)){
         moveChecker(gb, c, dieValue);
         movesLeft = incrementMoveCount(gb);
+    } else {
+        return;
     }
 
     if (movesLeft == 0){
@@ -31,14 +33,14 @@ void doDiceSwap(GameBoard* gb){
 
 void player_move_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
-    EventData event;
+    FSMEvent event;
     while (fsm_dequeue_event(&event)) {
-        if (event.event_type == PIP_CLICKED_EVENT) {
+        if (event.etype == PIP_CLICKED_EVENT) {
             uint32_t pipIndex = (uintptr_t)event.ctx;
             doPlayerMove(gb, pipIndex);
         }
 
-        if (event.event_type == DICE_CLICKED_EVENT) {
+        if (event.etype == DICE_CLICKED_EVENT) {
             doDiceSwap(gb);
         }   
     }
@@ -47,4 +49,5 @@ void player_move_init_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     log_debug("Entered state: PLAYER_TURN");
     updateBoardForPlayerMove(gb);
+    saveCheckerState(gb);
 }

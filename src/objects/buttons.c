@@ -6,18 +6,15 @@
 #include "buttons.h"
 #include "sage.h"
 #include "util.h"
-
-uint32_t ButtonClickEventType = 0;
+#include "fsm.h"
 
 void clickUndo(ViewManager* vm, Sprite* sprite, void* object, void* context) {
     (void)vm;
     (void)context;
     (void)sprite;
     (void)object;
-    SDL_Event e = { 0 };
-    e.type = ButtonClickEventType;
-    e.user.code = UNDO_BTN;
-    SDL_PushEvent(&e);
+    FSMEvent e = { UNDO_MOVE_EVENT, NULL };
+    fsm_enqueue_event(e);
 }
 
 void clickConfirm(ViewManager* vm, Sprite* sprite, void* object, void* context) {
@@ -25,10 +22,8 @@ void clickConfirm(ViewManager* vm, Sprite* sprite, void* object, void* context) 
     (void)context;
     (void)sprite;
     (void)object;
-    SDL_Event e = { 0 };
-    e.type = ButtonClickEventType;
-    e.user.code = CONFIRM_BTN;
-    SDL_PushEvent(&e);
+    FSMEvent e = { CONFIRMED_MOVE_EVENT, NULL };
+    fsm_enqueue_event(e);
 }
 
 void updateConfirmBtn(ViewManager* vm, Sprite* sprite, void* object, void* context) {

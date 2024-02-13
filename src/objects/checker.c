@@ -8,24 +8,23 @@
 #include "sprite.h"
 #include "util.h"
 #include "vector.h"
+#include "fsm.h"
 #include "dstats.h"
-
-uint32_t CheckerClickEventType = 0;
 
 int32_t getCheckerX(Checker* checker) {
   int32_t pipIndex = checker->pipIndex;
   int32_t pipOffset;
   int32_t checkerX;
 
-  if (pipIndex == LIGHT_HOME){
+  if (pipIndex == LIGHT_HOME) {
     return CHECKER_TOP_HOME_X + (checker->pipOffset * CHECKER_W);
   }
 
-  if (pipIndex == DARK_HOME){
+  if (pipIndex == DARK_HOME) {
     return CHECKER_BOT_HOME_X + (checker->pipOffset * CHECKER_W);
   }
 
-  if (pipIndex == LIGHT_BAR || pipIndex == DARK_BAR){
+  if (pipIndex == LIGHT_BAR || pipIndex == DARK_BAR) {
     return CHECKER_BAR_X;
   }
 
@@ -52,16 +51,16 @@ int32_t getCheckerY(Checker* checker) {
   int32_t offset;
   int32_t pipIndex = checker->pipIndex;
 
-  if (pipIndex == LIGHT_HOME){
+  if (pipIndex == LIGHT_HOME) {
     return CHECKER_TOP_HOME_Y;
   }
-  if (pipIndex == DARK_HOME){
+  if (pipIndex == DARK_HOME) {
     return CHECKER_BOT_HOME_Y;
   }
-  if (pipIndex == LIGHT_BAR){
+  if (pipIndex == LIGHT_BAR) {
     return CHECKER_BAR_TOP_Y;
   }
-  if (pipIndex == DARK_BAR){
+  if (pipIndex == DARK_BAR) {
     return CHECKER_BAR_BOT_Y;
   }
 
@@ -81,10 +80,9 @@ void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) 
   (void)sprite;
   (void)context;
   Checker* checker = (Checker*)object;
-  SDL_Event e = { 0 };
-  e.type = CheckerClickEventType;
-  e.user.data1 = checker;
-  SDL_PushEvent(&e);
+  uintptr_t pipIndex = (uintptr_t)checker->pipIndex;
+  FSMEvent e = { PIP_CLICKED_EVENT, (void*)pipIndex };
+  fsm_enqueue_event(e);
 }
 
 void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {

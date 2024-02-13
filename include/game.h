@@ -7,8 +7,8 @@
 #include "fsm.h"
 #include <stdbool.h>
 
-#define FIRST_DIE(gb) ((gb->die1.index == 0) ? gb->die1 : gb->die2)
-#define SECOND_DIE(gb) ((gb->die2.index == 1) ? gb->die2 : gb->die1)
+#define FIRST_DIE(gb) ((gb->die1.index == 0) ? &gb->die1 : &gb->die2)
+#define SECOND_DIE(gb) ((gb->die2.index == 1) ? &gb->die2 : &gb->die1)
 #define DOUBLES_ROLLED(gb) ((gb->die1.value == gb->die2.value))
 
 /**
@@ -106,3 +106,15 @@ void rollDice(GameBoard* gb);
  * @brief Returns true if the active player has barred checkers
  */
 bool playerHasCheckersOnBar(GameBoard* gb);
+
+/**
+ * @brief Copies the state of the checkers into
+ * the save buffer
+ */
+void saveCheckerState(GameBoard* gb);
+
+/**
+ * @brief Restores the contents of the save buffer into
+ * the gameboard state
+ */
+void loadCheckerState(GameBoard* gb);

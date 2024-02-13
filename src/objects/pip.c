@@ -3,25 +3,23 @@
  * @author Michael Baumgarten (you@domain.com)
  * @brief
  */
-#include <SDL3/SDL.h>
-#include <stdint.h>
 #include "sprite.h"
 #include "pip.h"
 #include "sage.h"
 #include "util.h"
+#include "fsm.h"
+#include <SDL3/SDL.h>
+#include <stdint.h>
 
 extern Sage sage;
-uint32_t PipClickEventType = 0;
 
-void clickPip(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+void clickPip(ViewManager* vm, Sprite* sprite, void* pipIndex, void* context) {
     (void)vm;
     (void)sprite;
     (void)context;
-    uint32_t pipIndex = (uintptr_t)object;
-    SDL_Event e = { 0 };
-    e.type = PipClickEventType;
-    e.user.code = pipIndex;
-    SDL_PushEvent(&e);
+
+    FSMEvent e = { PIP_CLICKED_EVENT, pipIndex };
+    fsm_enqueue_event(e);
 }
 
 
@@ -58,7 +56,7 @@ void createPipSprite(SDL_Texture* texture, int32_t index) {
     pipSprite = Sprite_createEx(texture, pipSrc, pipDst, Z_PIPS);
     pipSprite->useViewport = true;
 
-    int32_t realIndex = (index < 12) ? (index+13) : (24-index);
+    int32_t realIndex = (index < 12) ? (index + 13) : (24 - index);
     Sprite_registerClickFn(pipSprite, clickPip, INT2VOIDP(realIndex), NULL);
     Sage_registerSprite(pipSprite);
 }
