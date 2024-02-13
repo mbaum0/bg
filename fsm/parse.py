@@ -50,7 +50,7 @@ def gen_fsm_struct(context_name):
         typedef struct FiniteStateMachine {
             State current_state;
             EventQueue eventQueue;
-            void (*state_functions[NUM_STATES])(struct FiniteStateMachine*, EventQueue*, void*);
+            void (*state_functions[NUM_STATES])(struct FiniteStateMachine*, void*);
             void (*state_init_functions[NUM_STATES])(struct FiniteStateMachine*, void*);
         } FiniteStateMachine;
 
@@ -69,6 +69,7 @@ def gen_state_fxs(states, context_name):
     template = """
         {% for s in states -%}
         void {{ s.lower() }}_state_function(FiniteStateMachine* fsm, void* ctx);
+        void {{ s.lower() }}_init_state_function(FiniteStateMachine* fsm, void* ctx);
         {% endfor -%}
         """
     template = dedent(template)
@@ -105,6 +106,10 @@ def gen_state_file(state, events, context_name):
             }
             {% endif %}
         }
+        void {{ state.lower() }}_init_state_function(FiniteStateMachine* fsm, void* ctx) {
+            {{ context_name }}* {{ context_name.lower() }} = ({{ context_name }}*)ctx;
+            // this is called when the {{ state.lower() }} state is first entered
+        }
         """
     template = dedent(template)
     result += Template(template).render({"state": state, "events": events, "context_name":context_name})
@@ -121,8 +126,11 @@ def gen_fsm_file(states, context_name):
             void fsm_init(FiniteStateMachine *fsm) {
                 {% for s in states %}
                 fsm->state_functions[{{ s }}_STATE] = {{ s.lower() }}_state_function;
+                fsm->state_init_functions[{{ s }}_STATE] = {{ s.lower() }}_init_state_function;
                 {%- endfor %}
                 fsm->current_state = {{ states[0] }}_STATE;
+                fsm->eventQueue.front = 0;
+                fsm->eventQueue.rear = 0;
             }
 
             void fsm_enqueue_event(FiniteStateMachine *fsm, Event event) {
@@ -166,7 +174,7 @@ def gen_fsm_file(states, context_name):
 def main():
     with open("scheme.toml", "rb") as f:
         data = tomllib.load(f)
-        events = []
+        events = set()
         states = []
         context_name = ""
         for state, data in data.items():
@@ -175,7 +183,7 @@ def main():
             if state != "FSM":
                 states.append(state)
                 s_events = data['events']
-                events.extend(s_events)
+                events.update(s_events)
                 gen_state_file(state, s_events, context_name)
         gen_fsm_header(events, states, context_name)
         gen_fsm_file(states, context_name)
