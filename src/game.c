@@ -9,11 +9,9 @@
 #include "pip.h"
 #include "board.h"
 #include "util.h"
+#include "fsm.h"
 
-extern uint32_t PipClickEventType;
-extern uint32_t CheckerClickEventType;
-extern uint32_t DiceClickEventType;
-extern uint32_t ButtonClickEventType;
+extern FiniteStateMachine FSM;
 
 void rollDiceIfPossible(GameBoard* gb);
 void swapDiceIfPossible(GameBoard* gb);
@@ -597,7 +595,7 @@ void moveCheckerIfPossible(GameBoard* gb, Checker* c) {
 }
 
 
-void initCheckerSetup(GameBoard* gb) {
+void initCheckerSetup(void) {
     int32_t lightSetup[] = { 1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19 };
     //int32_t darkSetup[] = { 24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6 };
     int32_t darkSetup[] =   { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2};
@@ -605,39 +603,38 @@ void initCheckerSetup(GameBoard* gb) {
     int32_t pipIndex;
     for (int32_t i = 0; i < 15; i++) {
         pipIndex = lightSetup[i];
-        gb->lightCheckers[i].pipOffset = getNumCheckersOnPip(gb, pipIndex);
-        gb->lightCheckers[i].pipIndex = pipIndex;
-        gb->lightCheckers[i].color = LIGHT;
+        FSM.gb.lightCheckers[i].pipOffset = getNumCheckersOnPip(&FSM.gb, pipIndex);
+        FSM.gb.lightCheckers[i].pipIndex = pipIndex;
+        FSM.gb.lightCheckers[i].color = LIGHT;
     }
 
     for (int32_t i = 0; i < 15; i++) {
         pipIndex = darkSetup[i];
-        gb->darkCheckers[i].pipOffset = getNumCheckersOnPip(gb, pipIndex);
-        gb->darkCheckers[i].pipIndex = pipIndex;
-        gb->darkCheckers[i].color = DARK;
+        FSM.gb.darkCheckers[i].pipOffset = getNumCheckersOnPip(&FSM.gb, pipIndex);
+        FSM.gb.darkCheckers[i].pipIndex = pipIndex;
+        FSM.gb.darkCheckers[i].color = DARK;
     }
 }
 
-void initEventCallbacks(GameBoard* gb) {
-    PipClickEventType = SDL_RegisterEvents(1);
-    CheckerClickEventType = SDL_RegisterEvents(1);
-    DiceClickEventType = SDL_RegisterEvents(1);
-    ButtonClickEventType = SDL_RegisterEvents(1);
-    Sage_registerEventCallback(PipClickEventType, handlePipClick, gb);
-    Sage_registerEventCallback(CheckerClickEventType, handleCheckerClick, gb);
-    Sage_registerEventCallback(DiceClickEventType, handleDiceClick, gb);
-    Sage_registerEventCallback(SDL_EVENT_KEY_DOWN, handleKeyPress, gb);
-    Sage_registerEventCallback(ButtonClickEventType, handleButtonClick, gb);
-}
+// void initEventCallbacks(GameBoard* gb) {
+//     PipClickEventType = SDL_RegisterEvents(1);
+//     CheckerClickEventType = SDL_RegisterEvents(1);
+//     DiceClickEventType = SDL_RegisterEvents(1);
+//     ButtonClickEventType = SDL_RegisterEvents(1);
+//     Sage_registerEventCallback(PipClickEventType, handlePipClick, gb);
+//     Sage_registerEventCallback(CheckerClickEventType, handleCheckerClick, gb);
+//     Sage_registerEventCallback(DiceClickEventType, handleDiceClick, gb);
+//     Sage_registerEventCallback(SDL_EVENT_KEY_DOWN, handleKeyPress, gb);
+//     Sage_registerEventCallback(ButtonClickEventType, handleButtonClick, gb);
+// }
 
-GameBoard* GameBoard_create(void) {
-    GameBoard* gb = calloc(1, sizeof(GameBoard));
-    gb->die1 = (GameDie){ 1, 0, 1, DICE_NONE, false };
-    gb->die2 = (GameDie){ 2, 1, 1, DICE_NONE, false };
-    gb->confirm = (GameButton){ CONFIRM_BTN, false, 1 };
-    gb->undo = (GameButton){ UNDO_BTN, false, 1 };
-    gb->winner = NONE;
-    initCheckerSetup(gb);
+void gameboard_init(void) {
+    FSM.gb.die1 = (GameDie){ 1, 0, 1, DICE_NONE, false };
+    FSM.gb.die2 = (GameDie){ 2, 1, 1, DICE_NONE, false };
+    FSM.gb.confirm = (GameButton){ CONFIRM_BTN, false, 1 };
+    FSM.gb.undo = (GameButton){ UNDO_BTN, false, 1 };
+    FSM.gb.activePlayer = LIGHT;
+    initCheckerSetup();
     createBoardSprites();
     createPipSprites();
     createDiceSprites(&gb->die1, &gb->die2);
@@ -646,7 +643,5 @@ GameBoard* GameBoard_create(void) {
         createCheckerSprite(&gb->lightCheckers[i]);
         createCheckerSprite(&gb->darkCheckers[i]);
     }
-    initEventCallbacks(gb);
-    updateGameState(gb, DARK_DICE_ROLL);
     return gb;
 }

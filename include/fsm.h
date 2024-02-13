@@ -1,5 +1,22 @@
 #pragma once
+#include "checker.h"
+#include "dice.h"
+#include "buttons.h"
 #include <stdbool.h>
+
+typedef struct GameBoard GameBoard;
+
+struct GameBoard {
+  Checker lightCheckers[15];
+  Checker lightCheckersSave[15];
+  Checker darkCheckers[15];
+  Checker darkCheckersSave[15];
+  GameDie die1;
+  GameDie die2;
+  GameButton confirm;
+  GameButton undo;
+  Color activePlayer;
+};
 
 typedef enum {
     CONFIRMED_MOVE_EVENT,
@@ -30,22 +47,22 @@ typedef struct {
 typedef struct FiniteStateMachine {
     State current_state;
     EventQueue eventQueue;
-    void (*state_functions[NUM_STATES])(struct FiniteStateMachine*, void*);
-    void (*state_init_functions[NUM_STATES])(struct FiniteStateMachine*, void*);
+    GameBoard gb;
+    void (*state_functions[NUM_STATES])(struct FiniteStateMachine*);
+    void (*state_init_functions[NUM_STATES])(struct FiniteStateMachine*);
 } FiniteStateMachine;
 
-void fsm_init(FiniteStateMachine* fsm);
-void fsm_enqueue_event(FiniteStateMachine* fsm, Event event);
-bool fsm_dequeue_event(FiniteStateMachine* fsm, EventData* event);
-void fsm_step(FiniteStateMachine* fsm, void* ctx);
-void fsm_transition(FiniteStateMachine *fsm, State next_state, void* ctx);
+void fsm_init(void);
+void fsm_enqueue_event(Event event);
+bool fsm_dequeue_event(EventData* event);
+void fsm_step(void);
+void fsm_transition(State next_state);
 
-typedef struct {} GameBoard;
-void wait_for_roll_state(FiniteStateMachine* fsm, void* ctx);
-void wait_for_roll_init_state(FiniteStateMachine* fsm, void* ctx);
-void player_move_state(FiniteStateMachine* fsm, void* ctx);
-void player_move_init_state(FiniteStateMachine* fsm, void* ctx);
-void move_confirm_state(FiniteStateMachine* fsm, void* ctx);
-void move_confirm_init_state(FiniteStateMachine* fsm, void* ctx);
-void game_over_state(FiniteStateMachine* fsm, void* ctx);
-void game_over_init_state(FiniteStateMachine* fsm, void* ctx);
+void wait_for_roll_state(void);
+void wait_for_roll_init_state(void);
+void player_move_state(void);
+void player_move_init_state(void);
+void move_confirm_state(void);
+void move_confirm_init_state(void);
+void game_over_state(void);
+void game_over_init_state(void);

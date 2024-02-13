@@ -8,6 +8,7 @@
 #include "dstats.h"
 #include "log.h"
 #include "game.h"
+#include "fsm.h"
 
 int SDL_AppInit(int argc, char **argv){
   (void)argc;
@@ -15,12 +16,13 @@ int SDL_AppInit(int argc, char **argv){
   extern Sage sage;
   Sage_init("Backgammon!", WINDOW_W, WINDOW_H, false);
   srand(0);
-  GameBoard_create();
+  fsm_init();
   return 0;
 }
 
 int SDL_AppIterate(void){
   Sage_step();
+  fsm_step();
   return 0;
 }
 
