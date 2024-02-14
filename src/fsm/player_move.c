@@ -33,8 +33,10 @@ void doPlayerMove(GameBoard* gb, int32_t pipIndex) {
   }
 
   int32_t dieValue = getNextDieValue(gb);
-  if (isValidMove(gb, c, dieValue)) {
-    moveChecker(gb, c, dieValue);
+  GameMove gm = {c, dieValue};
+
+  if (isValidMove(gb, gm)) {
+    moveChecker(gb, gm);
     movesLeft = incrementMoveCount(gb);
   } else {
     return;

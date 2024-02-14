@@ -21,11 +21,7 @@ void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
 }
 
 void DStats_create(void) {
-  extern DStats stats;
   char debugText[200];
-  // sprintf(debugText, "FPS: %f\ngame height: %f\ngame width: %f\npipHeight: %f\npipWidth: %f\ncHeight: %f\ncWidth: %f
-  // ", stats.fps, stats.gameHeight, stats.gameWidth, stats.pipHeight, stats.pipWidth, stats.checkerHeight,
-  // stats.checkerWidth);
   sprintf(debugText, "  ");
   SDL_Color color = {255, 255, 255, 255};
   TTF_Font* debugFont = Sage_loadFont("assets/VeraMono.ttf", 20);

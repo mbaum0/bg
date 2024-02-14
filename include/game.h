@@ -11,6 +11,12 @@
 #define SECOND_DIE(gb) ((gb->die2.index == 1) ? &gb->die2 : &gb->die1)
 #define DOUBLES_ROLLED(gb) ((gb->die1.value == gb->die2.value))
 
+typedef struct GameMove GameMove;
+struct GameMove {
+  Checker* c;
+  int32_t amount;
+};
+
 /**
  * @brief Initialize the gameboard to a new game state.
  */
@@ -20,13 +26,13 @@ void gameboard_init(void);
  * @brief Move the given checker the provided amount. This function
  * has no checks for validity.
  */
-void moveChecker(GameBoard* gb, Checker* c, int32_t amount);
+void moveChecker(GameBoard* gb, GameMove gm);
 
 /**
  * @brief Returns true if the provided checker is able to move
  * the provided amount.
  */
-bool isValidMove(GameBoard* gb, Checker* c, int32_t amount);
+bool isValidMove(GameBoard* gb, GameMove gm);
 
 /**
  * @brief Get the top checker on a given pip.
