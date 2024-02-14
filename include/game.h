@@ -10,11 +10,19 @@
 #define FIRST_DIE(gb) ((gb->die1.index == 0) ? &gb->die1 : &gb->die2)
 #define SECOND_DIE(gb) ((gb->die2.index == 1) ? &gb->die2 : &gb->die1)
 #define DOUBLES_ROLLED(gb) ((gb->die1.value == gb->die2.value))
+#define PLAYER_CHECKERS(gb, color) ((color == LIGHT) ? gb->lightCheckers : gb->darkCheckers)
 
 typedef struct GameMove GameMove;
 struct GameMove {
   Checker* c;
   int32_t amount;
+};
+
+typedef struct GameMoveSequence GameMoveSequence;
+struct GameMoveSequence {
+  GameMove moves[4];
+  int32_t numMoves;
+  int32_t resultScore;
 };
 
 /**
@@ -127,11 +135,11 @@ void loadCheckerState(GameBoard* gb);
 /**
  * @brief Returns true if the active player has any valid moves
  */
-bool playerHasMoves(GameBoard* gb, bool bothDice);
+bool playerHasMoves(GameBoard* gb);
 
 /**
  * @brief Return the current score of the player. This is a
  * weighted value based on the distance of all of their checkers
- * to their home.
+ * to their home. Less is better
  */
 int32_t getPlayerScore(GameBoard* gb, Color player);

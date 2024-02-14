@@ -376,11 +376,13 @@ void updateBoardForConfirm(GameBoard* gb) {
   }
 }
 
-bool playerHasMoves(GameBoard* gb, bool bothDice) {
+bool playerHasMoves(GameBoard* gb) {
   Checker* c;
-  int32_t firstDie = FIRST_DIE(gb)->value;
-  int32_t secondDie = SECOND_DIE(gb)->value;
+  GameDie* firstDie = FIRST_DIE(gb);
+  GameDie* secondDie = SECOND_DIE(gb);
   GameMove gm;
+  int32_t usesPerDie = (DOUBLES_ROLLED(gb) ? 2 : 1);
+  bool hasBothDiceLeft = (firstDie->uses < usesPerDie);
   for (int32_t i = 0; i < 15; i++) {
     if (gb->activePlayer == DARK) {
       c = &gb->darkCheckers[i];
@@ -388,13 +390,13 @@ bool playerHasMoves(GameBoard* gb, bool bothDice) {
       c = &gb->lightCheckers[i];
     }
     gm.c = c;
-    if (bothDice) {
-      gm.amount = firstDie;
+    if (hasBothDiceLeft) {
+      gm.amount = firstDie->value;
       if (isValidMove(gb, gm)) {
         return true;
       }
     }
-    gm.amount = secondDie;
+    gm.amount = secondDie->value;
     if (isValidMove(gb, gm)) {
       return true;
     }

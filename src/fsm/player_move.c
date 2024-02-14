@@ -3,6 +3,7 @@
  * @author Michael Baumgarten (you@domain.com)
  * @brief
  */
+#include "ai.h"
 #include "fsm.h"
 #include "game.h"
 #include <stdio.h>
@@ -13,7 +14,7 @@ uint32_t timerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx) {
   GameDie* die1 = FIRST_DIE(gb);
   bool hasBothDiceLeft = (die1->uses == 0);
 
-  if (!playerHasMoves(gb, hasBothDiceLeft)) {
+  if (!playerHasMoves(gb)) {
     log_debug("Active player has no moves available");
     if (hasBothDiceLeft) {
       gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
@@ -66,10 +67,17 @@ void player_move_state(FiniteStateMachine* fsm) {
     }
   }
 }
+
 void player_move_init_state(FiniteStateMachine* fsm) {
   GameBoard* gb = &fsm->gb;
   log_debug("Entered state: PLAYER_TURN");
   updateBoardForPlayerMove(gb);
   saveCheckerState(gb);
   SDL_AddTimer(1000, timerEndPlayerTurnIfNoMoves, gb);
+
+  // this can be removed later
+  GameMoveSequence best = findBestMoveSequence(gb, gb->activePlayer);
+  char moveStr[100];
+  moveSequenceToString(best, moveStr);
+  log_debug("%s", moveStr);
 }
