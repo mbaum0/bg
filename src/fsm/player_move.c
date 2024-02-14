@@ -34,7 +34,7 @@ void doPlayerMove(GameBoard* gb, int32_t pipIndex) {
   }
 
   int32_t dieValue = getNextDieValue(gb);
-  GameMove gm = {c, dieValue};
+  GameMove gm = {c->color, c->pipIndex, dieValue};
 
   if (isValidMove(gb, gm)) {
     moveChecker(gb, gm);

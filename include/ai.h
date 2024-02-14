@@ -13,15 +13,19 @@
  * ie (PLAYER - OPPONENT)
  * Greater values are better for the given player.
  */
-int32_t evaluateBoard(GameBoard* gb, Color player);
+int32_t evaluateBoard(GameBoard* gb, Color player, GameMoveSequence* moveSequence);
 
 /**
  * @brief Generates all possible move sequences for the player from
  * a given state and stores them in the provided array. Returns the number
  * of generated sequences.
  */
-int32_t generateMoves(GameBoard gb, Color player, GameMoveSequence* moveSequences, int32_t numSequences, int32_t die1,
-                      int32_t die2, int32_t depth);
+int32_t generateMoves(GameBoard gb, Color player, GameMoveSequence* moveSequences);
+
+/**
+ * @brief Generates a list of possible next moves. Returns the number of moves found.
+ */
+int32_t getPossibleMoves(GameBoard gb, Color player, GameMove* moves, int32_t amount);
 
 /**
  * @brief Gets the best possible move sequence based on a single-turn score.

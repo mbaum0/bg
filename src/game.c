@@ -140,9 +140,9 @@ Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex) {
   return topChecker;
 }
 
-int32_t getNextPip(Checker* c, int32_t amount) {
-  int32_t oldPip = c->pipIndex;
-  int32_t direction = (c->color == LIGHT) ? 1 : -1;
+int32_t getNextPip(int32_t pipIndex, Color player, int32_t amount) {
+  int32_t oldPip = pipIndex;
+  int32_t direction = (player == LIGHT) ? 1 : -1;
   int32_t newPip;
   if (oldPip == LIGHT_BAR) {
     newPip = DARK_HOME + amount;
@@ -157,9 +157,9 @@ int32_t getNextPip(Checker* c, int32_t amount) {
 
 // // returns true if a move is valid
 bool isValidMove(GameBoard* gb, GameMove gm) {
-  Color player = gm.c->color;
-  int32_t oldPip = gm.c->pipIndex;
-  int32_t newPip = getNextPip(gm.c, gm.amount);
+  Color player = gm.player;
+  int32_t oldPip = gm.srcPip;
+  int32_t newPip = getNextPip(oldPip, player, gm.amount);
 
   if (player != gb->activePlayer) {
     return false;
@@ -189,7 +189,7 @@ bool isValidMove(GameBoard* gb, GameMove gm) {
   // not valid move if moving checker to opponent owned-pip
   if (numCheckers > 1) {
     Checker* topChecker = getTopCheckerOnPip(gb, newPip);
-    if (topChecker->color == OPPONENT_COLOR(gm.c->color)) {
+    if (topChecker->color == OPPONENT_COLOR(gm.player)) {
       return false;
     }
   }
@@ -389,7 +389,8 @@ bool playerHasMoves(GameBoard* gb) {
     } else {
       c = &gb->lightCheckers[i];
     }
-    gm.c = c;
+    gm.srcPip = c->pipIndex;
+    gm.player = gb->activePlayer;
     if (hasBothDiceLeft) {
       gm.amount = firstDie->value;
       if (isValidMove(gb, gm)) {
@@ -405,8 +406,8 @@ bool playerHasMoves(GameBoard* gb) {
 }
 
 void moveChecker(GameBoard* gb, GameMove gm) {
-  int32_t pipIndex = gm.c->pipIndex;
-  int32_t nextPip = getNextPip(gm.c, gm.amount);
+  int32_t pipIndex = gm.srcPip;
+  int32_t nextPip = getNextPip(pipIndex, gm.player, gm.amount);
 
   // if we hit our opponents blot, bar the checker
   if (isPipOpponentBlot(gb, nextPip)) {
@@ -414,8 +415,10 @@ void moveChecker(GameBoard* gb, GameMove gm) {
     barChecker(gb, blot);
   }
 
-  gm.c->pipOffset = getNumCheckersOnPip(gb, nextPip);
-  gm.c->pipIndex = nextPip;
+  Checker* c = getTopCheckerOnPip(gb, pipIndex);
+
+  c->pipOffset = getNumCheckersOnPip(gb, nextPip);
+  c->pipIndex = nextPip;
   log_debug("moved checker from pip %d to pip %d", pipIndex, nextPip);
 }
 

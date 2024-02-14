@@ -14,7 +14,8 @@
 
 typedef struct GameMove GameMove;
 struct GameMove {
-  Checker* c;
+  Color player;
+  int32_t srcPip;
   int32_t amount;
 };
 
@@ -59,10 +60,10 @@ bool playerHasClosedBoard(GameBoard* gb, Color player);
 int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex);
 
 /**
- * @brief Returns the index of the destination pip if the given
- * checker is move the provided amount.
+ * @brief Returns the index of the destination pip if a checker
+ * if moved from the source pip the given amount.
  */
-int32_t getNextPip(Checker* c, int32_t amount);
+int32_t getNextPip(int32_t pipIndex, Color player, int32_t amount);
 
 /**
  * @brief Returns the value of the next available die. Returns -1
