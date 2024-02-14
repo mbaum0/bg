@@ -122,3 +122,10 @@ void loadCheckerState(GameBoard* gb);
  * @brief Returns true if the active player has any valid moves
  */
 bool playerHasMoves(GameBoard* gb, bool bothDice);
+
+/**
+ * @brief Return the current score of the player. This is a
+ * weighted value based on the distance of all of their checkers
+ * to their home.
+ */
+int32_t getPlayerScore(GameBoard* gb, Color player);

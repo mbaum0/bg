@@ -4,31 +4,19 @@
  * @brief Debug stats for the game
  */
 #include "dstats.h"
+#include "fsm.h"
+#include "game.h"
 
-DStats stats = {0};
+extern FiniteStateMachine FSM;
 
 void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
   (void)vm;
   (void)data;
-  extern DStats stats;
+  GameBoard gb = FSM.gb;
+  int32_t lightScore = getPlayerScore(&gb, LIGHT);
+  int32_t darkScore = getPlayerScore(&gb, DARK);
   char debugText[200];
-  float fps, gameHeight, gameWidth, pipHeight, pipWidth, checkerHeight, checkerWidth, checkerRenderedHeight,
-      checkerRenderedWidth;
-  ;
-  fps = stats.fps;
-  gameHeight = stats.gameHeight;
-  gameWidth = stats.gameWidth;
-  pipHeight = stats.pipHeight;
-  pipWidth = stats.pipWidth;
-  checkerHeight = stats.checkerHeight;
-  checkerWidth = stats.checkerWidth;
-  checkerRenderedHeight = stats.checkerRenderedHeight;
-  checkerRenderedWidth = stats.checkerRenderedWidth;
-  sprintf(debugText,
-          "FPS: %f\ngame height: %f\ngame width: %f\npipHeight: %f\npipWidth: %f\ncHeight: %f\ncWidth: %f\ncRenderW: "
-          "%f\ncRenderH: %f",
-          fps, gameHeight, gameWidth, pipHeight, pipWidth, checkerHeight, checkerWidth, checkerRenderedWidth,
-          checkerRenderedHeight);
+  sprintf(debugText, "lightScore: %d\ndarkScore: %d\n", lightScore, darkScore);
   Snippet_setText(snippet, debugText);
 }
 

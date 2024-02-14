@@ -414,6 +414,34 @@ void moveChecker(GameBoard* gb, Checker* c, int32_t amount) {
   log_debug("moved checker from pip %d to pip %d", pipIndex, nextPip);
 }
 
+int32_t getPlayerScore(GameBoard* gb, Color player) {
+  int32_t score = 0;
+  Checker* checkers;
+  if (player == LIGHT) {
+    checkers = gb->lightCheckers;
+  } else {
+    checkers = gb->darkCheckers;
+  }
+  for (int32_t i = 0; i < 15; i++) {
+    int32_t pipIndex = checkers[i].pipIndex;
+    if (pipIndex == LIGHT_HOME || pipIndex == DARK_HOME) {
+      // add nothing here because checker is home
+      continue;
+    }
+
+    if (pipIndex == LIGHT_BAR || pipIndex == DARK_BAR) {
+      score += 25;
+    }
+
+    if (player == LIGHT) {
+      score += (LIGHT_HOME - pipIndex);
+    } else {
+      score += pipIndex;
+    }
+  }
+  return score;
+}
+
 void initCheckerSetup(void) {
   int32_t lightSetup[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
   int32_t darkSetup[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
