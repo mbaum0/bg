@@ -39,7 +39,7 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
 
     // do it once with the original dice, and once with them swapped
     for (int32_t p = 0; p < 2; p++) {
-        if (swapDice){
+        if (swapDice) {
             die1 = SECOND_DIE(gb)->value;
             die2 = FIRST_DIE(gb)->value;
         } else {
@@ -134,7 +134,7 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
                 break;
             }
         }
-        if (DOUBLES_ROLLED(gb)){
+        if (DOUBLES_ROLLED(gb)) {
             // we don't need to do a dice swap if there were doubles rolled
             break;
         }
@@ -144,12 +144,12 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
 }
 
 GameMoveSequence findBestMoveSequence(GameBoard* gb, Color player) {
-    GameMoveSequence moveSequences[MAX_SEQUENCES] = { 0 };
+    GameMoveSequence moveSequences[MAX_SEQUENCES] = {0};
 
     int32_t numOptions = generateMovesSequences(gb, player, moveSequences, MAX_SEQUENCES);
 
     int32_t bestScore = 999;
-    GameMoveSequence best = { 0 };
+    GameMoveSequence best = {0};
     for (int32_t i = 0; i < numOptions; i++) {
         GameMoveSequence gms = moveSequences[i];
         if (gms.resultScore < bestScore) {
@@ -158,23 +158,21 @@ GameMoveSequence findBestMoveSequence(GameBoard* gb, Color player) {
         }
     }
     int32_t currentScore = evaluateBoard(gb, player);
-    log_debug("AI found %d move options. Best option will alter game by %d points", numOptions, (currentScore - best.resultScore));
+    log_debug("AI found %d move options. Best option will alter game by %d points", numOptions,
+              (currentScore - best.resultScore));
     return best;
 }
 
 void moveSequenceToString(GameMoveSequence gsm, char* dst) {
     if (gsm.numMoves == 1) {
         sprintf(dst, "pip: %d\nscore: %d\n", gsm.moves[0].srcPip, gsm.resultScore);
-    }
-    else if (gsm.numMoves == 2) {
+    } else if (gsm.numMoves == 2) {
         sprintf(dst, "pip: %d\npip: %d\nscore: %d\n", gsm.moves[0].srcPip, gsm.moves[1].srcPip, gsm.resultScore);
-    }
-    else if (gsm.numMoves == 3) {
+    } else if (gsm.numMoves == 3) {
         sprintf(dst, "pip: %d\npip: %d\npip: %d\nscore: %d\n", gsm.moves[0].srcPip, gsm.moves[1].srcPip,
-            gsm.moves[2].srcPip, gsm.resultScore);
-    }
-    else if (gsm.numMoves == 4) {
+                gsm.moves[2].srcPip, gsm.resultScore);
+    } else if (gsm.numMoves == 4) {
         sprintf(dst, "pip: %d\npip: %d\npip: %d\npip: %d\nscore: %d\n", gsm.moves[0].srcPip, gsm.moves[1].srcPip,
-            gsm.moves[2].srcPip, gsm.moves[3].srcPip, gsm.resultScore);
+                gsm.moves[2].srcPip, gsm.moves[3].srcPip, gsm.resultScore);
     }
 }
