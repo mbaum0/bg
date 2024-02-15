@@ -1,5 +1,5 @@
 {
-    "C_Cpp.formatting": "vcFormat",
+    "C_Cpp.formatting": "clangFormat",
     "C_Cpp.vcFormat.space.pointerReferenceAlignment": "left",
     "cmake.configureOnOpen": false,
     "files.associations": {
