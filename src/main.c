@@ -15,7 +15,7 @@ int SDL_AppInit(int argc, char** argv) {
     (void)argv;
     extern Sage sage;
     Sage_init("Backgammon!", WINDOW_W, WINDOW_H, false);
-    srand(0);
+    srand(5);
     fsm_init();
     gameboard_init();
     DStats_create();

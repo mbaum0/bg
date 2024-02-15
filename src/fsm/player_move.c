@@ -8,11 +8,11 @@
 #include "game.h"
 #include <stdio.h>
 
-/**
- * This is a hacky solution to combine the gameboard
- * and a move so that the AI can pass both of them
- * to the timer function.
- */
+ /**
+  * This is a hacky solution to combine the gameboard
+  * and a move so that the AI can pass both of them
+  * to the timer function.
+  */
 typedef struct GameBoardMove GameBoardMove;
 
 struct GameBoardMove {
@@ -31,7 +31,8 @@ uint32_t timerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx) {
         if (hasBothDiceLeft) {
             gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
             fsm_transition(WAIT_FOR_ROLL_STATE);
-        } else {
+        }
+        else {
             fsm_transition(MOVE_CONFIRM_STATE);
         }
     }
@@ -55,7 +56,8 @@ void doAiMove(GameBoard* gb, GameMove gm) {
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
         incrementMoveCount(gb);
-    } else {
+    }
+    else {
         log_error("AI picked an invalid move.");
     }
 }
@@ -76,6 +78,13 @@ uint32_t timerEndAiMove(uint32_t interval, void* ctx) {
     return 0;
 }
 
+uint32_t timeDoAiSwapDice(uint32_t interval, void* ctx) {
+    (void)interval;
+    GameBoard* gb = (GameBoard*)ctx;
+    swapDiceIfAllowed(gb);
+    return 0;
+}
+
 void doPlayerMove(GameBoard* gb, int32_t pipIndex) {
     int32_t movesLeft = 0;
     Checker* c = getTopCheckerOnPip(gb, pipIndex);
@@ -84,12 +93,13 @@ void doPlayerMove(GameBoard* gb, int32_t pipIndex) {
     }
 
     int32_t dieValue = getNextDieValue(gb);
-    GameMove gm = {c->color, c->pipIndex, dieValue};
+    GameMove gm = { c->color, c->pipIndex, dieValue };
 
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
         movesLeft = incrementMoveCount(gb);
-    } else {
+    }
+    else {
         return;
     }
 
@@ -143,15 +153,24 @@ void player_move_init_state(FiniteStateMachine* fsm) {
         GameMoveSequence gms = findBestMoveSequence(gb, gb->aiPlayer);
         int32_t i = 0;
         int32_t delay = 500;
-        for (i = 0; i < gms.numMoves; i++) {
-            GameBoardMove* gbm = SDL_malloc(sizeof(GameBoardMove));
-            gbm->gb = gb;
-            gbm->move = gms.moves[i];
-            SDL_AddTimer(delay, timerDoAiMove, gbm);
-            delay += 500;
+
+        if (gms.numMoves > 0) {
+            if (gms.swapDice) {
+                SDL_AddTimer(delay, timeDoAiSwapDice, gb);
+                delay += 500;
+            }
+            for (i = 0; i < gms.numMoves; i++) {
+                GameBoardMove* gbm = SDL_malloc(sizeof(GameBoardMove));
+                gbm->gb = gb;
+                gbm->move = gms.moves[i];
+                SDL_AddTimer(delay, timerDoAiMove, gbm);
+                delay += 500;
+            }
         }
+        // end ai turn
         SDL_AddTimer(delay, timerEndAiMove, gb);
-    } else {
+    }
+    else {
         // timeout the player if no moves.
         SDL_AddTimer(500, timerEndPlayerTurnIfNoMoves, gb);
     }

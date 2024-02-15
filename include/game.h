@@ -20,10 +20,16 @@ struct GameMove {
 };
 
 typedef struct GameMoveSequence GameMoveSequence;
+/**
+ * GameMoveSequence contains an array of GameMoves which
+ * represents a turn. If swapDice is true, the dice should
+ * be swapped at the beginning of the sequence to make it valid.
+ */
 struct GameMoveSequence {
     GameMove moves[4];
     int32_t numMoves;
     int32_t resultScore;
+    bool swapDice;
 };
 
 /**
