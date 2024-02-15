@@ -6,6 +6,7 @@
 #include "dstats.h"
 #include "fsm.h"
 #include "game.h"
+#include "util.h"
 
 extern FiniteStateMachine FSM;
 
@@ -24,8 +25,8 @@ void DStats_create(void) {
     char debugText[200];
     sprintf(debugText, "  ");
     SDL_Color color = {255, 255, 255, 255};
-    TTF_Font* debugFont = Sage_loadFont("assets/VeraMono.ttf", 20);
-    Snippet* snippet = Snippet_create(debugFont, color, 1, 1, 10, true);
+    TTF_Font* debugFont = Sage_loadFont("assets/VeraMono.ttf", DEBUG_FONT_SIZE);
+    Snippet* snippet = Snippet_create(debugFont, color, DEBUG_X, DEBUG_Y, Z_DEBUG, true);
     Sage_registerSnippet(snippet);
     Snippet_setText(snippet, debugText);
     Snippet_registerUpdateFn(snippet, DStats_update, NULL);
