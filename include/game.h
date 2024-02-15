@@ -14,16 +14,16 @@
 
 typedef struct GameMove GameMove;
 struct GameMove {
-  Color player;
-  int32_t srcPip;
-  int32_t amount;
+    Color player;
+    int32_t srcPip;
+    int32_t amount;
 };
 
 typedef struct GameMoveSequence GameMoveSequence;
 struct GameMoveSequence {
-  GameMove moves[4];
-  int32_t numMoves;
-  int32_t resultScore;
+    GameMove moves[4];
+    int32_t numMoves;
+    int32_t resultScore;
 };
 
 /**
@@ -144,3 +144,9 @@ bool playerHasMoves(GameBoard* gb);
  * to their home. Less is better
  */
 int32_t getPlayerScore(GameBoard* gb, Color player);
+
+/**
+ * @brief Creates a deep copy of the src GameBoard and places
+ * it into dst.
+ */
+void deepCopy(GameBoard* dst, GameBoard* src);

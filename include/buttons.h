@@ -11,9 +11,9 @@ typedef struct GameButton GameButton;
 typedef enum { CONFIRM_BTN, UNDO_BTN } GameButtonType;
 
 struct GameButton {
-  GameButtonType kind;
-  bool visible;
-  int32_t side;
+    GameButtonType kind;
+    bool visible;
+    int32_t side;
 };
 
 void createButtonSprites(GameButton* undo, GameButton* confirm);

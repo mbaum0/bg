@@ -15,22 +15,22 @@
 typedef struct Sprite Sprite;
 
 struct Sprite {
-  int32_t id;
-  SDL_Texture* texture;
-  SDL_FRect src_rect;
-  SDL_FRect dst_rect;
-  bool visible;
-  bool hovered;
-  void* update_fn;
-  void* update_object;
-  void* update_context;
-  void* click_fn;
-  void* click_object;
-  void* click_context;
-  bool useViewport;
-  int32_t z;
-  uint8_t alpha;
-  SDL_Color outline;
+    int32_t id;
+    SDL_Texture* texture;
+    SDL_FRect src_rect;
+    SDL_FRect dst_rect;
+    bool visible;
+    bool hovered;
+    void* update_fn;
+    void* update_object;
+    void* update_context;
+    void* click_fn;
+    void* click_object;
+    void* click_context;
+    bool useViewport;
+    int32_t z;
+    uint8_t alpha;
+    SDL_Color outline;
 };
 
 /**

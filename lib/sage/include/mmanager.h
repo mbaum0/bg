@@ -14,11 +14,11 @@
 typedef struct MediaManager MediaManager;
 
 struct MediaManager {
-  SDL_Renderer* renderer;
-  SDL_Window* window;
-  SDL_Texture*** textures;
-  TTF_Font*** fonts;
-  float pixelScale;
+    SDL_Renderer* renderer;
+    SDL_Window* window;
+    SDL_Texture*** textures;
+    TTF_Font*** fonts;
+    float pixelScale;
 };
 
 /**

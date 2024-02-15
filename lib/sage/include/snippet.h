@@ -16,19 +16,19 @@
 typedef struct Snippet Snippet;
 
 struct Snippet {
-  int32_t id;
-  TTF_Font* font;
-  SDL_Color color;
-  int32_t x;
-  int32_t y;
-  int32_t z;
-  bool visible;
-  char* text;
-  SDL_FRect dst_rect;
-  SDL_Texture* texture;
-  void* update_fn;
-  void* update_data;
-  SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
+    int32_t id;
+    TTF_Font* font;
+    SDL_Color color;
+    int32_t x;
+    int32_t y;
+    int32_t z;
+    bool visible;
+    char* text;
+    SDL_FRect dst_rect;
+    SDL_Texture* texture;
+    void* update_fn;
+    void* update_data;
+    SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
 };
 
 /**

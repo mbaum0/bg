@@ -11,28 +11,28 @@
 #include "util.h"
 
 int SDL_AppInit(int argc, char** argv) {
-  (void)argc;
-  (void)argv;
-  extern Sage sage;
-  Sage_init("Backgammon!", WINDOW_W, WINDOW_H, false);
-  srand(0);
-  fsm_init();
-  gameboard_init();
-  DStats_create();
-  return 0;
+    (void)argc;
+    (void)argv;
+    extern Sage sage;
+    Sage_init("Backgammon!", WINDOW_W, WINDOW_H, false);
+    srand(0);
+    fsm_init();
+    gameboard_init();
+    DStats_create();
+    return 0;
 }
 
 int SDL_AppIterate(void) {
-  Sage_step();
-  fsm_step();
-  return 0;
+    Sage_step();
+    fsm_step();
+    return 0;
 }
 
 int SDL_AppEvent(const SDL_Event* event) {
-  SDL_Event e = *event;
-  return Sage_handleEvent(&e);
+    SDL_Event e = *event;
+    return Sage_handleEvent(&e);
 }
 
 void SDL_AppQuit(void) {
-  Sage_destroy();
+    Sage_destroy();
 }

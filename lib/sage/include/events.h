@@ -14,13 +14,13 @@ typedef void (*EventCallback_fn)(uint32_t eventType, SDL_Event* e, void* data);
 typedef struct EventCallback EventCallback;
 
 struct EventCallback {
-  uint32_t eventType;
-  EventCallback_fn callback;
-  void* data;
+    uint32_t eventType;
+    EventCallback_fn callback;
+    void* data;
 };
 
 struct EventManager {
-  EventCallback*** callbacks; // pointer to the callbacks array
+    EventCallback*** callbacks; // pointer to the callbacks array
 };
 
 /**

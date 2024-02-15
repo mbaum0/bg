@@ -16,9 +16,9 @@
 typedef struct Sage Sage;
 
 struct Sage {
-  MediaManager* mm;
-  ViewManager* vm;
-  EventManager* em;
+    MediaManager* mm;
+    ViewManager* vm;
+    EventManager* em;
 };
 
 /**

@@ -22,12 +22,12 @@ typedef enum { LIGHT, DARK, NONE } Color;
 
 #define OPPONENT_COLOR(c) (c == LIGHT ? DARK : LIGHT)
 #define CHECKER_IS_BARRED(c)                                                                                           \
-  ((c->color == DARK && c->pipIndex == DARK_BAR) || (c->color == LIGHT && c->pipIndex == LIGHT_BAR))
+    ((c->color == DARK && c->pipIndex == DARK_BAR) || (c->color == LIGHT && c->pipIndex == LIGHT_BAR))
 
 struct Checker {
-  int32_t pipIndex;
-  int32_t pipOffset;
-  Color color;
+    int32_t pipIndex;
+    int32_t pipOffset;
+    Color color;
 };
 
 void createCheckerSprite(Checker* c);
