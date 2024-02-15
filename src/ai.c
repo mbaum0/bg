@@ -53,13 +53,59 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
             GameBoard gb2;
             deepCopy(&gb2, &gb1);
             moveChecker(&gb2, gm2);
+
+            if (DOUBLES_ROLLED(gb)) {
+                GameMove thirdMoves[15];
+                int32_t thirdMovesCount = getPossibleMoves(&gb2, player, die1, thirdMoves);
+
+                // test for third moves
+                for (int32_t k = 0; k < thirdMovesCount; k++) {
+                    GameMove gm3 = thirdMoves[k];
+                    GameBoard gb3;
+                    deepCopy(&gb3, &gb2);
+                    moveChecker(&gb3, gm3);
+                    GameMove fourthMoves[15];
+                    int32_t fourthMovesCount = getPossibleMoves(&gb3, player, die2, fourthMoves);
+
+                    // test for fourth moves
+                    for (int32_t l = 0; l < fourthMovesCount; l++) {
+                        GameMove gm4 = fourthMoves[l];
+                        GameBoard gb4;
+                        deepCopy(&gb4, &gb3);
+                        moveChecker(&gb4, gm4);
+                        // save off the 4-move option
+                        moveSequences[numSequences].moves[0] = gm1;
+                        moveSequences[numSequences].moves[1] = gm2;
+                        moveSequences[numSequences].moves[2] = gm3;
+                        moveSequences[numSequences].moves[3] = gm4;
+                        moveSequences[numSequences].numMoves = 4;
+                        moveSequences[numSequences].resultScore = evaluateBoard(&gb4, player);
+                        numSequences++;
+                        if (numSequences >= max) {
+                            return numSequences;
+                        }
+                    }
+                    // save off the 3-move option
+                    moveSequences[numSequences].moves[0] = gm1;
+                    moveSequences[numSequences].moves[1] = gm2;
+                    moveSequences[numSequences].moves[2] = gm3;
+                    moveSequences[numSequences].numMoves = 3;
+                    moveSequences[numSequences].resultScore = evaluateBoard(&gb3, player);
+                    numSequences++;
+                    if (numSequences >= max) {
+                        return numSequences;
+                    }
+                }
+            }
+
+            // save off the 2-move option
             moveSequences[numSequences].moves[0] = gm1;
             moveSequences[numSequences].moves[1] = gm2;
             moveSequences[numSequences].numMoves = 2;
             moveSequences[numSequences].resultScore = evaluateBoard(&gb2, player);
             numSequences++;
             if (numSequences >= max) {
-                break;
+                return numSequences;
             }
         }
 
@@ -76,9 +122,9 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
 }
 
 GameMoveSequence findBestMoveSequence(GameBoard* gb, Color player) {
-    GameMoveSequence moveSequences[400] = {0};
+    GameMoveSequence moveSequences[800] = {0};
 
-    int32_t numOptions = generateMovesSequences(gb, player, moveSequences, 400);
+    int32_t numOptions = generateMovesSequences(gb, player, moveSequences, 800);
 
     int32_t bestScore = 999;
     GameMoveSequence best = {0};
@@ -89,6 +135,8 @@ GameMoveSequence findBestMoveSequence(GameBoard* gb, Color player) {
             best = gms;
         }
     }
+    int32_t currentScore = evaluateBoard(gb, player);
+    log_debug("AI found %d move options. Best option will alter game by %d points", numOptions, (currentScore - best.resultScore));
     return best;
 }
 

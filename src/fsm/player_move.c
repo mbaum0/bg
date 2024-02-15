@@ -8,10 +8,10 @@
 #include "game.h"
 #include <stdio.h>
 
- /**
-  * This is a hacky solution to combine the gameboard
-  * and a move so that the AI can pass both of them
-  * to the timer function.
+/**
+ * This is a hacky solution to combine the gameboard
+ * and a move so that the AI can pass both of them
+ * to the timer function.
  */
 typedef struct GameBoardMove GameBoardMove;
 
@@ -19,7 +19,6 @@ struct GameBoardMove {
     GameBoard* gb;
     GameMove move;
 };
-
 
 uint32_t timerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx) {
     (void)interval;
@@ -32,8 +31,7 @@ uint32_t timerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx) {
         if (hasBothDiceLeft) {
             gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
             fsm_transition(WAIT_FOR_ROLL_STATE);
-        }
-        else {
+        } else {
             fsm_transition(MOVE_CONFIRM_STATE);
         }
     }
@@ -57,8 +55,7 @@ void doAiMove(GameBoard* gb, GameMove gm) {
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
         incrementMoveCount(gb);
-    }
-    else {
+    } else {
         log_error("AI picked an invalid move.");
     }
 }
@@ -71,14 +68,13 @@ uint32_t timerDoAiMove(uint32_t interval, void* ctx) {
     return 0;
 }
 
-uint32_t timerEndAiMove(uint32_t interval, void* ctx){
+uint32_t timerEndAiMove(uint32_t interval, void* ctx) {
     (void)interval;
     GameBoard* gb = (GameBoard*)ctx;
     gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
     fsm_transition(WAIT_FOR_ROLL_STATE);
     return 0;
 }
-
 
 void doPlayerMove(GameBoard* gb, int32_t pipIndex) {
     int32_t movesLeft = 0;
@@ -88,13 +84,12 @@ void doPlayerMove(GameBoard* gb, int32_t pipIndex) {
     }
 
     int32_t dieValue = getNextDieValue(gb);
-    GameMove gm = { c->color, c->pipIndex, dieValue };
+    GameMove gm = {c->color, c->pipIndex, dieValue};
 
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
         movesLeft = incrementMoveCount(gb);
-    }
-    else {
+    } else {
         return;
     }
 
@@ -142,7 +137,6 @@ void player_move_init_state(FiniteStateMachine* fsm) {
     log_debug("Entered state: PLAYER_MOVE");
     updateBoardForPlayerMove(gb);
     saveCheckerState(gb);
-    SDL_AddTimer(500, timerEndPlayerTurnIfNoMoves, gb);
 
     if (gb->activePlayer == gb->aiPlayer) {
         // queue up moves
@@ -157,5 +151,8 @@ void player_move_init_state(FiniteStateMachine* fsm) {
             delay += 500;
         }
         SDL_AddTimer(delay, timerEndAiMove, gb);
+    } else {
+        // timeout the player if no moves.
+        SDL_AddTimer(500, timerEndPlayerTurnIfNoMoves, gb);
     }
 }
