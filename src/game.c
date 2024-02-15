@@ -475,24 +475,13 @@ void initCheckerSetup(void) {
     }
 }
 
-// void initEventCallbacks(GameBoard* gb) {
-//     PipClickEventType = SDL_RegisterEvents(1);
-//     CheckerClickEventType = SDL_RegisterEvents(1);
-//     DiceClickEventType = SDL_RegisterEvents(1);
-//     ButtonClickEventType = SDL_RegisterEvents(1);
-//     Sage_registerEventCallback(PipClickEventType, handlePipClick, gb);
-//     Sage_registerEventCallback(CheckerClickEventType, handleCheckerClick, gb);
-//     Sage_registerEventCallback(DiceClickEventType, handleDiceClick, gb);
-//     Sage_registerEventCallback(SDL_EVENT_KEY_DOWN, handleKeyPress, gb);
-//     Sage_registerEventCallback(ButtonClickEventType, handleButtonClick, gb);
-// }
-
 void gameboard_init(void) {
     FSM.gb.die1 = (GameDie){1, 0, 0, 0, DICE_NONE};
     FSM.gb.die2 = (GameDie){2, 1, 0, 0, DICE_NONE};
     FSM.gb.confirm = (GameButton){CONFIRM_BTN, false, 1};
     FSM.gb.undo = (GameButton){UNDO_BTN, false, 1};
     FSM.gb.activePlayer = LIGHT;
+    FSM.gb.aiPlayer = DARK;
     initCheckerSetup();
     createBoardSprites();
     createPipSprites();

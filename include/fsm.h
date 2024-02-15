@@ -16,9 +16,17 @@ struct GameBoard {
     GameButton confirm;
     GameButton undo;
     Color activePlayer;
+    Color aiPlayer;
 };
 
-typedef enum { CONFIRMED_MOVE_EVENT, UNDO_MOVE_EVENT, DICE_CLICKED_EVENT, PIP_CLICKED_EVENT } FSMEventType;
+typedef enum {
+    CONFIRMED_MOVE_EVENT,
+    UNDO_MOVE_EVENT,
+    DICE_CLICKED_EVENT,
+    AI_DICE_CLICKED_EVENT,
+    PIP_CLICKED_EVENT,
+    AI_PIP_CLICKED_EVENT
+} FSMEventType;
 
 typedef struct {
     FSMEventType etype;
