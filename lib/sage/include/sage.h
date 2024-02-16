@@ -92,3 +92,8 @@ void Sage_registerSnippet(Snippet* snippet);
 void Sage_registerEventCallback(uint32_t eventType, EventCallback_fn callback_fn, void* data);
 
 void Sage_setViewport(SDL_FRect viewport);
+
+/**
+ * @brief Set the z-value of the sprite
+ */
+void Sprite_setZ(Sprite* s, int32_t newZ);

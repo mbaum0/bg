@@ -70,3 +70,7 @@ void Sage_registerSnippet(Snippet* snippet) {
 void Sage_registerEventCallback(uint32_t eventType, EventCallback_fn callback_fn, void* data) {
     EM_registerCallback(sage.em, eventType, callback_fn, data);
 }
+
+void Sprite_setZ(Sprite* s, int32_t newZ){
+    VM_setSpriteZ(sage.vm, s, newZ);
+}

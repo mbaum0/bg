@@ -120,6 +120,23 @@ int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
     return sprite->id;
 }
 
+int32_t compareSpriteZ(const void* a, const void* b){
+    Sprite* aS = *(Sprite**)a;
+    Sprite* bS = *(Sprite**)b;
+    return aS->z - bS->z;
+}
+
+void VM_sortSprites(ViewManager* vm) {
+    qsort(*vm->sprites, arrlen(*vm->sprites), sizeof(Sprite*), compareSpriteZ);
+}
+
+void VM_setSpriteZ(ViewManager* vm, Sprite* s, int32_t newZ) {
+    if (s->z != newZ) {
+        s->z = newZ;
+        VM_sortSprites(vm);
+    }
+}
+
 void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* object, void* context) {
     sprite->update_fn = (void*)update_fn;
     sprite->update_object = object;

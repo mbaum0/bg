@@ -78,6 +78,11 @@ void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* objec
 void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void* data);
 
 /**
+ * @brief Update the z-value of a sprite
+ */
+void VM_setSpriteZ(ViewManager* vm, Sprite* s, int32_t newZ);
+
+/**
  * @brief Get the Sprite at the given coordinates
  *
  * @param vm The ViewManager instance

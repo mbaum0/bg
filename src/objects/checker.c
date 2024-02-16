@@ -90,9 +90,9 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
     float x = Sprite_getX(sprite);
     float y = Sprite_getY(sprite);
     if (c->pipIndex == LIGHT_BAR || c->pipIndex == DARK_BAR) {
-        sprite->z = Z_BAR_CHECKERS;
+        Sprite_setZ(sprite, Z_BAR_CHECKERS);
     } else {
-        sprite->z = Z_CHECKERS;
+        Sprite_setZ(sprite, Z_CHECKERS);
     }
     if (!isEqual(x, newX, CHECKER_VELOCITY) || !isEqual(y, newY, CHECKER_VELOCITY)) {
         float xVel = getHorizontalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
