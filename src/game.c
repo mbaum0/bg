@@ -332,13 +332,14 @@ int32_t incrementMoveCount(GameBoard* gb) {
     return 0;
 }
 
-void updateBoardForPlayerMove(GameBoard* gb) {
+void initBoardForPlayerMove(GameBoard* gb) {
     gb->die1.uses = 0;
     gb->die2.uses = 0;
     gb->die1.animation = DICE_SWAP;
     gb->die2.animation = DICE_SWAP;
-    gb->confirm.visible = false;
+    gb->roll.visible = false;
     gb->undo.visible = false;
+    gb->confirm.visible = false;
     if (gb->activePlayer == LIGHT) {
         gb->die1.side = 0;
         gb->die2.side = 0;
@@ -348,13 +349,28 @@ void updateBoardForPlayerMove(GameBoard* gb) {
     }
 }
 
-void updateBoardForDiceRoll(GameBoard* gb) {
+void updateBoardForPlayerMove(GameBoard* gb){
+    if (NUM_MOVES_MADE(gb) > 0 && (gb->activePlayer != gb->aiPlayer)){
+        gb->undo.visible = true;
+    } else {
+        gb->undo.visible = false;
+    }
+}
+
+void initBoardForDiceRoll(GameBoard* gb) {
     gb->die1.uses = 0;
     gb->die2.uses = 0;
     gb->die1.animation = DICE_MOVE;
     gb->die2.animation = DICE_MOVE;
     gb->confirm.visible = false;
     gb->undo.visible = false;
+
+    if (gb->activePlayer == gb->aiPlayer){
+        gb->roll.visible = false;
+    } else {
+        gb->roll.visible = true;
+    }
+    
     if (gb->activePlayer == LIGHT) {
         gb->die1.side = 0;
         gb->die2.side = 0;
@@ -364,15 +380,26 @@ void updateBoardForDiceRoll(GameBoard* gb) {
     }
 }
 
-void updateBoardForConfirm(GameBoard* gb) {
+void initBoardForInit(GameBoard* gb){
+    gb->roll.visible = true;
+    if (gb->activePlayer == LIGHT) {
+        gb->confirm.location = BTN_LEFT;
+        gb->roll.location = BTN_LEFT;
+    } else {
+        gb->confirm.location = BTN_RIGHT;
+        gb->roll.location = BTN_RIGHT;
+    }
+}
+
+void initBoardForConfirm(GameBoard* gb) {
     gb->confirm.visible = true;
     gb->undo.visible = true;
     if (gb->activePlayer == LIGHT) {
-        gb->confirm.side = 0;
-        gb->undo.side = 0;
+        gb->confirm.location = BTN_LEFT;
+        gb->roll.location = BTN_LEFT;
     } else {
-        gb->confirm.side = 1;
-        gb->undo.side = 1;
+        gb->confirm.location = BTN_RIGHT;
+        gb->roll.location = BTN_RIGHT;
     }
 }
 
@@ -478,15 +505,16 @@ void initCheckerSetup(void) {
 void gameboard_init(void) {
     FSM.gb.die1 = (GameDie){1, 0, 0, 0, DICE_NONE};
     FSM.gb.die2 = (GameDie){2, 1, 0, 0, DICE_NONE};
-    FSM.gb.confirm = (GameButton){CONFIRM_BTN, false, 1};
-    FSM.gb.undo = (GameButton){UNDO_BTN, false, 1};
+    FSM.gb.confirm = (GameButton){CONFIRM_BTN, false, BTN_RIGHT};
+    FSM.gb.undo = (GameButton){UNDO_BTN, false, BTN_CENTER};
+    FSM.gb.roll = (GameButton){ROLL_BTN, false, BTN_RIGHT};
     FSM.gb.activePlayer = LIGHT;
     FSM.gb.aiPlayer = DARK;
     initCheckerSetup();
     createBoardSprites();
     createPipSprites();
     createDiceSprites(&FSM.gb.die1, &FSM.gb.die2);
-    createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm);
+    createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll);
     for (int32_t i = 0; i < 15; i++) {
         createCheckerSprite(&FSM.gb.lightCheckers[i]);
         createCheckerSprite(&FSM.gb.darkCheckers[i]);

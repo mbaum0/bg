@@ -35,6 +35,8 @@ void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
 
     if (die->uses == 1) {
         Sprite_setAlpha(sprite, 128);
+    } else if (die->uses == 2){
+        Sprite_setAlpha(sprite, 64);
     } else {
         Sprite_setAlpha(sprite, 255);
     }
@@ -60,7 +62,7 @@ void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
 }
 
 void createDiceSprites(GameDie* die1, GameDie* die2) {
-    SDL_Texture* diceTexture = Sage_loadSVGTexture("assets/dice.svg", DICE_W * 6, DICE_W);
+    SDL_Texture* diceTexture = Sage_loadTexture("assets/dice.png");
     SDL_FRect src_rect = {0, 0, DICE_W, DICE_W};
     src_rect.x = (DICE_W * (die1->value - 1));
 
@@ -70,6 +72,7 @@ void createDiceSprites(GameDie* die1, GameDie* die2) {
     Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
     Sprite_registerClickFn(s, clickDice, NULL, NULL);
     Sprite_registerUpdateFn(s, updateDice, die1, NULL);
+    s->useViewport = true;
     Sage_registerSprite(s);
 
     dst_rect.x += DICE_GAP;
@@ -77,5 +80,6 @@ void createDiceSprites(GameDie* die1, GameDie* die2) {
     s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
     Sprite_registerClickFn(s, clickDice, NULL, NULL);
     Sprite_registerUpdateFn(s, updateDice, die2, NULL);
+    s->useViewport = true;
     Sage_registerSprite(s);
 }

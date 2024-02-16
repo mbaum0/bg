@@ -15,6 +15,7 @@ struct GameBoard {
     GameDie die2;
     GameButton confirm;
     GameButton undo;
+    GameButton roll;
     Color activePlayer;
     Color aiPlayer;
 };
@@ -22,8 +23,9 @@ struct GameBoard {
 typedef enum {
     CONFIRMED_MOVE_EVENT,
     UNDO_MOVE_EVENT,
+    ROLL_DICE_EVENT,
+    AI_ROLL_DICE_EVENT,
     DICE_CLICKED_EVENT,
-    AI_DICE_CLICKED_EVENT,
     PIP_CLICKED_EVENT,
     AI_PIP_CLICKED_EVENT
 } FSMEventType;
@@ -33,7 +35,7 @@ typedef struct {
     void* ctx;
 } FSMEvent;
 
-typedef enum { WAIT_FOR_ROLL_STATE, PLAYER_MOVE_STATE, MOVE_CONFIRM_STATE, GAME_OVER_STATE, NUM_STATES } State;
+typedef enum { INIT_STATE, WAIT_FOR_ROLL_STATE, PLAYER_MOVE_STATE, MOVE_CONFIRM_STATE, GAME_OVER_STATE, NUM_STATES } State;
 
 // Define event queue
 #define MAX_EVENTS 10
@@ -56,6 +58,8 @@ bool fsm_dequeue_event(FSMEvent* event);
 void fsm_step(void);
 void fsm_transition(State next_state);
 
+void init_state(FiniteStateMachine* fsm);
+void init_init_state(FiniteStateMachine* fsm);
 void wait_for_roll_state(FiniteStateMachine* fsm);
 void wait_for_roll_init_state(FiniteStateMachine* fsm);
 void player_move_state(FiniteStateMachine* fsm);

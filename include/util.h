@@ -64,6 +64,7 @@
 #define CHECKER_BAR_X X(197.2)
 #define CHECKER_BAR_TOP_Y X(290.5)
 #define CHECKER_BAR_BOT_Y X(407.4)
+#define CHECKER_GAP X(27)
 
 #define DICE_W X(45)
 #define DICE_LEFT_X X(58.8)
@@ -71,11 +72,12 @@
 #define DICE_GAP X(47)
 #define DICE_Y X(344.5)
 
-#define BTN_W DICE_W
-#define BTN_LEFT_X DICE_LEFT_X
-#define BTN_RIGHT_X DICE_RIGHT_X
-#define BTN_GAP DICE_GAP
-#define BTN_Y DICE_Y
+#define GAME_BTN_W X(52)
+#define GAME_BTN_Y X(341)
+#define GAME_BTN_LEFT_X X(77)
+#define GAME_BTN_RIGHT_X X(296)
+#define GAME_BTN_CENTER_X X(189)
+#define GAME_BTN_SRC_OFFSET GAME_BTN_W
 
 #define CHECKER_VELOCITY X(20)
 #define DICE_VELOCITY X(5)

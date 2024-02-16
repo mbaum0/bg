@@ -150,7 +150,7 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y) {
     int32_t currentTopZ = -1;
     for (int32_t i = 0; i < arrlen(sprites); i++) {
         Sprite* sprite = sprites[i];
-        if (sprite->visible) {
+        if (sprite->visible && sprite->click_fn != NULL) {
             SDL_FPoint p = {x, y};
             SDL_FRect dst = sprite->dst_rect;
             if (sprite->useViewport) {

@@ -113,6 +113,7 @@ void doDiceSwap(GameBoard* gb) {
 void player_move_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     FSMEvent event;
+    updateBoardForPlayerMove(gb);
     while (fsm_dequeue_event(&event)) {
         if (event.etype == PIP_CLICKED_EVENT) {
             // player can't pick for ai
@@ -136,13 +137,18 @@ void player_move_state(FiniteStateMachine* fsm) {
                 doPlayerMove(gb, pipIndex);
             }
         }
+
+        if (event.etype == UNDO_MOVE_EVENT){
+            loadCheckerState(gb);
+            fsm_transition(PLAYER_MOVE_STATE);
+        }
     }
 }
 
 void player_move_init_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     log_debug("Entered state: PLAYER_MOVE");
-    updateBoardForPlayerMove(gb);
+    initBoardForPlayerMove(gb);
     saveCheckerState(gb);
 
     if (gb->activePlayer == gb->aiPlayer) {

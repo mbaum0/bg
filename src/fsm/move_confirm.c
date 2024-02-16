@@ -27,5 +27,5 @@ void move_confirm_state(FiniteStateMachine* fsm) {
 void move_confirm_init_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     log_debug("Entered state: CONFIRM");
-    updateBoardForConfirm(gb);
+    initBoardForConfirm(gb);
 }

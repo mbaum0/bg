@@ -110,6 +110,7 @@ SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int3
     SDL_RWops* f = SDL_RWFromFile(path, "rb");
     SDL_Surface* s = IMG_LoadSizedSVG_RW(f, width, height);
     SDL_Texture* t = SDL_CreateTextureFromSurface(mm->renderer, s);
+    SDL_SetTextureBlendMode(t, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(s);
     return t;
 }

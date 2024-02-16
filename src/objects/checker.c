@@ -63,10 +63,10 @@ int32_t getCheckerY(Checker* checker) {
 
     if (isBetween(pipIndex, 1, 12)) {
         offset = CHECKER_PIP_12_Y;
-        offset -= (checker->pipOffset * CHECKER_W);
+        offset -= (checker->pipOffset * CHECKER_GAP);
     } else {
         offset = CHECKER_PIP_13_Y;
-        offset += (checker->pipOffset * CHECKER_W);
+        offset += (checker->pipOffset * CHECKER_GAP);
     }
     return offset;
 }
@@ -89,6 +89,11 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
     float newY = getCheckerY(c);
     float x = Sprite_getX(sprite);
     float y = Sprite_getY(sprite);
+    if (c->pipIndex == LIGHT_BAR || c->pipIndex == DARK_BAR) {
+        sprite->z = Z_BAR_CHECKERS;
+    } else {
+        sprite->z = Z_CHECKERS;
+    }
     if (!isEqual(x, newX, CHECKER_VELOCITY) || !isEqual(y, newY, CHECKER_VELOCITY)) {
         float xVel = getHorizontalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
         float yVel = getVerticalVelocity(CHECKER_VELOCITY, x, y, newX, newY);

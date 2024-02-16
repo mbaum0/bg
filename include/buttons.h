@@ -8,12 +8,13 @@
 #include <stdint.h>
 
 typedef struct GameButton GameButton;
-typedef enum { CONFIRM_BTN, UNDO_BTN } GameButtonType;
+typedef enum { CONFIRM_BTN, UNDO_BTN, ROLL_BTN } GameButtonType;
+typedef enum { BTN_LEFT, BTN_CENTER, BTN_RIGHT } GameButtonLocation;
 
 struct GameButton {
     GameButtonType kind;
     bool visible;
-    int32_t side;
+    GameButtonLocation location;
 };
 
-void createButtonSprites(GameButton* undo, GameButton* confirm);
+void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll);

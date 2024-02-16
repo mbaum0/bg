@@ -10,6 +10,7 @@
 #define FIRST_DIE(gb) ((gb->die1.index == 0) ? &gb->die1 : &gb->die2)
 #define SECOND_DIE(gb) ((gb->die2.index == 1) ? &gb->die2 : &gb->die1)
 #define DOUBLES_ROLLED(gb) ((gb->die1.value == gb->die2.value))
+#define NUM_MOVES_MADE(gb) ((gb->die1.uses + gb->die2.uses))
 #define PLAYER_CHECKERS(gb, color) ((color == LIGHT) ? gb->lightCheckers : gb->darkCheckers)
 
 typedef struct GameMove GameMove;
@@ -89,22 +90,33 @@ void swapDiceIfAllowed(GameBoard* gb);
 int32_t incrementMoveCount(GameBoard* gb);
 
 /**
- * @brief Updates the board for player move state. This includes
+ * @brief Inits the board for player move state. This includes
  * dice positions, animations, button visibility, etc.
+ */
+void initBoardForPlayerMove(GameBoard* gb);
+
+/**
+ * @brief Updates the display of the board during the player move state.
  */
 void updateBoardForPlayerMove(GameBoard* gb);
 
 /**
- * @brief Updates the board for dice roll state. This includes
+ * @brief Inits the board for dice roll state. This includes
  * dice positions, animations, button visibility, etc.
  */
-void updateBoardForDiceRoll(GameBoard* gb);
+void initBoardForDiceRoll(GameBoard* gb);
 
 /**
- * @brief Updates the board for the confirm state. This includes
+ * @brief Inits the board for the confirm state. This includes
  * the undo/confirm button visibility.
  */
-void updateBoardForConfirm(GameBoard* gb);
+void initBoardForConfirm(GameBoard* gb);
+
+/**
+ * @brief Inits the board for the initial state of the game. This includes
+ * the undo/confirm/roll button visibility.
+ */
+void initBoardForInit(GameBoard* gb);
 
 /**
  * @brief Returns true if the given pip is occupied by a single

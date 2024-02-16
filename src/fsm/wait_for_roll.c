@@ -10,7 +10,7 @@
 uint32_t timerAiRoll(uint32_t interval, void* ctx) {
     (void)interval;
     (void)ctx;
-    FSMEvent e = {AI_DICE_CLICKED_EVENT, NULL};
+    FSMEvent e = {AI_ROLL_DICE_EVENT, NULL};
     fsm_enqueue_event(e);
     return 0;
 }
@@ -19,7 +19,7 @@ void wait_for_roll_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     FSMEvent event;
     while (fsm_dequeue_event(&event)) {
-        if (event.etype == DICE_CLICKED_EVENT) {
+        if (event.etype == ROLL_DICE_EVENT) {
             // player can't roll for the ai
             if (gb->activePlayer != gb->aiPlayer) {
                 rollDice(gb);
@@ -27,7 +27,7 @@ void wait_for_roll_state(FiniteStateMachine* fsm) {
             }
         }
 
-        if (event.etype == AI_DICE_CLICKED_EVENT) {
+        if (event.etype == AI_ROLL_DICE_EVENT) {
             // ai shouldn't cheat ;)
             if (gb->activePlayer == gb->aiPlayer) {
                 rollDice(gb);
@@ -39,7 +39,7 @@ void wait_for_roll_state(FiniteStateMachine* fsm) {
 void wait_for_roll_init_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     log_debug("Entered state: WAIT_FOR_ROLL");
-    updateBoardForDiceRoll(gb);
+    initBoardForDiceRoll(gb);
 
     // auto-roll for the ai
     if (gb->activePlayer == gb->aiPlayer) {

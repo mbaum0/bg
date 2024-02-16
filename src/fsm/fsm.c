@@ -6,7 +6,8 @@
 FiniteStateMachine FSM = {0};
 
 void fsm_init(void) {
-
+    FSM.state_functions[INIT_STATE] = init_state;
+    FSM.state_init_functions[INIT_STATE] = init_init_state;
     FSM.state_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_state;
     FSM.state_init_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_init_state;
     FSM.state_functions[PLAYER_MOVE_STATE] = player_move_state;
@@ -15,7 +16,7 @@ void fsm_init(void) {
     FSM.state_init_functions[MOVE_CONFIRM_STATE] = move_confirm_init_state;
     FSM.state_functions[GAME_OVER_STATE] = game_over_state;
     FSM.state_init_functions[GAME_OVER_STATE] = game_over_init_state;
-    FSM.current_state = WAIT_FOR_ROLL_STATE;
+    FSM.current_state = INIT_STATE;
     FSM.eventQueue.front = 0;
     FSM.eventQueue.rear = 0;
 }
