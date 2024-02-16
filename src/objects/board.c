@@ -15,10 +15,17 @@ void createBoardSprites(void) {
     Sprite* back = Sprite_createEx(background, feltRect, feltRect, Z_BACKGROUND);
     Sage_registerSprite(back);
 
+    SDL_Texture* trimTexture = Sage_loadSVGTexture("assets/trim.svg", TRIM_H, TRIM_W);
+    SDL_FRect trimSrcRect = {0, 0, TRIM_W, TRIM_H};
+    SDL_FRect trimDstRect = {TRIM_X, TRIM_Y, TRIM_W, TRIM_H};
+    Sprite* trimSprite = Sprite_createEx(trimTexture, trimSrcRect, trimDstRect, Z_TRIM);
+    Sage_registerSprite(trimSprite);
+    Sage_setViewport(trimDstRect);
+
     SDL_Texture* boardTexture = Sage_loadSVGTexture("assets/board.svg", BOARD_H, BOARD_W);
     SDL_FRect boardSrcRect = {0, 0, BOARD_W, BOARD_H};
     SDL_FRect boardDstRect = {BOARD_X, BOARD_Y, BOARD_W, BOARD_H};
     Sprite* boardSprite = Sprite_createEx(boardTexture, boardSrcRect, boardDstRect, Z_BOARD);
+    boardSprite->useViewport = true;
     Sage_registerSprite(boardSprite);
-    Sage_setViewport(boardDstRect);
 }

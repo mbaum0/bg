@@ -51,7 +51,7 @@ SDL_Texture* Sage_loadSVGTexture(char* path, int32_t width, int32_t height) {
     return MM_loadSVGTexture(sage.mm, path, width, height);
 }
 
-int32_t Sage_convertHighDPI(int32_t value) {
+float Sage_convertHighDPI(float value) {
     return sage.mm->pixelScale * value;
 }
 

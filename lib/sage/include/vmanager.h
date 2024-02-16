@@ -13,6 +13,12 @@
  * @brief ViewManager manages rendering Sprites to the screen.
  */
 typedef struct ViewManager ViewManager;
+struct ViewManager {
+    SDL_Renderer* renderer;
+    Sprite*** sprites;
+    Snippet*** snippets;
+    SDL_FRect viewport;
+};
 
 /**
  * @brief Initialize a new ViewManager instance and returns a pointer to it. Must

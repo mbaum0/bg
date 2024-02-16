@@ -9,13 +9,6 @@
 #include "util.h"
 #include <math.h>
 
-struct ViewManager {
-    SDL_Renderer* renderer;
-    Sprite*** sprites;
-    Snippet*** snippets;
-    SDL_FRect viewport;
-};
-
 /**
  * @brief Used to pickup on mouse clicks on sprites
  *

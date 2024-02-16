@@ -13,21 +13,27 @@
 #define Z_BACKGROUND 0
 #define Z_BOARD 1
 #define Z_PIPS 2
-#define Z_TRIM 3
-#define Z_CHECKERS 4
-#define Z_DICE 5
-#define Z_BUTTONS 6
-#define Z_DEBUG 7
+#define Z_CHECKERS 3
+#define Z_TRIM 4
+#define Z_BAR_CHECKERS 5
+#define Z_DICE 6
+#define Z_BUTTONS 7
+#define Z_DEBUG 8
 
 #define X(x) (Sage_convertHighDPI(x))
 
 #define FELT_W X(430)
 #define FELT_H X(932)
 
+#define TRIM_W X(430)
+#define TRIM_H X(733)
+#define TRIM_X X(0)
+#define TRIM_Y X(99)
+
 #define BOARD_W X(430)
 #define BOARD_H X(700)
 #define BOARD_X X(0)
-#define BOARD_Y X(116)
+#define BOARD_Y X(17)
 
 #define PIP_W X(34)
 #define PIP_H X(160)
