@@ -104,9 +104,9 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
 }
 
 void createCheckerSprite(Checker* c) {
-    SDL_Texture* texture = Sage_loadSVGTexture("assets/checkers.svg", CHECKER_W * 2, CHECKER_W);
-    SDL_FRect s_lightRect = {0, 0, CHECKER_W, CHECKER_W};
-    SDL_FRect s_darkRect = {CHECKER_W, 0, CHECKER_W, CHECKER_W};
+    SDL_Texture* texture = Sage_loadTexture("assets/checkers.png");
+    SDL_FRect s_lightRect = {0, 0, CHECKER_SRC_W, CHECKER_SRC_W};
+    SDL_FRect s_darkRect = {CHECKER_SRC_W, 0, CHECKER_SRC_W, CHECKER_SRC_W};
 
     int32_t x = getCheckerX(c);
     int32_t y = getCheckerY(c);

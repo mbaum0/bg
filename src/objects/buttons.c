@@ -78,7 +78,7 @@ void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll
     int32_t x = (confirm->location == BTN_LEFT) ? GAME_BTN_LEFT_X : GAME_BTN_RIGHT_X;
 
     // confirm btn
-    SDL_FRect src_rect = {0, 0, GAME_BTN_W, GAME_BTN_W};
+    SDL_FRect src_rect = {0, 0, GAME_BTN_SRC_W, GAME_BTN_SRC_W};
     SDL_FRect dst_rect = {x, GAME_BTN_Y, GAME_BTN_W, GAME_BTN_W};
     Sprite* s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
     Sprite_setVisible(s, confirm->visible);

@@ -22,16 +22,22 @@
 
 #define X(x) (Sage_convertHighDPI(x))
 
-#define FELT_W X(430)
-#define FELT_H X(932)
+#define FELT_SRC_W (430)
+#define FELT_SRC_H (932)
+#define FELT_W X(FELT_SRC_W)
+#define FELT_H X(FELT_SRC_H)
 
-#define TRIM_W X(430)
-#define TRIM_H X(733)
+#define TRIM_SRC_W (430)
+#define TRIM_SRC_H (733)
+#define TRIM_W X(TRIM_SRC_W)
+#define TRIM_H X(TRIM_SRC_H)
 #define TRIM_X X(0)
 #define TRIM_Y X(99)
 
-#define BOARD_W X(430)
-#define BOARD_H X(700)
+#define BOARD_SRC_W (430)
+#define BOARD_SRC_H (700)
+#define BOARD_W X(BOARD_SRC_W)
+#define BOARD_H X(BOARD_SRC_H)
 #define BOARD_X X(0)
 #define BOARD_Y X(17)
 
@@ -47,7 +53,8 @@
 #define PIP_19_X X(221)
 #define PIP_19_Y X(66.562)
 
-#define CHECKER_W X(36)
+#define CHECKER_SRC_W (36)
+#define CHECKER_W X(CHECKER_SRC_W)
 #define CHECKER_PIP_6_X X(220)
 #define CHECKER_PIP_6_Y X(635.3)
 #define CHECKER_PIP_12_X X(4)
@@ -66,18 +73,20 @@
 #define CHECKER_BAR_BOT_Y X(407.4)
 #define CHECKER_GAP X(27)
 
-#define DICE_W X(45)
+#define DICE_SRC_W (45)
+#define DICE_W X(DICE_SRC_W)
 #define DICE_LEFT_X X(58.8)
 #define DICE_RIGHT_X X(279.8)
 #define DICE_GAP X(47)
 #define DICE_Y X(344.5)
 
-#define GAME_BTN_W X(52)
+#define GAME_BTN_SRC_W (52)
+#define GAME_BTN_W X(GAME_BTN_SRC_W)
 #define GAME_BTN_Y X(341)
 #define GAME_BTN_LEFT_X X(77)
 #define GAME_BTN_RIGHT_X X(296)
 #define GAME_BTN_CENTER_X X(189)
-#define GAME_BTN_SRC_OFFSET GAME_BTN_W
+#define GAME_BTN_SRC_OFFSET GAME_BTN_SRC_W
 
 #define CHECKER_VELOCITY X(20)
 #define DICE_VELOCITY X(5)

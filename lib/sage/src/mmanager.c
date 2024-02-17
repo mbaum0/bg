@@ -25,6 +25,7 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
         mm->window = SDL_CreateWindow(title, winWidth, winHeight, SDL_WINDOW_HIGH_PIXEL_DENSITY);
         mm->pixelScale = 1;
     }
+    log_debug("Set pixel scaling to: %f", mm->pixelScale);
 
     if (!mm->window) {
         log_error("Failed to open %d x %d window: %s", w, h, SDL_GetError());
