@@ -340,7 +340,7 @@ void initBoardForPlayerMove(GameBoard* gb) {
     gb->roll.visible = false;
     gb->undo.visible = false;
     gb->confirm.visible = false;
-    if (gb->activePlayer == LIGHT) {
+    if (gb->activePlayer == gb->aiPlayer) {
         gb->die1.side = 0;
         gb->die2.side = 0;
     } else {
@@ -371,7 +371,7 @@ void initBoardForDiceRoll(GameBoard* gb) {
         gb->roll.visible = true;
     }
     
-    if (gb->activePlayer == LIGHT) {
+    if (gb->activePlayer == gb->aiPlayer) {
         gb->die1.side = 0;
         gb->die2.side = 0;
     } else {
@@ -382,7 +382,7 @@ void initBoardForDiceRoll(GameBoard* gb) {
 
 void initBoardForInit(GameBoard* gb){
     gb->roll.visible = true;
-    if (gb->activePlayer == LIGHT) {
+    if (gb->activePlayer == gb->aiPlayer) {
         gb->confirm.location = BTN_LEFT;
         gb->roll.location = BTN_LEFT;
     } else {
@@ -394,7 +394,7 @@ void initBoardForInit(GameBoard* gb){
 void initBoardForConfirm(GameBoard* gb) {
     gb->confirm.visible = true;
     gb->undo.visible = true;
-    if (gb->activePlayer == LIGHT) {
+    if (gb->activePlayer == gb->aiPlayer) {
         gb->confirm.location = BTN_LEFT;
         gb->roll.location = BTN_LEFT;
     } else {
