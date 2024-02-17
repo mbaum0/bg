@@ -11,14 +11,16 @@ float getVerticalVelocity(float velocity, float x0, float y0, float x1, float y1
     float hypotenuse = sqrt(pow(x1 - x0, 2) + pow(y1 - y0, 2));
     float cosOrigin = fabs(y1 - y0) / hypotenuse;
     float yVelocity = cosOrigin * velocity;
-    return yVelocity *= (y0 < y1) ? 1 : -1;
+    yVelocity *= (y0 < y1) ? 1 : -1;
+    return yVelocity;
 }
 
 float getHorizontalVelocity(float velocity, float x0, float y0, float x1, float y1) {
     float hypotenuse = sqrt(pow(x1 - x0, 2) + pow(y1 - y0, 2));
     float sinOrigin = fabs(x1 - x0) / hypotenuse;
     float xVelocity = sinOrigin * velocity;
-    return xVelocity *= (x0 < x1) ? 1 : -1;
+    xVelocity *= (x0 < x1) ? 1 : -1;
+    return xVelocity;
 }
 
 void getNextCoordinatesCircle(float radius, float velocity, float h, float k, float x, float y, float* nextX,

@@ -7,26 +7,25 @@
 #include "stb_ds.h"
 
 bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fillDisplay) {
-    (void)winHeight;
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER) < 0) {
         log_error("Couldn't initialize SDL: %s", SDL_GetError());
         return false;
     }
-    int w, h;
+    int w = winWidth;
+    int h = winHeight;
 
     if (fillDisplay) {
         SDL_DisplayID did = SDL_GetPrimaryDisplay();
         const SDL_DisplayMode* dm = SDL_GetCurrentDisplayMode(did);
         w = dm->w;
         h = dm->h;
-        mm->window = SDL_CreateWindow(title, w, h, SDL_WINDOW_HIGH_PIXEL_DENSITY);
         mm->pixelScale = (dm->pixel_density * w) / (float)winWidth;
     } else {
-        mm->window = SDL_CreateWindow(title, winWidth, winHeight, SDL_WINDOW_HIGH_PIXEL_DENSITY);
         mm->pixelScale = 1;
     }
     log_debug("Set pixel scaling to: %f", mm->pixelScale);
 
+    mm->window = SDL_CreateWindow(title, w, h, SDL_WINDOW_HIGH_PIXEL_DENSITY);
     if (!mm->window) {
         log_error("Failed to open %d x %d window: %s", w, h, SDL_GetError());
         return false;
@@ -54,8 +53,13 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
 
 MediaManager* MM_init(char* title, int winWidth, int winHeight, bool fillDisplay) {
     MediaManager* mm = calloc(1, sizeof(MediaManager));
+    if (mm == NULL){
+        log_error("Failed to allocate memory for the media manager");
+        return NULL;
+    }
     if (!initSDL(mm, title, winWidth, winHeight, fillDisplay)) {
         log_error("Failed to initialize SDL");
+        free(mm);
         return NULL;
     }
     mm->textures = malloc(sizeof(SDL_Texture**));
