@@ -8,7 +8,7 @@
 #include "sage.h"
 #include "util.h"
 
-void clickUndo(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
+void clickUndo(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
     (void)vm;
     (void)context;
     (void)sprite;
@@ -18,7 +18,7 @@ void clickUndo(ViewManager* vm, Sprite* sprite, void* object, void* context, int
     fsm_enqueue_event(e);
 }
 
-void clickConfirm(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
+void clickConfirm(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
     (void)vm;
     (void)context;
     (void)sprite;
@@ -28,7 +28,7 @@ void clickConfirm(ViewManager* vm, Sprite* sprite, void* object, void* context, 
     fsm_enqueue_event(e);
 }
 
-void clickRoll(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
+void clickRoll(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
     (void)vm;
     (void)context;
     (void)sprite;
@@ -78,7 +78,7 @@ void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll
     //SDL_Texture* btnTexture = Sage_loadSVGTexture("assets/buttons.svg", BTN_W * 2, BTN_W);
     SDL_Texture* btnTexture = Sage_loadTexture("assets/buttons.png");
 
-    int32_t x = (confirm->location == BTN_LEFT) ? GAME_BTN_LEFT_X : GAME_BTN_RIGHT_X;
+    Sint32 x = (confirm->location == BTN_LEFT) ? GAME_BTN_LEFT_X : GAME_BTN_RIGHT_X;
 
     // confirm btn
     SDL_FRect src_rect = {0, 0, GAME_BTN_SRC_W, GAME_BTN_SRC_W};

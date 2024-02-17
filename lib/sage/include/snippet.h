@@ -7,7 +7,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3_ttf/SDL_ttf.h>
 #include <stdbool.h>
-#include <stdint.h>
+
 
 /**
  * @brief A Snippet is a bit of text that is drawn on the screen. It can be manipulated using
@@ -16,12 +16,12 @@
 typedef struct Snippet Snippet;
 
 struct Snippet {
-    int32_t id;
+    Sint32 id;
     TTF_Font* font;
     SDL_Color color;
-    int32_t x;
-    int32_t y;
-    int32_t z;
+    Sint32 x;
+    Sint32 y;
+    Sint32 z;
     bool visible;
     char* text;
     SDL_FRect dst_rect;
@@ -42,11 +42,11 @@ struct Snippet {
  * @param visible Whether or not the Snippet is visible
  * @return Snippet*
  */
-Snippet* Snippet_create(TTF_Font* font, SDL_Color color, int32_t x, int32_t y, int32_t z, bool visible);
+Snippet* Snippet_create(TTF_Font* font, SDL_Color color, Sint32 x, Sint32 y, Sint32 z, bool visible);
 /**
  * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks
  */
-void Snippet_setLocation(Snippet* snippet, int32_t x, int32_t y);
+void Snippet_setLocation(Snippet* snippet, Sint32 x, Sint32 y);
 
 /**
  * @brief Set the text of the Snippet. Only used in SnippetUpdate_fn callbacks

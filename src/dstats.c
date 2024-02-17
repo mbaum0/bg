@@ -14,8 +14,8 @@ void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
     GameBoard gb = FSM.gb;
-    int32_t lightScore = getPlayerScore(&gb, LIGHT);
-    int32_t darkScore = getPlayerScore(&gb, DARK);
+    Sint32 lightScore = getPlayerScore(&gb, LIGHT);
+    Sint32 darkScore = getPlayerScore(&gb, DARK);
     char debugText[200];
     sprintf(debugText, "lightScore: %d\ndarkScore: %d\n", lightScore, darkScore);
     Snippet_setText(snippet, debugText);

@@ -23,10 +23,10 @@ void loadCheckerState(GameBoard* gb) {
     memcpy(gb->darkCheckers, gb->darkCheckersSave, sizeof(gb->darkCheckers));
 }
 
-bool isPipOpponentBlot(GameBoard* gb, int32_t pipIndex) {
+bool isPipOpponentBlot(GameBoard* gb, Sint32 pipIndex) {
     Color opponent = OPPONENT_COLOR(gb->activePlayer);
 
-    int32_t numCheckers = getNumCheckersOnPip(gb, pipIndex);
+    Sint32 numCheckers = getNumCheckersOnPip(gb, pipIndex);
     if (numCheckers == 1) {
         Checker* c = getTopCheckerOnPip(gb, pipIndex);
         return (c->color == opponent);
@@ -42,7 +42,7 @@ bool playerHasCheckersOnBar(GameBoard* gb) {
     }
 }
 
-int32_t getNextDieValue(GameBoard* gb) {
+Sint32 getNextDieValue(GameBoard* gb) {
     GameDie die1 = *FIRST_DIE(gb);
     GameDie die2 = *SECOND_DIE(gb);
     if (DOUBLES_ROLLED(gb)) {
@@ -66,7 +66,7 @@ int32_t getNextDieValue(GameBoard* gb) {
 
 bool playerHasClosedBoard(GameBoard* gb, Color player) {
     Checker checker;
-    for (int32_t i = 0; i < 15; i++) {
+    for (Sint32 i = 0; i < 15; i++) {
         if (player == LIGHT) {
             checker = gb->lightCheckers[i];
         } else {
@@ -84,9 +84,9 @@ bool playerHasClosedBoard(GameBoard* gb, Color player) {
 }
 
 // void checkForWinner(GameBoard* gb){
-//     int32_t numLightHome = 0;
-//     int32_t numDarkHome = 0;
-//     for (int32_t i = 0; i < 15; i++){
+//     Sint32 numLightHome = 0;
+//     Sint32 numDarkHome = 0;
+//     for (Sint32 i = 0; i < 15; i++){
 //         if (gb->lightCheckers[i].pipIndex == LIGHT_HOME){
 //             numLightHome++;
 //         }
@@ -106,10 +106,10 @@ bool playerHasClosedBoard(GameBoard* gb, Color player) {
 //     }
 // }
 
-int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex) {
-    int32_t count = 0;
+Sint32 getNumCheckersOnPip(GameBoard* gb, Sint32 pipIndex) {
+    Sint32 count = 0;
     Checker* checker;
-    for (int32_t i = 0; i < 15; i++) {
+    for (Sint32 i = 0; i < 15; i++) {
         checker = &gb->lightCheckers[i];
         if (checker->pipIndex == pipIndex) {
             count += 1;
@@ -122,10 +122,10 @@ int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex) {
     return count;
 }
 
-Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex) {
+Checker* getTopCheckerOnPip(GameBoard* gb, Sint32 pipIndex) {
     Checker* topChecker = NULL;
-    int32_t topIndex = -1;
-    for (int32_t i = 0; i < 15; i++) {
+    Sint32 topIndex = -1;
+    for (Sint32 i = 0; i < 15; i++) {
         Checker* c = &gb->lightCheckers[i];
         if (c->pipIndex == pipIndex && c->pipOffset > topIndex) {
             topChecker = c;
@@ -140,10 +140,10 @@ Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex) {
     return topChecker;
 }
 
-int32_t getNextPip(int32_t pipIndex, Color player, int32_t amount) {
-    int32_t oldPip = pipIndex;
-    int32_t direction = (player == LIGHT) ? 1 : -1;
-    int32_t newPip;
+Sint32 getNextPip(Sint32 pipIndex, Color player, Sint32 amount) {
+    Sint32 oldPip = pipIndex;
+    Sint32 direction = (player == LIGHT) ? 1 : -1;
+    Sint32 newPip;
     if (oldPip == LIGHT_BAR) {
         newPip = DARK_HOME + amount;
     } else if (oldPip == DARK_BAR) {
@@ -158,8 +158,8 @@ int32_t getNextPip(int32_t pipIndex, Color player, int32_t amount) {
 // // returns true if a move is valid
 bool isValidMove(GameBoard* gb, GameMove gm) {
     Color player = gm.player;
-    int32_t oldPip = gm.srcPip;
-    int32_t newPip = getNextPip(oldPip, player, gm.amount);
+    Sint32 oldPip = gm.srcPip;
+    Sint32 newPip = getNextPip(oldPip, player, gm.amount);
 
     if (player != gb->activePlayer) {
         return false;
@@ -185,7 +185,7 @@ bool isValidMove(GameBoard* gb, GameMove gm) {
         return false;
     }
 
-    int32_t numCheckers = getNumCheckersOnPip(gb, newPip);
+    Sint32 numCheckers = getNumCheckersOnPip(gb, newPip);
     // not valid move if moving checker to opponent owned-pip
     if (numCheckers > 1) {
         Checker* topChecker = getTopCheckerOnPip(gb, newPip);
@@ -207,10 +207,10 @@ void barChecker(GameBoard* gb, Checker* c) {
     }
 }
 
-// void handlePipClick(uint32_t eventType, SDL_Event* e, void* data) {
+// void handlePipClick(Uint32 eventType, SDL_Event* e, void* data) {
 //     (void)eventType;
 //     GameBoard* gb = (GameBoard*)data;
-//     uint32_t pipIndex = e->user.code;
+//     Uint32 pipIndex = e->user.code;
 //     log_debug("pip %d clicked", pipIndex);
 //     Checker* checker = getTopCheckerOnPip(gb, pipIndex);
 //     if (checker != NULL) {
@@ -239,7 +239,7 @@ void barChecker(GameBoard* gb, Checker* c) {
 //     }
 // }
 
-// void handleButtonClick(uint32_t eventType, SDL_Event* e, void* data) {
+// void handleButtonClick(Uint32 eventType, SDL_Event* e, void* data) {
 //     (void)eventType;
 //     GameBoard* gb = (GameBoard*)data;
 //     GameButtonType btnType = e->user.code;
@@ -253,7 +253,7 @@ void barChecker(GameBoard* gb, Checker* c) {
 //     }
 // }
 
-// void handleCheckerClick(uint32_t eventType, SDL_Event* e, void* data) {
+// void handleCheckerClick(Uint32 eventType, SDL_Event* e, void* data) {
 //     (void)eventType;
 //     GameBoard* gb = (GameBoard*)data;
 //     Checker* checker = (Checker*)e->user.data1;
@@ -261,7 +261,7 @@ void barChecker(GameBoard* gb, Checker* c) {
 //     moveCheckerIfPossible(gb, checker);
 // }
 
-// void handleDiceClick(uint32_t eventType, SDL_Event* e, void* data) {
+// void handleDiceClick(Uint32 eventType, SDL_Event* e, void* data) {
 //     (void)eventType;
 //     (void)e;
 //     GameBoard* gb = (GameBoard*)data;
@@ -270,7 +270,7 @@ void barChecker(GameBoard* gb, Checker* c) {
 //     rollDiceIfPossible(gb);
 // }
 
-// void handleKeyPress(uint32_t eventType, SDL_Event* e, void* data) {
+// void handleKeyPress(Uint32 eventType, SDL_Event* e, void* data) {
 //     (void)eventType;
 //     GameBoard* gb = (GameBoard*)data;
 //     if (e->key.keysym.sym == SDLK_SPACE) {
@@ -301,13 +301,13 @@ void rollDice(GameBoard* gb) {
 
 void swapDiceIfAllowed(GameBoard* gb) {
     if (gb->die1.uses == 0 && gb->die2.uses == 0) {
-        int32_t index1 = gb->die1.index;
+        Sint32 index1 = gb->die1.index;
         gb->die1.index = gb->die2.index;
         gb->die2.index = index1;
     }
 }
 
-int32_t incrementMoveCount(GameBoard* gb) {
+Sint32 incrementMoveCount(GameBoard* gb) {
     GameDie* die1 = FIRST_DIE(gb);
     GameDie* die2 = SECOND_DIE(gb);
     if (DOUBLES_ROLLED(gb)) {
@@ -408,9 +408,9 @@ bool playerHasMoves(GameBoard* gb) {
     GameDie* firstDie = FIRST_DIE(gb);
     GameDie* secondDie = SECOND_DIE(gb);
     GameMove gm;
-    int32_t usesPerDie = (DOUBLES_ROLLED(gb) ? 2 : 1);
+    Sint32 usesPerDie = (DOUBLES_ROLLED(gb) ? 2 : 1);
     bool hasBothDiceLeft = (firstDie->uses < usesPerDie);
-    for (int32_t i = 0; i < 15; i++) {
+    for (Sint32 i = 0; i < 15; i++) {
         if (gb->activePlayer == DARK) {
             c = &gb->darkCheckers[i];
         } else {
@@ -433,8 +433,8 @@ bool playerHasMoves(GameBoard* gb) {
 }
 
 void moveChecker(GameBoard* gb, GameMove gm) {
-    int32_t pipIndex = gm.srcPip;
-    int32_t nextPip = getNextPip(pipIndex, gm.player, gm.amount);
+    Sint32 pipIndex = gm.srcPip;
+    Sint32 nextPip = getNextPip(pipIndex, gm.player, gm.amount);
 
     // if we hit our opponents blot, bar the checker
     if (isPipOpponentBlot(gb, nextPip)) {
@@ -449,16 +449,16 @@ void moveChecker(GameBoard* gb, GameMove gm) {
     log_debug("moved checker from pip %d to pip %d", pipIndex, nextPip);
 }
 
-int32_t getPlayerScore(GameBoard* gb, Color player) {
-    int32_t score = 0;
+Sint32 getPlayerScore(GameBoard* gb, Color player) {
+    Sint32 score = 0;
     Checker* checkers;
     if (player == LIGHT) {
         checkers = gb->lightCheckers;
     } else {
         checkers = gb->darkCheckers;
     }
-    for (int32_t i = 0; i < 15; i++) {
-        int32_t pipIndex = checkers[i].pipIndex;
+    for (Sint32 i = 0; i < 15; i++) {
+        Sint32 pipIndex = checkers[i].pipIndex;
         if (pipIndex == LIGHT_HOME || pipIndex == DARK_HOME) {
             // add nothing here because checker is home
             continue;
@@ -482,19 +482,19 @@ void deepCopy(GameBoard* dst, GameBoard* src) {
 }
 
 void initCheckerSetup(void) {
-    int32_t lightSetup[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
-    int32_t darkSetup[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
-    // int32_t darkSetup[] = { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 };
+    Sint32 lightSetup[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
+    Sint32 darkSetup[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
+    // Sint32 darkSetup[] = { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 };
 
-    int32_t pipIndex;
-    for (int32_t i = 0; i < 15; i++) {
+    Sint32 pipIndex;
+    for (Sint32 i = 0; i < 15; i++) {
         pipIndex = lightSetup[i];
         FSM.gb.lightCheckers[i].pipOffset = getNumCheckersOnPip(&FSM.gb, pipIndex);
         FSM.gb.lightCheckers[i].pipIndex = pipIndex;
         FSM.gb.lightCheckers[i].color = LIGHT;
     }
 
-    for (int32_t i = 0; i < 15; i++) {
+    for (Sint32 i = 0; i < 15; i++) {
         pipIndex = darkSetup[i];
         FSM.gb.darkCheckers[i].pipOffset = getNumCheckersOnPip(&FSM.gb, pipIndex);
         FSM.gb.darkCheckers[i].pipIndex = pipIndex;
@@ -515,7 +515,7 @@ void gameboard_init(void) {
     createPipSprites();
     createDiceSprites(&FSM.gb.die1, &FSM.gb.die2);
     createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll);
-    for (int32_t i = 0; i < 15; i++) {
+    for (Sint32 i = 0; i < 15; i++) {
         createCheckerSprite(&FSM.gb.lightCheckers[i]);
         createCheckerSprite(&FSM.gb.darkCheckers[i]);
     }

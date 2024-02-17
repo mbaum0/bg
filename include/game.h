@@ -16,8 +16,8 @@
 typedef struct GameMove GameMove;
 struct GameMove {
     Color player;
-    int32_t srcPip;
-    int32_t amount;
+    Sint32 srcPip;
+    Sint32 amount;
 };
 
 typedef struct GameMoveSequence GameMoveSequence;
@@ -28,8 +28,8 @@ typedef struct GameMoveSequence GameMoveSequence;
  */
 struct GameMoveSequence {
     GameMove moves[4];
-    int32_t numMoves;
-    int32_t resultScore;
+    Sint32 numMoves;
+    Sint32 resultScore;
     bool swapDice;
 };
 
@@ -53,7 +53,7 @@ bool isValidMove(GameBoard* gb, GameMove gm);
 /**
  * @brief Get the top checker on a given pip.
  */
-Checker* getTopCheckerOnPip(GameBoard* gb, int32_t pipIndex);
+Checker* getTopCheckerOnPip(GameBoard* gb, Sint32 pipIndex);
 
 /**
  * @brief Returns true if all of the player's checkers are within
@@ -64,19 +64,19 @@ bool playerHasClosedBoard(GameBoard* gb, Color player);
 /**
  * @brief Get the number of checkers on a given pip.
  */
-int32_t getNumCheckersOnPip(GameBoard* gb, int32_t pipIndex);
+Sint32 getNumCheckersOnPip(GameBoard* gb, Sint32 pipIndex);
 
 /**
  * @brief Returns the index of the destination pip if a checker
  * if moved from the source pip the given amount.
  */
-int32_t getNextPip(int32_t pipIndex, Color player, int32_t amount);
+Sint32 getNextPip(Sint32 pipIndex, Color player, Sint32 amount);
 
 /**
  * @brief Returns the value of the next available die. Returns -1
  * if there are no more moves left.
  */
-int32_t getNextDieValue(GameBoard* gb);
+Sint32 getNextDieValue(GameBoard* gb);
 
 /**
  * @brief Swaps the order of the dice if neither die is used.
@@ -87,7 +87,7 @@ void swapDiceIfAllowed(GameBoard* gb);
  * @brief Increments the move counter and returns the number
  * of moves the player has left
  */
-int32_t incrementMoveCount(GameBoard* gb);
+Sint32 incrementMoveCount(GameBoard* gb);
 
 /**
  * @brief Inits the board for player move state. This includes
@@ -122,7 +122,7 @@ void initBoardForInit(GameBoard* gb);
  * @brief Returns true if the given pip is occupied by a single
  * opponent checker. Opponent is the non-active player.
  */
-bool isPipOpponentBlot(GameBoard* gb, int32_t pipIndex);
+bool isPipOpponentBlot(GameBoard* gb, Sint32 pipIndex);
 
 /**
  * @brief Move the provided checker to its player's bar
@@ -161,7 +161,7 @@ bool playerHasMoves(GameBoard* gb);
  * weighted value based on the distance of all of their checkers
  * to their home. Less is better
  */
-int32_t getPlayerScore(GameBoard* gb, Color player);
+Sint32 getPlayerScore(GameBoard* gb, Color player);
 
 /**
  * @brief Creates a deep copy of the src GameBoard and places

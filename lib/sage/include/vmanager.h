@@ -44,9 +44,9 @@ void VM_draw(ViewManager* vm);
  *
  * @param vm The ViewManager instance
  * @param sprite Sprite to register
- * @return int32_t The id of the Sprite
+ * @return Sint32 The id of the Sprite
  */
-int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite);
+Sint32 VM_registerSprite(ViewManager* vm, Sprite* sprite);
 
 /**
  * @brief Register a Snippet with the ViewManager. Do not free Snippets directly once registered, as they are managed by
@@ -54,9 +54,9 @@ int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite);
  *
  * @param vm The ViewManager instance
  * @param snippet Snippet to register
- * @return int32_t The id of the Snippet
+ * @return Sint32 The id of the Snippet
  */
-int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet);
+Sint32 VM_registerSnippet(ViewManager* vm, Snippet* snippet);
 
 /**
  * @brief Sprite update functions are called every frame to update the Sprite's state.
@@ -71,16 +71,16 @@ typedef void (*SnippetUpdate_fn)(ViewManager* vm, Snippet* snippet, void* data);
 /**
  * @brief Sprite click functions are called when the Sprite is clicked.
  */
-typedef void (*SpriteClick_fn)(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code);
+typedef void (*SpriteClick_fn)(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code);
 
 void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* object, void* context);
-void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context, int32_t code);
+void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context, Sint32 code);
 void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void* data);
 
 /**
  * @brief Update the z-value of a sprite
  */
-void VM_setSpriteZ(ViewManager* vm, Sprite* s, int32_t newZ);
+void VM_setSpriteZ(ViewManager* vm, Sprite* s, Sint32 newZ);
 
 /**
  * @brief Get the Sprite at the given coordinates
@@ -91,6 +91,6 @@ void VM_setSpriteZ(ViewManager* vm, Sprite* s, int32_t newZ);
  *
  * @return Sprite* The Sprite at the given coordinates, or NULL if no Sprite is found
  */
-Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y);
+Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, Sint32 x, Sint32 y);
 
 Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite);

@@ -6,7 +6,7 @@
 #include "snippet.h"
 #include <stdlib.h>
 
-void Snippet_setLocation(Snippet* snippet, int32_t x, int32_t y) {
+void Snippet_setLocation(Snippet* snippet, Sint32 x, Sint32 y) {
     SDL_DestroyTexture(snippet->texture);
     snippet->x = x;
     snippet->y = y;
@@ -31,7 +31,7 @@ void Snippet_setVisible(Snippet* snippet, bool visible) {
     snippet->visible = visible;
 }
 
-Snippet* Snippet_create(TTF_Font* font, SDL_Color color, int32_t x, int32_t y, int32_t z, bool visible) {
+Snippet* Snippet_create(TTF_Font* font, SDL_Color color, Sint32 x, Sint32 y, Sint32 z, bool visible) {
     Snippet* snippet = malloc(sizeof(Snippet));
     snippet->id = 0;
     snippet->font = font;

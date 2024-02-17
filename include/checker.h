@@ -6,7 +6,7 @@
 #pragma once
 #include "board.h"
 #include "sage.h"
-#include <stdint.h>
+
 
 typedef struct Checker Checker;
 typedef enum { LIGHT, DARK, NONE } Color;
@@ -25,8 +25,8 @@ typedef enum { LIGHT, DARK, NONE } Color;
     ((c->color == DARK && c->pipIndex == DARK_BAR) || (c->color == LIGHT && c->pipIndex == LIGHT_BAR))
 
 struct Checker {
-    int32_t pipIndex;
-    int32_t pipOffset;
+    Sint32 pipIndex;
+    Sint32 pipOffset;
     Color color;
 };
 

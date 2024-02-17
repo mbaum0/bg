@@ -4,22 +4,22 @@
  * @brief
  */
 #include "ai.h"
-#include <stdint.h>
 
-int32_t evaluateBoard(GameBoard* gb, Color player) {
-    int32_t score = getPlayerScore(gb, player);
-    int32_t opponent = getPlayerScore(gb, OPPONENT_COLOR(player));
+
+Sint32 evaluateBoard(GameBoard* gb, Color player) {
+    Sint32 score = getPlayerScore(gb, player);
+    Sint32 opponent = getPlayerScore(gb, OPPONENT_COLOR(player));
     return score - opponent;
 }
 
-int32_t getPossibleMoves(GameBoard* gb, Color player, int32_t dieValue, GameMove* moves) {
+Sint32 getPossibleMoves(GameBoard* gb, Color player, Sint32 dieValue, GameMove* moves) {
     GameMove gm;
-    int32_t numMoves = 0;
+    Sint32 numMoves = 0;
 
     Checker* checkers = PLAYER_CHECKERS(gb, player);
     gm.player = player;
     gm.amount = dieValue;
-    for (int32_t i = 0; i < 15; i++) {
+    for (Sint32 i = 0; i < 15; i++) {
         gm.srcPip = checkers[i].pipIndex;
         if (isValidMove(gb, gm)) {
             moves[numMoves] = gm;
@@ -29,16 +29,16 @@ int32_t getPossibleMoves(GameBoard* gb, Color player, int32_t dieValue, GameMove
     return numMoves;
 }
 
-int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* moveSequences, int32_t max) {
-    int32_t numSequences = 0;
+Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* moveSequences, Sint32 max) {
+    Sint32 numSequences = 0;
 
     GameBoard gb0;
     deepCopy(&gb0, gb);
     bool swapDice = false;
-    int32_t die1, die2;
+    Sint32 die1, die2;
 
     // do it once with the original dice, and once with them swapped
-    for (int32_t p = 0; p < 2; p++) {
+    for (Sint32 p = 0; p < 2; p++) {
         if (swapDice) {
             die1 = SECOND_DIE(gb)->value;
             die2 = FIRST_DIE(gb)->value;
@@ -48,19 +48,19 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
         }
         GameMove firstMoves[15];
 
-        int32_t firstMovesCount = getPossibleMoves(&gb0, player, die1, firstMoves);
+        Sint32 firstMovesCount = getPossibleMoves(&gb0, player, die1, firstMoves);
 
         // do each possible first move, then test for second moves.
-        for (int32_t i = 0; i < firstMovesCount; i++) {
+        for (Sint32 i = 0; i < firstMovesCount; i++) {
             GameMove gm1 = firstMoves[i];
             GameBoard gb1;
             deepCopy(&gb1, &gb0);
             moveChecker(&gb1, gm1);
             GameMove secondMoves[15];
-            int32_t secondMovesCount = getPossibleMoves(&gb1, player, die2, secondMoves);
+            Sint32 secondMovesCount = getPossibleMoves(&gb1, player, die2, secondMoves);
 
             // test for second moves
-            for (int32_t j = 0; j < secondMovesCount; j++) {
+            for (Sint32 j = 0; j < secondMovesCount; j++) {
                 GameMove gm2 = secondMoves[j];
                 GameBoard gb2;
                 deepCopy(&gb2, &gb1);
@@ -68,19 +68,19 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
 
                 if (DOUBLES_ROLLED(gb)) {
                     GameMove thirdMoves[15];
-                    int32_t thirdMovesCount = getPossibleMoves(&gb2, player, die1, thirdMoves);
+                    Sint32 thirdMovesCount = getPossibleMoves(&gb2, player, die1, thirdMoves);
 
                     // test for third moves
-                    for (int32_t k = 0; k < thirdMovesCount; k++) {
+                    for (Sint32 k = 0; k < thirdMovesCount; k++) {
                         GameMove gm3 = thirdMoves[k];
                         GameBoard gb3;
                         deepCopy(&gb3, &gb2);
                         moveChecker(&gb3, gm3);
                         GameMove fourthMoves[15];
-                        int32_t fourthMovesCount = getPossibleMoves(&gb3, player, die2, fourthMoves);
+                        Sint32 fourthMovesCount = getPossibleMoves(&gb3, player, die2, fourthMoves);
 
                         // test for fourth moves
-                        for (int32_t l = 0; l < fourthMovesCount; l++) {
+                        for (Sint32 l = 0; l < fourthMovesCount; l++) {
                             GameMove gm4 = fourthMoves[l];
                             GameBoard gb4;
                             deepCopy(&gb4, &gb3);
@@ -146,18 +146,18 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
 void findBestMoveSequence(GameBoard* gb, Color player, GameMoveSequence* result) {
     GameMoveSequence moveSequences[MAX_SEQUENCES] = {0};
 
-    int32_t numOptions = generateMovesSequences(gb, player, moveSequences, MAX_SEQUENCES);
+    Sint32 numOptions = generateMovesSequences(gb, player, moveSequences, MAX_SEQUENCES);
 
-    int32_t bestScore = 999;
+    Sint32 bestScore = 999;
     GameMoveSequence best = {0};
-    for (int32_t i = 0; i < numOptions; i++) {
+    for (Sint32 i = 0; i < numOptions; i++) {
         GameMoveSequence gms = moveSequences[i];
         if (gms.resultScore < bestScore) {
             bestScore = gms.resultScore;
             best = gms;
         }
     }
-    int32_t currentScore = evaluateBoard(gb, player);
+    Sint32 currentScore = evaluateBoard(gb, player);
     log_debug("AI found %d move options. Best option will alter game by %d points", numOptions,
               (currentScore - best.resultScore));
     *result = best;

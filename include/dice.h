@@ -6,15 +6,17 @@
 #pragma once
 
 #include <stdbool.h>
-#include <stdint.h>
+
+#include <SDL3/SDL.h>
+
 typedef struct GameDie GameDie;
 typedef enum { DICE_SWAP, DICE_MOVE, DICE_NONE } DiceAnimation;
 
 struct GameDie {
-    int32_t value;
-    int32_t index;
-    int32_t side;
-    int32_t uses; // int instead of bool to account for doubles
+    Sint32 value;
+    Sint32 index;
+    Sint32 side;
+    Sint32 uses; // int instead of bool to account for doubles
     DiceAnimation animation;
 };
 

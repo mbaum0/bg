@@ -20,7 +20,7 @@ struct GameBoardMove {
     GameMove move;
 };
 
-uint32_t timerEndPlayerTurnIfNoMoves(uint32_t interval, void* ctx) {
+Uint32 timerEndPlayerTurnIfNoMoves(Uint32 interval, void* ctx) {
     (void)interval;
     GameBoard* gb = (GameBoard*)ctx;
     GameDie* die1 = FIRST_DIE(gb);
@@ -45,7 +45,7 @@ void doAiMove(GameBoard* gb, GameMove gm) {
         return;
     }
 
-    int32_t dieValue = getNextDieValue(gb);
+    Sint32 dieValue = getNextDieValue(gb);
 
     if (dieValue != gm.amount) {
         log_error("AI picked invalid die value.");
@@ -60,7 +60,7 @@ void doAiMove(GameBoard* gb, GameMove gm) {
     }
 }
 
-uint32_t timerDoAiMove(uint32_t interval, void* ctx) {
+Uint32 timerDoAiMove(Uint32 interval, void* ctx) {
     (void)interval;
     GameBoardMove* gbm = (GameBoardMove*)ctx;
     doAiMove(gbm->gb, gbm->move);
@@ -68,7 +68,7 @@ uint32_t timerDoAiMove(uint32_t interval, void* ctx) {
     return 0;
 }
 
-uint32_t timerEndAiMove(uint32_t interval, void* ctx) {
+Uint32 timerEndAiMove(Uint32 interval, void* ctx) {
     (void)interval;
     GameBoard* gb = (GameBoard*)ctx;
     gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
@@ -76,21 +76,21 @@ uint32_t timerEndAiMove(uint32_t interval, void* ctx) {
     return 0;
 }
 
-uint32_t timeDoAiSwapDice(uint32_t interval, void* ctx) {
+Uint32 timeDoAiSwapDice(Uint32 interval, void* ctx) {
     (void)interval;
     GameBoard* gb = (GameBoard*)ctx;
     swapDiceIfAllowed(gb);
     return 0;
 }
 
-void doPlayerMove(GameBoard* gb, int32_t pipIndex) {
-    int32_t movesLeft = 0;
+void doPlayerMove(GameBoard* gb, Sint32 pipIndex) {
+    Sint32 movesLeft = 0;
     Checker* c = getTopCheckerOnPip(gb, pipIndex);
     if (c == NULL) {
         return;
     }
 
-    int32_t dieValue = getNextDieValue(gb);
+    Sint32 dieValue = getNextDieValue(gb);
     GameMove gm = {c->color, c->pipIndex, dieValue};
 
     if (isValidMove(gb, gm)) {
@@ -118,7 +118,7 @@ void player_move_state(FiniteStateMachine* fsm) {
         if (event.etype == PIP_CLICKED_EVENT) {
             // player can't pick for ai
             if (gb->activePlayer != gb->aiPlayer) {
-                uint32_t pipIndex = event.code;
+                Uint32 pipIndex = event.code;
                 doPlayerMove(gb, pipIndex);
             }
         }
@@ -133,7 +133,7 @@ void player_move_state(FiniteStateMachine* fsm) {
         if (event.etype == AI_PIP_CLICKED_EVENT) {
             // ai shouldn't cheat ;)
             if (gb->activePlayer == gb->aiPlayer) {
-                uint32_t pipIndex = event.code;
+                Uint32 pipIndex = event.code;
                 doPlayerMove(gb, pipIndex);
             }
         }
@@ -155,8 +155,8 @@ void player_move_init_state(FiniteStateMachine* fsm) {
         // queue up moves
         GameMoveSequence gms;
         findBestMoveSequence(gb, gb->aiPlayer, &gms);
-        int32_t i = 0;
-        int32_t delay = 500;
+        Sint32 i = 0;
+        Sint32 delay = 500;
 
         if (gms.numMoves > 0) {
             if (gms.swapDice) {

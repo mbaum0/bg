@@ -5,7 +5,8 @@
  */
 #pragma once
 #include <stdbool.h>
-#include <stdint.h>
+
+#include <SDL3/SDL.h>
 
 #define WINDOW_W (430)
 #define WINDOW_H (932)
@@ -97,6 +98,6 @@
 
 #define EPSILON 0.0001
 
-bool isBetween(int32_t x, int32_t min, int32_t max);
+bool isBetween(Sint32 x, Sint32 min, Sint32 max);
 bool isEqual(float x, float y, float epsilon);
 int generateRandomNumber(int min, int max);

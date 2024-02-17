@@ -46,7 +46,7 @@ void MM_free(MediaManager* mm);
  */
 SDL_Texture* MM_loadTexture(MediaManager* mm, char* path);
 
-SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int32_t height);
+SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint32 height);
 
 /**
  * @brief Loads a font from a file
@@ -56,4 +56,4 @@ SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int3
  * @param size font size
  * @return TTF_Font* pointer to the font, NULL if failed to load
  */
-TTF_Font* MM_loadFont(MediaManager* mm, char* path, int32_t size);
+TTF_Font* MM_loadFont(MediaManager* mm, char* path, Sint32 size);

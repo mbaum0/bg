@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-bool isBetween(int32_t x, int32_t min, int32_t max) {
+bool isBetween(Sint32 x, Sint32 min, Sint32 max) {
     return x >= min && x <= max;
 }
 

@@ -75,7 +75,7 @@ void destroySDL(MediaManager* mm) {
 
 void destroyTextures(MediaManager* mm) {
     SDL_Texture** textures = *mm->textures;
-    for (int32_t i = 0; i < arrlen(textures); i++) {
+    for (Sint32 i = 0; i < arrlen(textures); i++) {
         SDL_DestroyTexture(textures[i]);
     }
     IMG_Quit();
@@ -83,7 +83,7 @@ void destroyTextures(MediaManager* mm) {
 
 void destroyFonts(MediaManager* mm) {
     TTF_Font** fonts = *mm->fonts;
-    for (int32_t i = 0; i < arrlen(fonts); i++) {
+    for (Sint32 i = 0; i < arrlen(fonts); i++) {
         TTF_CloseFont(fonts[i]);
     }
     TTF_Quit();
@@ -111,7 +111,7 @@ SDL_Texture* MM_loadTexture(MediaManager* mm, char* path) {
     return texture;
 }
 
-SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int32_t height) {
+SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint32 height) {
     SDL_RWops* f = SDL_RWFromFile(path, "rb");
     SDL_Surface* s = IMG_LoadSizedSVG_RW(f, width, height);
     SDL_Texture* t = SDL_CreateTextureFromSurface(mm->renderer, s);
@@ -120,7 +120,7 @@ SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, int32_t width, int3
     return t;
 }
 
-TTF_Font* MM_loadFont(MediaManager* mm, char* path, int32_t size) {
+TTF_Font* MM_loadFont(MediaManager* mm, char* path, Sint32 size) {
     log_debug("Loading font: %s", path);
     TTF_Font* font = TTF_OpenFont(path, size);
     if (!font) {

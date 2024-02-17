@@ -47,7 +47,7 @@ int Sage_handleEvent(SDL_Event* event);
  */
 SDL_Texture* Sage_loadTexture(char* path);
 
-SDL_Texture* Sage_loadSVGTexture(char* path, int32_t width, int32_t height);
+SDL_Texture* Sage_loadSVGTexture(char* path, Sint32 width, Sint32 height);
 
 float Sage_convertHighDPI(float value);
 
@@ -58,15 +58,15 @@ float Sage_convertHighDPI(float value);
  * @param size Font size
  * @return TTF_Font*
  */
-TTF_Font* Sage_loadFont(char* path, int32_t size);
+TTF_Font* Sage_loadFont(char* path, Sint32 size);
 
 /**
  * @brief Register a sprite with the SAGE engine
  *
  * @param sprite Sprite to register
- * @return int32_t The id of the Sprite
+ * @return Sint32 The id of the Sprite
  */
-int32_t Sage_registerSprite(Sprite* sprite);
+Sint32 Sage_registerSprite(Sprite* sprite);
 
 /**
  * @brief Register a snippet with the SAGE engine
@@ -82,11 +82,11 @@ void Sage_registerSnippet(Snippet* snippet);
  * @param callback_fn Callback function
  * @param data data to pass to the callback function
  */
-void Sage_registerEventCallback(uint32_t eventType, EventCallback_fn callback_fn, void* data);
+void Sage_registerEventCallback(Uint32 eventType, EventCallback_fn callback_fn, void* data);
 
 void Sage_setViewport(SDL_FRect viewport);
 
 /**
  * @brief Set the z-value of the sprite
  */
-void Sprite_setZ(Sprite* s, int32_t newZ);
+void Sprite_setZ(Sprite* s, Sint32 newZ);

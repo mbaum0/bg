@@ -11,10 +11,10 @@
 #include "util.h"
 #include "vector.h"
 
-int32_t getCheckerX(Checker* checker) {
-    int32_t pipIndex = checker->pipIndex;
-    int32_t pipOffset;
-    int32_t checkerX;
+Sint32 getCheckerX(Checker* checker) {
+    Sint32 pipIndex = checker->pipIndex;
+    Sint32 pipOffset;
+    Sint32 checkerX;
 
     if (pipIndex == LIGHT_HOME) {
         return CHECKER_TOP_HOME_X + (checker->pipOffset * CHECKER_W);
@@ -44,9 +44,9 @@ int32_t getCheckerX(Checker* checker) {
     return checkerX;
 }
 
-int32_t getCheckerY(Checker* checker) {
-    int32_t offset;
-    int32_t pipIndex = checker->pipIndex;
+Sint32 getCheckerY(Checker* checker) {
+    Sint32 offset;
+    Sint32 pipIndex = checker->pipIndex;
 
     if (pipIndex == LIGHT_HOME) {
         return CHECKER_TOP_HOME_Y;
@@ -71,13 +71,13 @@ int32_t getCheckerY(Checker* checker) {
     return offset;
 }
 
-void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
+void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
     (void)vm;
     (void)sprite;
     (void)context;
     (void)code;
     Checker* checker = (Checker*)object;
-    int32_t pipIndex = checker->pipIndex;
+    Sint32 pipIndex = checker->pipIndex;
     FSMEvent e = {PIP_CLICKED_EVENT, pipIndex, NULL};
     fsm_enqueue_event(e);
 }
@@ -109,8 +109,8 @@ void createCheckerSprite(Checker* c) {
     SDL_FRect s_lightRect = {0, 0, CHECKER_SRC_W, CHECKER_SRC_W};
     SDL_FRect s_darkRect = {CHECKER_SRC_W, 0, CHECKER_SRC_W, CHECKER_SRC_W};
 
-    int32_t x = getCheckerX(c);
-    int32_t y = getCheckerY(c);
+    Sint32 x = getCheckerX(c);
+    Sint32 y = getCheckerY(c);
 
     SDL_FRect dst = {x, y, CHECKER_W, CHECKER_W};
     Sprite* s;

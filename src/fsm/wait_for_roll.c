@@ -7,7 +7,7 @@
 #include "game.h"
 #include <stdio.h>
 
-uint32_t timerAiRoll(uint32_t interval, void* ctx) {
+Uint32 timerAiRoll(Uint32 interval, void* ctx) {
     (void)interval;
     (void)ctx;
     FSMEvent e = {AI_ROLL_DICE_EVENT, 0, NULL};

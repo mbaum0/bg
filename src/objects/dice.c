@@ -9,7 +9,7 @@
 #include "util.h"
 #include "vector.h"
 
-void clickDice(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
+void clickDice(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
     (void)vm;
     (void)sprite;
     (void)context;
@@ -67,7 +67,7 @@ void createDiceSprites(GameDie* die1, GameDie* die2) {
     SDL_FRect src_rect = {0, 0, DICE_SRC_W, DICE_SRC_W};
     src_rect.x = (DICE_SRC_W * (die1->value - 1));
 
-    int32_t x = (die1->side == 0) ? DICE_LEFT_X : DICE_RIGHT_X;
+    Sint32 x = (die1->side == 0) ? DICE_LEFT_X : DICE_RIGHT_X;
 
     SDL_FRect dst_rect = {x, DICE_Y, DICE_W, DICE_W};
     Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);

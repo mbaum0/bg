@@ -15,20 +15,20 @@
  * ie (PLAYER - OPPONENT)
  * Greater values are better for the given player.
  */
-int32_t evaluateBoard(GameBoard* gb, Color player);
+Sint32 evaluateBoard(GameBoard* gb, Color player);
 
 /**
  * @brief Generates all possible move sequences for the player from
  * a given state and stores them in the provided array. Returns the number
  * of generated sequences.
  */
-int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* moveSequences, int32_t max);
+Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* moveSequences, Sint32 max);
 
 /**
  * @brief Generates a list of possible next moves. Returns the number of moves found. There
  * can be at most 15 moves as there are 15 checkers per player.
  */
-int32_t getPossibleMoves(GameBoard* gb, Color player, int32_t dieValue, GameMove* moves);
+Sint32 getPossibleMoves(GameBoard* gb, Color player, Sint32 dieValue, GameMove* moves);
 
 /**
  * @brief Gets the best possible move sequence based on a single-turn score.

@@ -53,14 +53,14 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
 
 void freeSprites(ViewManager* vm){
     Sprite** sprites = *vm->sprites;
-    for (int32_t i = 0; i < arrlen(sprites); i++){
+    for (Sint32 i = 0; i < arrlen(sprites); i++){
         free(sprites[i]);
     }
 }
 
 void freeSnippets(ViewManager* vm){
     Snippet** snippets = *vm->snippets;
-    for (int32_t i = 0; i < arrlen(snippets); i++){
+    for (Sint32 i = 0; i < arrlen(snippets); i++){
         free(snippets[i]);
     }
 }
@@ -89,7 +89,7 @@ void VM_draw(ViewManager* vm) {
     SDL_SetRenderDrawColor(vm->renderer, 255, 255, 255, 255);
     SDL_RenderClear(vm->renderer);
     Sprite** sprites = *vm->sprites;
-    for (int32_t i = 0; i < arrlen(sprites); i++) {
+    for (Sint32 i = 0; i < arrlen(sprites); i++) {
         Sprite* sprite = sprites[i];
         if (sprite->update_fn != NULL) {
             SpriteUpdate_fn fptr = (SpriteUpdate_fn)sprite->update_fn;
@@ -107,7 +107,7 @@ void VM_draw(ViewManager* vm) {
         }
     }
     Snippet** snippets = *vm->snippets;
-    for (int32_t i = 0; i < arrlen(snippets); i++) {
+    for (Sint32 i = 0; i < arrlen(snippets); i++) {
         Snippet* snippet = snippets[i];
         if (snippet->update_fn != NULL) {
             SnippetUpdate_fn fptr = (SnippetUpdate_fn)snippet->update_fn;
@@ -118,10 +118,10 @@ void VM_draw(ViewManager* vm) {
     SDL_RenderPresent(vm->renderer);
 }
 
-int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
-    sprite->id = (int32_t)arrlen(*vm->sprites);
-    int32_t zindex = -1;
-    for (int32_t i = 0; i < arrlen(*vm->sprites); i++) {
+Sint32 VM_registerSprite(ViewManager* vm, Sprite* sprite) {
+    sprite->id = (Sint32)arrlen(*vm->sprites);
+    Sint32 zindex = -1;
+    for (Sint32 i = 0; i < arrlen(*vm->sprites); i++) {
         Sprite* s = (*vm->sprites)[i];
         if (s->z > sprite->z) {
             zindex = i;
@@ -136,7 +136,7 @@ int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
     return sprite->id;
 }
 
-int32_t compareSpriteZ(const void* a, const void* b){
+Sint32 compareSpriteZ(const void* a, const void* b){
     Sprite* aS = *(Sprite**)a;
     Sprite* bS = *(Sprite**)b;
     return aS->z - bS->z;
@@ -146,7 +146,7 @@ void VM_sortSprites(ViewManager* vm) {
     qsort(*vm->sprites, arrlen(*vm->sprites), sizeof(Sprite*), compareSpriteZ);
 }
 
-void VM_setSpriteZ(ViewManager* vm, Sprite* s, int32_t newZ) {
+void VM_setSpriteZ(ViewManager* vm, Sprite* s, Sint32 newZ) {
     if (s->z != newZ) {
         s->z = newZ;
         VM_sortSprites(vm);
@@ -159,16 +159,16 @@ void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* ob
     sprite->update_context = context;
 }
 
-void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context, int32_t code) {
+void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context, Sint32 code) {
     sprite->click_fn = (void*)click_fn;
     sprite->click_object = object;
     sprite->click_context = context;
     sprite->click_code = code;
 }
 
-int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
+Sint32 VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
     snippet->renderer = vm->renderer;
-    snippet->id = (int32_t)arrlen(*vm->snippets);
+    snippet->id = (Sint32)arrlen(*vm->snippets);
     arrput(*vm->snippets, snippet);
     return snippet->id;
 }
@@ -178,11 +178,11 @@ void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void
     snippet->update_data = data;
 }
 
-Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y) {
+Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, Sint32 x, Sint32 y) {
     Sprite** sprites = *vm->sprites;
     Sprite* topSprite = NULL;
-    int32_t currentTopZ = -1;
-    for (int32_t i = 0; i < arrlen(sprites); i++) {
+    Sint32 currentTopZ = -1;
+    for (Sint32 i = 0; i < arrlen(sprites); i++) {
         Sprite* sprite = sprites[i];
         if (sprite->visible && sprite->click_fn != NULL) {
             SDL_FPoint p = {x, y};
@@ -204,7 +204,7 @@ Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, int32_t x, int32_t y) {
 
 Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite) {
     Sprite** sprites = *vm->sprites;
-    for (int32_t i = 0; i < arrlen(sprites); i++) {
+    for (Sint32 i = 0; i < arrlen(sprites); i++) {
         Sprite* other = sprites[i];
         if (other != sprite && other->visible) {
             if (SDL_HasRectIntersectionFloat(&sprite->dst_rect, &other->dst_rect)) {

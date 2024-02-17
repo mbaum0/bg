@@ -4,6 +4,6 @@
  * @brief board and trim objects
  */
 #pragma once
-#include <stdint.h>
+
 
 void createBoardSprites(void);

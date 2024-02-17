@@ -7,14 +7,14 @@
 
 #include <SDL3/SDL.h>
 #include <stdbool.h>
-#include <stdint.h>
+
 
 typedef struct EventManager EventManager;
-typedef void (*EventCallback_fn)(uint32_t eventType, SDL_Event* e, void* data);
+typedef void (*EventCallback_fn)(Uint32 eventType, SDL_Event* e, void* data);
 typedef struct EventCallback EventCallback;
 
 struct EventCallback {
-    uint32_t eventType;
+    Uint32 eventType;
     EventCallback_fn callback;
     void* data;
 };
@@ -32,7 +32,7 @@ struct EventManager {
  * @param callback_fn The callback function to be called when the event occurs
  * @param data The data to be passed to the callback function
  */
-void EM_registerCallback(EventManager* em, uint32_t event_type, EventCallback_fn callback_fn, void* data);
+void EM_registerCallback(EventManager* em, Uint32 event_type, EventCallback_fn callback_fn, void* data);
 
 /**
  * @brief Initialize the event manager

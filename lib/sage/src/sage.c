@@ -8,12 +8,12 @@
 
 Sage sage = {0};
 
-int32_t delayFrame(int32_t frameStart) {
-    int32_t frameTime = (int32_t)(SDL_GetTicks() - frameStart);
+Sint32 delayFrame(Sint32 frameStart) {
+    Sint32 frameTime = (Sint32)(SDL_GetTicks() - frameStart);
     if (frameTime < MS_PER_FRAME) {
         SDL_Delay(MS_PER_FRAME - frameTime);
     }
-    return (int32_t)SDL_GetTicks();
+    return (Sint32)SDL_GetTicks();
 }
 
 void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay) {
@@ -47,7 +47,7 @@ SDL_Texture* Sage_loadTexture(char* path) {
     return MM_loadTexture(sage.mm, path);
 }
 
-SDL_Texture* Sage_loadSVGTexture(char* path, int32_t width, int32_t height) {
+SDL_Texture* Sage_loadSVGTexture(char* path, Sint32 width, Sint32 height) {
     return MM_loadSVGTexture(sage.mm, path, width, height);
 }
 
@@ -55,11 +55,11 @@ float Sage_convertHighDPI(float value) {
     return sage.mm->pixelScale * value;
 }
 
-TTF_Font* Sage_loadFont(char* path, int32_t size) {
+TTF_Font* Sage_loadFont(char* path, Sint32 size) {
     return MM_loadFont(sage.mm, path, size);
 }
 
-int32_t Sage_registerSprite(Sprite* sprite) {
+Sint32 Sage_registerSprite(Sprite* sprite) {
     return VM_registerSprite(sage.vm, sprite);
 }
 
@@ -67,10 +67,10 @@ void Sage_registerSnippet(Snippet* snippet) {
     VM_registerSnippet(sage.vm, snippet);
 }
 
-void Sage_registerEventCallback(uint32_t eventType, EventCallback_fn callback_fn, void* data) {
+void Sage_registerEventCallback(Uint32 eventType, EventCallback_fn callback_fn, void* data) {
     EM_registerCallback(sage.em, eventType, callback_fn, data);
 }
 
-void Sprite_setZ(Sprite* s, int32_t newZ){
+void Sprite_setZ(Sprite* s, Sint32 newZ){
     VM_setSpriteZ(sage.vm, s, newZ);
 }
