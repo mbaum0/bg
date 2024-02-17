@@ -143,7 +143,7 @@ int32_t generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mo
     return numSequences;
 }
 
-GameMoveSequence findBestMoveSequence(GameBoard* gb, Color player) {
+void findBestMoveSequence(GameBoard* gb, Color player, GameMoveSequence* result) {
     GameMoveSequence moveSequences[MAX_SEQUENCES] = {0};
 
     int32_t numOptions = generateMovesSequences(gb, player, moveSequences, MAX_SEQUENCES);
@@ -160,7 +160,7 @@ GameMoveSequence findBestMoveSequence(GameBoard* gb, Color player) {
     int32_t currentScore = evaluateBoard(gb, player);
     log_debug("AI found %d move options. Best option will alter game by %d points", numOptions,
               (currentScore - best.resultScore));
-    return best;
+    *result = best;
 }
 
 void moveSequenceToString(GameMoveSequence gsm, char* dst) {

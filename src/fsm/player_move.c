@@ -153,7 +153,8 @@ void player_move_init_state(FiniteStateMachine* fsm) {
 
     if (gb->activePlayer == gb->aiPlayer) {
         // queue up moves
-        GameMoveSequence gms = findBestMoveSequence(gb, gb->aiPlayer);
+        GameMoveSequence gms;
+        findBestMoveSequence(gb, gb->aiPlayer, &gms);
         int32_t i = 0;
         int32_t delay = 500;
 

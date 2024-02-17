@@ -33,7 +33,7 @@ int32_t getPossibleMoves(GameBoard* gb, Color player, int32_t dieValue, GameMove
 /**
  * @brief Gets the best possible move sequence based on a single-turn score.
  */
-GameMoveSequence findBestMoveSequence(GameBoard* gb, Color player);
+void findBestMoveSequence(GameBoard* gb, Color player, GameMoveSequence* result);
 
 /**
  * @brief Convert a move sequence to a string for logging.
