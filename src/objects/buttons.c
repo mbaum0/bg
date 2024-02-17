@@ -75,13 +75,13 @@ void updateRollBtn(ViewManager* vm, Sprite* sprite, void* object, void* context)
 }
 
 void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll) {
-    //SDL_Texture* btnTexture = Sage_loadSVGTexture("assets/buttons.svg", BTN_W * 2, BTN_W);
-    SDL_Texture* btnTexture = Sage_loadTexture("assets/buttons.png");
+    // SDL_Texture* btnTexture = Sage_loadSVGTexture("assets/buttons.svg", BTN_W * 2, BTN_W);
+    SDL_Texture* btnTexture = Sage_loadTexture("assets/buttons2x.png");
 
     Sint32 x = (confirm->location == BTN_LEFT) ? GAME_BTN_LEFT_X : GAME_BTN_RIGHT_X;
 
     // confirm btn
-    SDL_FRect src_rect = {0, 0, GAME_BTN_SRC_W, GAME_BTN_SRC_W};
+    SDL_FRect src_rect = {0, 0, GAME_BTN_SRC_W * 2, GAME_BTN_SRC_W * 2};
     SDL_FRect dst_rect = {x, GAME_BTN_Y, GAME_BTN_W, GAME_BTN_W};
     Sprite* s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
     Sprite_setVisible(s, confirm->visible);
@@ -91,7 +91,7 @@ void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll
     Sage_registerSprite(s);
 
     // undo btn
-    src_rect.x = (GAME_BTN_SRC_OFFSET);
+    src_rect.x = (GAME_BTN_SRC_OFFSET * 2);
     dst_rect.x = GAME_BTN_CENTER_X;
     s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
     Sprite_setVisible(s, undo->visible);
@@ -101,7 +101,7 @@ void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll
     Sage_registerSprite(s);
 
     // roll btn
-    src_rect.x = (GAME_BTN_SRC_OFFSET * 2);
+    src_rect.x = (GAME_BTN_SRC_OFFSET * 2 * 2);
     dst_rect.x = x;
     s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
     Sprite_setVisible(s, roll->visible);

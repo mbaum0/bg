@@ -24,7 +24,7 @@ void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
     (void)context;
     GameDie* die = (GameDie*)object;
     SDL_FRect src = sprite->src_rect;
-    src.x = (DICE_SRC_W * (die->value - 1));
+    src.x = (DICE_SRC_W * (die->value - 1) * 2);
     Sprite_setSourceRect(sprite, src);
     SDL_FRect dst = sprite->dst_rect;
     int newX, newY;
@@ -36,7 +36,7 @@ void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
 
     if (die->uses == 1) {
         Sprite_setAlpha(sprite, 128);
-    } else if (die->uses == 2){
+    } else if (die->uses == 2) {
         Sprite_setAlpha(sprite, 64);
     } else {
         Sprite_setAlpha(sprite, 255);
@@ -63,9 +63,9 @@ void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
 }
 
 void createDiceSprites(GameDie* die1, GameDie* die2) {
-    SDL_Texture* diceTexture = Sage_loadTexture("assets/dice.png");
-    SDL_FRect src_rect = {0, 0, DICE_SRC_W, DICE_SRC_W};
-    src_rect.x = (DICE_SRC_W * (die1->value - 1));
+    SDL_Texture* diceTexture = Sage_loadTexture("assets/dice2x.png");
+    SDL_FRect src_rect = {0, 0, DICE_SRC_W * 2, DICE_SRC_W * 2};
+    src_rect.x = (DICE_SRC_W * (die1->value - 1) * 2);
 
     Sint32 x = (die1->side == 0) ? DICE_LEFT_X : DICE_RIGHT_X;
 
@@ -77,7 +77,7 @@ void createDiceSprites(GameDie* die1, GameDie* die2) {
     Sage_registerSprite(s);
 
     dst_rect.x += DICE_GAP;
-    src_rect.x = (DICE_SRC_W * (die2->value - 1));
+    src_rect.x = (DICE_SRC_W * (die2->value - 1) * 2);
     s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
     Sprite_registerClickFn(s, clickDice, NULL, NULL, 0);
     Sprite_registerUpdateFn(s, updateDice, die2, NULL);
