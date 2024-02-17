@@ -32,8 +32,6 @@ void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay);
 
 /**
  * @brief Destroy the SAGE engine and free all resources
- *
- * @param s The SAGE engine
  */
 void Sage_destroy(void);
 
@@ -44,7 +42,6 @@ int Sage_handleEvent(SDL_Event* event);
 /**
  * @brief Load a texture from a file
  *
- * @param s The SAGE engine
  * @param path The path to the texture file
  * @return SDL_Texture* The loaded texture
  */
@@ -57,7 +54,6 @@ float Sage_convertHighDPI(float value);
 /**
  * @brief Load a font from a file
  *
- * @param s The SAGE engine
  * @param path The path to the font file
  * @param size Font size
  * @return TTF_Font*
@@ -67,7 +63,6 @@ TTF_Font* Sage_loadFont(char* path, int32_t size);
 /**
  * @brief Register a sprite with the SAGE engine
  *
- * @param s The SAGE engine
  * @param sprite Sprite to register
  * @return int32_t The id of the Sprite
  */
@@ -76,7 +71,6 @@ int32_t Sage_registerSprite(Sprite* sprite);
 /**
  * @brief Register a snippet with the SAGE engine
  *
- * @param s The SAGE engine
  * @param snippet Snippet to register
  */
 void Sage_registerSnippet(Snippet* snippet);
@@ -84,7 +78,6 @@ void Sage_registerSnippet(Snippet* snippet);
 /**
  * @brief Register a callback function for an event
  *
- * @param s The SAGE engine
  * @param eventType Type of event
  * @param callback_fn Callback function
  * @param data data to pass to the callback function

@@ -9,11 +9,11 @@
 Sage sage = {0};
 
 int32_t delayFrame(int32_t frameStart) {
-    int32_t frameTime = SDL_GetTicks() - frameStart;
+    int32_t frameTime = (int32_t)(SDL_GetTicks() - frameStart);
     if (frameTime < MS_PER_FRAME) {
         SDL_Delay(MS_PER_FRAME - frameTime);
     }
-    return SDL_GetTicks();
+    return (int32_t)SDL_GetTicks();
 }
 
 void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay) {

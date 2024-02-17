@@ -30,7 +30,7 @@ int handleEvent(void* data, SDL_Event* event) {
         if (sprite != NULL) {
             if (sprite->click_fn != NULL) {
                 SpriteClick_fn fptr = (SpriteClick_fn)sprite->click_fn;
-                fptr(vm, sprite, sprite->click_object, sprite->click_context);
+                fptr(vm, sprite, sprite->click_object, sprite->click_context, sprite->click_code);
             }
         }
         break;
@@ -51,9 +51,25 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
     return vm;
 }
 
+void freeSprites(ViewManager* vm){
+    Sprite** sprites = *vm->sprites;
+    for (int32_t i = 0; i < arrlen(sprites); i++){
+        free(sprites[i]);
+    }
+}
+
+void freeSnippets(ViewManager* vm){
+    Snippet** snippets = *vm->snippets;
+    for (int32_t i = 0; i < arrlen(snippets); i++){
+        free(snippets[i]);
+    }
+}
+
 void VM_free(ViewManager* vm) {
+    freeSprites(vm);
     arrfree(*vm->sprites);
     free(vm->sprites);
+    freeSnippets(vm);
     arrfree(*vm->snippets);
     free(vm->snippets);
     free(vm);
@@ -103,7 +119,7 @@ void VM_draw(ViewManager* vm) {
 }
 
 int32_t VM_registerSprite(ViewManager* vm, Sprite* sprite) {
-    sprite->id = arrlen(*vm->sprites);
+    sprite->id = (int32_t)arrlen(*vm->sprites);
     int32_t zindex = -1;
     for (int32_t i = 0; i < arrlen(*vm->sprites); i++) {
         Sprite* s = (*vm->sprites)[i];
@@ -143,15 +159,16 @@ void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* ob
     sprite->update_context = context;
 }
 
-void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context) {
+void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context, int32_t code) {
     sprite->click_fn = (void*)click_fn;
     sprite->click_object = object;
     sprite->click_context = context;
+    sprite->click_code = code;
 }
 
 int32_t VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
     snippet->renderer = vm->renderer;
-    snippet->id = arrlen(*vm->snippets);
+    snippet->id = (int32_t)arrlen(*vm->snippets);
     arrput(*vm->snippets, snippet);
     return snippet->id;
 }

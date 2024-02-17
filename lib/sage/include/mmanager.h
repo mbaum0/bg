@@ -26,7 +26,7 @@ struct MediaManager {
  * @param title Title of the window
  * @param winWidth The width of the window
  * @param winHeight The height of the window
- * @param dillDisplay Whether to maximize the game to the size of the display
+ * @param fillDisplay Whether to maximize the game to the size of the display
  * @return MediaManager instance
  */
 MediaManager* MM_init(char* title, int winWidth, int winHeight, bool fillDisplay);

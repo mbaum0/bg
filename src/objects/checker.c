@@ -71,13 +71,14 @@ int32_t getCheckerY(Checker* checker) {
     return offset;
 }
 
-void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+void clickChecker(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
     (void)vm;
     (void)sprite;
     (void)context;
+    (void)code;
     Checker* checker = (Checker*)object;
-    uintptr_t pipIndex = (uintptr_t)checker->pipIndex;
-    FSMEvent e = {PIP_CLICKED_EVENT, (void*)pipIndex};
+    int32_t pipIndex = checker->pipIndex;
+    FSMEvent e = {PIP_CLICKED_EVENT, pipIndex, NULL};
     fsm_enqueue_event(e);
 }
 
@@ -121,6 +122,6 @@ void createCheckerSprite(Checker* c) {
     s->useViewport = true;
 
     Sprite_registerUpdateFn(s, updateChecker, c, NULL);
-    Sprite_registerClickFn(s, clickChecker, c, NULL);
+    Sprite_registerClickFn(s, clickChecker, c, NULL, 0);
     Sage_registerSprite(s);
 }

@@ -9,12 +9,13 @@
 #include "util.h"
 #include "vector.h"
 
-void clickDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+void clickDice(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
     (void)vm;
     (void)sprite;
     (void)context;
     (void)object;
-    FSMEvent e = {DICE_CLICKED_EVENT, NULL};
+    (void)code;
+    FSMEvent e = {DICE_CLICKED_EVENT, 0, NULL};
     fsm_enqueue_event(e);
 }
 
@@ -70,7 +71,7 @@ void createDiceSprites(GameDie* die1, GameDie* die2) {
 
     SDL_FRect dst_rect = {x, DICE_Y, DICE_W, DICE_W};
     Sprite* s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
-    Sprite_registerClickFn(s, clickDice, NULL, NULL);
+    Sprite_registerClickFn(s, clickDice, NULL, NULL, 0);
     Sprite_registerUpdateFn(s, updateDice, die1, NULL);
     s->useViewport = true;
     Sage_registerSprite(s);
@@ -78,7 +79,7 @@ void createDiceSprites(GameDie* die1, GameDie* die2) {
     dst_rect.x += DICE_GAP;
     src_rect.x = (DICE_SRC_W * (die2->value - 1));
     s = Sprite_createEx(diceTexture, src_rect, dst_rect, Z_DICE);
-    Sprite_registerClickFn(s, clickDice, NULL, NULL);
+    Sprite_registerClickFn(s, clickDice, NULL, NULL, 0);
     Sprite_registerUpdateFn(s, updateDice, die2, NULL);
     s->useViewport = true;
     Sage_registerSprite(s);

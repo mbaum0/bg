@@ -8,30 +8,33 @@
 #include "sage.h"
 #include "util.h"
 
-void clickUndo(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+void clickUndo(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
     (void)vm;
     (void)context;
     (void)sprite;
     (void)object;
-    FSMEvent e = {UNDO_MOVE_EVENT, NULL};
+    (void)code;
+    FSMEvent e = {UNDO_MOVE_EVENT, 0, NULL};
     fsm_enqueue_event(e);
 }
 
-void clickConfirm(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+void clickConfirm(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
     (void)vm;
     (void)context;
     (void)sprite;
     (void)object;
-    FSMEvent e = {CONFIRMED_MOVE_EVENT, NULL};
+    (void)code;
+    FSMEvent e = {CONFIRMED_MOVE_EVENT, 0, NULL};
     fsm_enqueue_event(e);
 }
 
-void clickRoll(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+void clickRoll(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
     (void)vm;
     (void)context;
     (void)sprite;
     (void)object;
-    FSMEvent e = {ROLL_DICE_EVENT, NULL};
+    (void)code;
+    FSMEvent e = {ROLL_DICE_EVENT, 0, NULL};
     fsm_enqueue_event(e);
 }
 
@@ -82,7 +85,7 @@ void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll
     SDL_FRect dst_rect = {x, GAME_BTN_Y, GAME_BTN_W, GAME_BTN_W};
     Sprite* s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
     Sprite_setVisible(s, confirm->visible);
-    Sprite_registerClickFn(s, clickConfirm, NULL, NULL);
+    Sprite_registerClickFn(s, clickConfirm, NULL, NULL, 0);
     Sprite_registerUpdateFn(s, updateConfirmBtn, confirm, NULL);
     s->useViewport = true;
     Sage_registerSprite(s);
@@ -92,7 +95,7 @@ void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll
     dst_rect.x = GAME_BTN_CENTER_X;
     s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
     Sprite_setVisible(s, undo->visible);
-    Sprite_registerClickFn(s, clickUndo, NULL, NULL);
+    Sprite_registerClickFn(s, clickUndo, NULL, NULL, 0);
     Sprite_registerUpdateFn(s, updateUndoBtn, undo, NULL);
     s->useViewport = true;
     Sage_registerSprite(s);
@@ -102,7 +105,7 @@ void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll
     dst_rect.x = x;
     s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
     Sprite_setVisible(s, roll->visible);
-    Sprite_registerClickFn(s, clickRoll, NULL, NULL);
+    Sprite_registerClickFn(s, clickRoll, NULL, NULL, 0);
     Sprite_registerUpdateFn(s, updateRollBtn, roll, NULL);
     s->useViewport = true;
     Sage_registerSprite(s);

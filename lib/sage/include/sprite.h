@@ -27,6 +27,7 @@ struct Sprite {
     void* click_fn;
     void* click_object;
     void* click_context;
+    int32_t click_code;
     bool useViewport;
     int32_t z;
     uint8_t alpha;

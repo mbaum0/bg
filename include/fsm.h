@@ -32,6 +32,7 @@ typedef enum {
 
 typedef struct {
     FSMEventType etype;
+    int32_t code;
     void* ctx;
 } FSMEvent;
 

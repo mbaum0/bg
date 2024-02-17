@@ -118,7 +118,7 @@ void player_move_state(FiniteStateMachine* fsm) {
         if (event.etype == PIP_CLICKED_EVENT) {
             // player can't pick for ai
             if (gb->activePlayer != gb->aiPlayer) {
-                uint32_t pipIndex = (uintptr_t)event.ctx;
+                uint32_t pipIndex = event.code;
                 doPlayerMove(gb, pipIndex);
             }
         }
@@ -133,7 +133,7 @@ void player_move_state(FiniteStateMachine* fsm) {
         if (event.etype == AI_PIP_CLICKED_EVENT) {
             // ai shouldn't cheat ;)
             if (gb->activePlayer == gb->aiPlayer) {
-                uint32_t pipIndex = (uintptr_t)event.ctx;
+                uint32_t pipIndex = event.code;
                 doPlayerMove(gb, pipIndex);
             }
         }

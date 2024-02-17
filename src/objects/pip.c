@@ -13,12 +13,13 @@
 
 extern Sage sage;
 
-void clickPip(ViewManager* vm, Sprite* sprite, void* pipIndex, void* context) {
+void clickPip(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code) {
     (void)vm;
     (void)sprite;
     (void)context;
+    (void)object;
 
-    FSMEvent e = {PIP_CLICKED_EVENT, pipIndex};
+    FSMEvent e = {PIP_CLICKED_EVENT, code, NULL};
     fsm_enqueue_event(e);
 }
 
@@ -45,7 +46,7 @@ void createPipSprite(SDL_Texture* texture, int32_t index) {
     pipSprite->useViewport = true;
 
     int32_t realIndex = (index < 12) ? (index + 13) : (24 - index);
-    Sprite_registerClickFn(pipSprite, clickPip, INT2VOIDP(realIndex), NULL);
+    Sprite_registerClickFn(pipSprite, clickPip, NULL, NULL, realIndex);
     Sage_registerSprite(pipSprite);
 }
 

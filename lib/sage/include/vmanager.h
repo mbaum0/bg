@@ -71,10 +71,10 @@ typedef void (*SnippetUpdate_fn)(ViewManager* vm, Snippet* snippet, void* data);
 /**
  * @brief Sprite click functions are called when the Sprite is clicked.
  */
-typedef void (*SpriteClick_fn)(ViewManager* vm, Sprite* sprite, void* object, void* context);
+typedef void (*SpriteClick_fn)(ViewManager* vm, Sprite* sprite, void* object, void* context, int32_t code);
 
 void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* object, void* context);
-void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context);
+void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context, int32_t code);
 void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void* data);
 
 /**
