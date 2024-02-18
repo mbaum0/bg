@@ -18,6 +18,7 @@ struct ViewManager {
     Sprite*** sprites;
     Snippet*** snippets;
     SDL_FRect viewport;
+    bool sortSpriteZNextFrame;
 };
 
 /**

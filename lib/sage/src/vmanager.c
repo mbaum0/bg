@@ -9,6 +9,16 @@
 #include "util.h"
 #include <math.h>
 
+Sint32 compareSpriteZ(const void* a, const void* b){
+    Sprite* aS = *(Sprite**)a;
+    Sprite* bS = *(Sprite**)b;
+    return aS->z - bS->z;
+}
+
+void VM_sortSprites(ViewManager* vm) {
+    qsort(*vm->sprites, arrlen(*vm->sprites), sizeof(Sprite*), compareSpriteZ);
+}
+
 /**
  * @brief Used to pickup on mouse clicks on sprites
  *
@@ -48,6 +58,7 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
     vm->snippets = malloc(sizeof(Snippet**));
     *vm->snippets = NULL;
     SDL_AddEventWatch(handleEvent, vm);
+    vm->sortSpriteZNextFrame = false;
     return vm;
 }
 
@@ -89,6 +100,11 @@ void VM_draw(ViewManager* vm) {
     SDL_SetRenderDrawColor(vm->renderer, 255, 255, 255, 255);
     SDL_RenderClear(vm->renderer);
     Sprite** sprites = *vm->sprites;
+    if (vm->sortSpriteZNextFrame){
+        VM_sortSprites(vm);
+        vm->sortSpriteZNextFrame = false;
+    }
+
     for (Sint32 i = 0; i < arrlen(sprites); i++) {
         Sprite* sprite = sprites[i];
         if (sprite->update_fn != NULL) {
@@ -136,20 +152,10 @@ Sint32 VM_registerSprite(ViewManager* vm, Sprite* sprite) {
     return sprite->id;
 }
 
-Sint32 compareSpriteZ(const void* a, const void* b){
-    Sprite* aS = *(Sprite**)a;
-    Sprite* bS = *(Sprite**)b;
-    return aS->z - bS->z;
-}
-
-void VM_sortSprites(ViewManager* vm) {
-    qsort(*vm->sprites, arrlen(*vm->sprites), sizeof(Sprite*), compareSpriteZ);
-}
-
 void VM_setSpriteZ(ViewManager* vm, Sprite* s, Sint32 newZ) {
     if (s->z != newZ) {
         s->z = newZ;
-        VM_sortSprites(vm);
+        vm->sortSpriteZNextFrame = true;
     }
 }
 

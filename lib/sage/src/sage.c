@@ -8,18 +8,11 @@
 
 Sage sage = {0};
 
-Sint32 delayFrame(Sint32 frameStart) {
-    Sint32 frameTime = (Sint32)(SDL_GetTicks() - frameStart);
-    if (frameTime < MS_PER_FRAME) {
-        SDL_Delay(MS_PER_FRAME - frameTime);
-    }
-    return (Sint32)SDL_GetTicks();
-}
-
 void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay) {
     sage.mm = MM_init(title, winWidth, winHeight, fillDisplay);
     sage.vm = VM_init(sage.mm->renderer);
     sage.em = EM_init();
+    sage.ticks = 0;
 }
 
 void Sage_destroy(void) {

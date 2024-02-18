@@ -7,8 +7,10 @@
 #include "fsm.h"
 #include "game.h"
 #include "util.h"
+#include "sage.h"
 
 extern FiniteStateMachine FSM;
+extern Sage sage;
 
 void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
@@ -17,7 +19,12 @@ void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
     Sint32 lightScore = getPlayerScore(&gb, LIGHT);
     Sint32 darkScore = getPlayerScore(&gb, DARK);
     char debugText[200];
-    sprintf(debugText, "lightScore: %d\ndarkScore: %d\n", lightScore, darkScore);
+
+    Uint64 ticksNow = SDL_GetPerformanceCounter();
+    float timestep = (float)(ticksNow - sage.ticks) / SDL_GetPerformanceFrequency();
+    sage.ticks = ticksNow;
+    float fps = (1.0 / timestep);
+    sprintf(debugText, "lightScore: %d\ndarkScore: %d\nfps: %f", lightScore, darkScore, fps);
     Snippet_setText(snippet, debugText);
 }
 

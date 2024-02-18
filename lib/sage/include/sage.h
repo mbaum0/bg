@@ -10,15 +10,13 @@
 #include "mmanager.h"
 #include "vmanager.h"
 
-#define FPS 60
-#define MS_PER_FRAME (1000 / FPS)
-
 typedef struct Sage Sage;
 
 struct Sage {
     MediaManager* mm;
     ViewManager* vm;
     EventManager* em;
+    Uint64 ticks;
 };
 
 /**
