@@ -94,7 +94,7 @@
 
 #define DEBUG_FONT_SIZE X(20)
 #define DEBUG_X X(2)
-#define DEBUG_Y BOARD_Y + BOARD_H
+#define DEBUG_Y TRIM_Y + TRIM_H
 
 #define EPSILON 0.0001
 
