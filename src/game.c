@@ -484,7 +484,7 @@ void deepCopy(GameBoard* dst, GameBoard* src) {
 void initCheckerSetup(void) {
     Sint32 lightSetup[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
     Sint32 darkSetup[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
-    // Sint32 darkSetup[] = { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 };
+    //Sint32 darkSetup[] = { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 };
 
     Sint32 pipIndex;
     for (Sint32 i = 0; i < 15; i++) {
