@@ -5,7 +5,6 @@
  */
 #pragma once
 #include "board.h"
-#include "fsm.h"
 #include "sage.h"
 
 typedef struct Checker Checker;
