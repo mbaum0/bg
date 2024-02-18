@@ -6,7 +6,6 @@
 #pragma once
 #include <stdbool.h>
 
-
 typedef struct GameButton GameButton;
 typedef enum { CONFIRM_BTN, UNDO_BTN, ROLL_BTN } GameButtonType;
 typedef enum { BTN_LEFT, BTN_CENTER, BTN_RIGHT } GameButtonLocation;

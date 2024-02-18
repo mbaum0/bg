@@ -9,7 +9,7 @@
 #include "util.h"
 #include <math.h>
 
-Sint32 compareSpriteZ(const void* a, const void* b){
+Sint32 compareSpriteZ(const void* a, const void* b) {
     Sprite* aS = *(Sprite**)a;
     Sprite* bS = *(Sprite**)b;
     return aS->z - bS->z;
@@ -62,16 +62,16 @@ ViewManager* VM_init(SDL_Renderer* renderer) {
     return vm;
 }
 
-void freeSprites(ViewManager* vm){
+void freeSprites(ViewManager* vm) {
     Sprite** sprites = *vm->sprites;
-    for (Sint32 i = 0; i < arrlen(sprites); i++){
+    for (Sint32 i = 0; i < arrlen(sprites); i++) {
         free(sprites[i]);
     }
 }
 
-void freeSnippets(ViewManager* vm){
+void freeSnippets(ViewManager* vm) {
     Snippet** snippets = *vm->snippets;
-    for (Sint32 i = 0; i < arrlen(snippets); i++){
+    for (Sint32 i = 0; i < arrlen(snippets); i++) {
         free(snippets[i]);
     }
 }
@@ -100,7 +100,7 @@ void VM_draw(ViewManager* vm) {
     SDL_SetRenderDrawColor(vm->renderer, 255, 255, 255, 255);
     SDL_RenderClear(vm->renderer);
     Sprite** sprites = *vm->sprites;
-    if (vm->sortSpriteZNextFrame){
+    if (vm->sortSpriteZNextFrame) {
         VM_sortSprites(vm);
         vm->sortSpriteZNextFrame = false;
     }

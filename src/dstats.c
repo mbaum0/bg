@@ -6,8 +6,8 @@
 #include "dstats.h"
 #include "fsm.h"
 #include "game.h"
-#include "util.h"
 #include "sage.h"
+#include "util.h"
 
 extern FiniteStateMachine FSM;
 extern Sage sage;

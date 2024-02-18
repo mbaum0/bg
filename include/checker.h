@@ -5,8 +5,8 @@
  */
 #pragma once
 #include "board.h"
+#include "fsm.h"
 #include "sage.h"
-
 
 typedef struct Checker Checker;
 typedef enum { LIGHT, DARK, NONE } Color;
@@ -25,8 +25,8 @@ typedef enum { LIGHT, DARK, NONE } Color;
     ((c->color == DARK && c->pipIndex == DARK_BAR) || (c->color == LIGHT && c->pipIndex == LIGHT_BAR))
 
 struct Checker {
-    Sint32 pipIndex;
-    Sint32 pipOffset;
+    Sint32 pipIndex;  // pip the checker is on
+    Sint32 pipOffset; // position of this checker on the pip
     Color color;
 };
 

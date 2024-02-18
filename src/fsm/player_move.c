@@ -138,7 +138,7 @@ void player_move_state(FiniteStateMachine* fsm) {
             }
         }
 
-        if (event.etype == UNDO_MOVE_EVENT){
+        if (event.etype == UNDO_MOVE_EVENT) {
             loadCheckerState(gb);
             fsm_transition(PLAYER_MOVE_STATE);
         }

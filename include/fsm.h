@@ -1,4 +1,5 @@
 #pragma once
+
 #include "buttons.h"
 #include "checker.h"
 #include "dice.h"
@@ -36,7 +37,14 @@ typedef struct {
     void* ctx;
 } FSMEvent;
 
-typedef enum { INIT_STATE, WAIT_FOR_ROLL_STATE, PLAYER_MOVE_STATE, MOVE_CONFIRM_STATE, GAME_OVER_STATE, NUM_STATES } State;
+typedef enum {
+    INIT_STATE,
+    WAIT_FOR_ROLL_STATE,
+    PLAYER_MOVE_STATE,
+    MOVE_CONFIRM_STATE,
+    GAME_OVER_STATE,
+    NUM_STATES
+} State;
 
 // Define event queue
 #define MAX_EVENTS 10

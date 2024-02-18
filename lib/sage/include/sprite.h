@@ -7,7 +7,6 @@
 #include <SDL3/SDL.h>
 #include <stdbool.h>
 
-
 /**
  * @brief A Sprite is a 2D image that is drawn on the screen. It can be manipulated using
  * the various Sprite_* functions.

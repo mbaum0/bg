@@ -5,7 +5,6 @@
  */
 #include "ai.h"
 
-
 Sint32 evaluateBoard(GameBoard* gb, Color player) {
     Sint32 score = getPlayerScore(gb, player);
     Sint32 opponent = getPlayerScore(gb, OPPONENT_COLOR(player));

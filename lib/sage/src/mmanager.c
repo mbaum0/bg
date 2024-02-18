@@ -53,7 +53,7 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
 
 MediaManager* MM_init(char* title, int winWidth, int winHeight, bool fillDisplay) {
     MediaManager* mm = calloc(1, sizeof(MediaManager));
-    if (mm == NULL){
+    if (mm == NULL) {
         log_error("Failed to allocate memory for the media manager");
         return NULL;
     }

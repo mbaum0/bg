@@ -8,7 +8,6 @@
 #include <SDL3/SDL.h>
 #include <stdbool.h>
 
-
 typedef struct EventManager EventManager;
 typedef void (*EventCallback_fn)(Uint32 eventType, SDL_Event* e, void* data);
 typedef struct EventCallback EventCallback;

@@ -5,5 +5,4 @@
  */
 #pragma once
 
-
 void createBoardSprites(void);

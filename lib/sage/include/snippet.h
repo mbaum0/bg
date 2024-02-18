@@ -8,7 +8,6 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <stdbool.h>
 
-
 /**
  * @brief A Snippet is a bit of text that is drawn on the screen. It can be manipulated using
  * the various Snippet_* functions.

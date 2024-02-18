@@ -64,6 +64,6 @@ void Sage_registerEventCallback(Uint32 eventType, EventCallback_fn callback_fn, 
     EM_registerCallback(sage.em, eventType, callback_fn, data);
 }
 
-void Sprite_setZ(Sprite* s, Sint32 newZ){
+void Sprite_setZ(Sprite* s, Sint32 newZ) {
     VM_setSpriteZ(sage.vm, s, newZ);
 }

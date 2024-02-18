@@ -349,8 +349,8 @@ void initBoardForPlayerMove(GameBoard* gb) {
     }
 }
 
-void updateBoardForPlayerMove(GameBoard* gb){
-    if (NUM_MOVES_MADE(gb) > 0 && (gb->activePlayer != gb->aiPlayer)){
+void updateBoardForPlayerMove(GameBoard* gb) {
+    if (NUM_MOVES_MADE(gb) > 0 && (gb->activePlayer != gb->aiPlayer)) {
         gb->undo.visible = true;
     } else {
         gb->undo.visible = false;
@@ -365,12 +365,12 @@ void initBoardForDiceRoll(GameBoard* gb) {
     gb->confirm.visible = false;
     gb->undo.visible = false;
 
-    if (gb->activePlayer == gb->aiPlayer){
+    if (gb->activePlayer == gb->aiPlayer) {
         gb->roll.visible = false;
     } else {
         gb->roll.visible = true;
     }
-    
+
     if (gb->activePlayer == gb->aiPlayer) {
         gb->die1.side = 0;
         gb->die2.side = 0;
@@ -380,7 +380,7 @@ void initBoardForDiceRoll(GameBoard* gb) {
     }
 }
 
-void initBoardForInit(GameBoard* gb){
+void initBoardForInit(GameBoard* gb) {
     gb->roll.visible = true;
     if (gb->activePlayer == gb->aiPlayer) {
         gb->confirm.location = BTN_LEFT;
@@ -484,7 +484,7 @@ void deepCopy(GameBoard* dst, GameBoard* src) {
 void initCheckerSetup(void) {
     Sint32 lightSetup[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
     Sint32 darkSetup[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
-    //Sint32 darkSetup[] = { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 };
+    // Sint32 darkSetup[] = { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 };
 
     Sint32 pipIndex;
     for (Sint32 i = 0; i < 15; i++) {
