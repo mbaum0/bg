@@ -11,6 +11,19 @@
 #include "util.h"
 #include <stdlib.h>
 
+#define SETUP_MODE_NORMAL 1
+#define SETUP_MODE_ALL_HOME 2
+
+
+#define SETUP_MODE SETUP_MODE_NORMAL
+#if SETUP_MODE == SETUP_MODE_ALL_HOME
+    Sint32 DARKSETUP[] = {19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24};
+    Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
+#else
+    Sint32 DARKSETUP[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
+    Sint32 LIGHTSETUP[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
+#endif
+
 extern FiniteStateMachine FSM;
 
 void saveCheckerState(GameBoard* gb) {
@@ -482,20 +495,16 @@ void deepCopy(GameBoard* dst, GameBoard* src) {
 }
 
 void initCheckerSetup(void) {
-    Sint32 darkSetup[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
-    Sint32 lightSetup[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
-    // Sint32 darkSetup[] = { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 };
-
     Sint32 pipIndex;
     for (Sint32 i = 0; i < 15; i++) {
-        pipIndex = lightSetup[i];
+        pipIndex = LIGHTSETUP[i];
         FSM.gb.lightCheckers[i].pipOffset = getNumCheckersOnPip(&FSM.gb, pipIndex);
         FSM.gb.lightCheckers[i].pipIndex = pipIndex;
         FSM.gb.lightCheckers[i].color = LIGHT;
     }
 
     for (Sint32 i = 0; i < 15; i++) {
-        pipIndex = darkSetup[i];
+        pipIndex = DARKSETUP[i];
         FSM.gb.darkCheckers[i].pipOffset = getNumCheckersOnPip(&FSM.gb, pipIndex);
         FSM.gb.darkCheckers[i].pipIndex = pipIndex;
         FSM.gb.darkCheckers[i].color = DARK;

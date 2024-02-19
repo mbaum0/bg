@@ -49,10 +49,10 @@ Sint32 getCheckerY(Checker* checker) {
     Sint32 offset;
     Sint32 pipIndex = checker->pipIndex;
 
-    if (pipIndex == LIGHT_HOME) {
+    if (pipIndex == DARK_HOME) {
         return CHECKER_TOP_HOME_Y;
     }
-    if (pipIndex == DARK_HOME) {
+    if (pipIndex == LIGHT_HOME) {
         return CHECKER_BOT_HOME_Y;
     }
     if (pipIndex == LIGHT_BAR) {

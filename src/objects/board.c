@@ -10,8 +10,8 @@
 #include <SDL3/SDL.h>
 
 void createBoardSprites(void) {
-    SDL_Texture* background = Sage_loadTexture("assets/felt.png");
-    SDL_FRect feltSrcRect = {0, 0, FELT_SRC_W, FELT_SRC_H};
+    SDL_Texture* background = Sage_loadTexture("assets/felt2x.png");
+    SDL_FRect feltSrcRect = {0, 0, FELT_SRC_W * 2, FELT_SRC_H * 2};
     SDL_FRect feltDstRect = {0, 0, FELT_W, FELT_H};
     Sprite* back = Sprite_createEx(background, feltSrcRect, feltDstRect, Z_BACKGROUND);
     Sage_registerSprite(back);
