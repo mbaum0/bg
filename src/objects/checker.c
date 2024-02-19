@@ -17,11 +17,11 @@ Sint32 getCheckerX(Checker* checker) {
     Sint32 pipOffset;
     Sint32 checkerX;
 
-    if (pipIndex == LIGHT_HOME) {
+    if (pipIndex == DARK_HOME) {
         return CHECKER_TOP_HOME_X + (checker->pipOffset * CHECKER_GAP);
     }
 
-    if (pipIndex == DARK_HOME) {
+    if (pipIndex == LIGHT_HOME) {
         return CHECKER_BOT_HOME_X + (checker->pipOffset * CHECKER_GAP);
     }
 

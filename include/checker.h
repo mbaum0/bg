@@ -10,12 +10,12 @@
 typedef struct Checker Checker;
 typedef enum { LIGHT, DARK, NONE } Color;
 
-#define LIGHT_HOME_START 19
-#define LIGHT_HOME_END 25
-#define LIGHT_HOME 25
-#define DARK_HOME_START 0
-#define DARK_HOME_END 6
-#define DARK_HOME 0
+#define DARK_HOME_START 19
+#define DARK_HOME_END 25
+#define DARK_HOME 25
+#define LIGHT_HOME_START 0
+#define LIGHT_HOME_END 6
+#define LIGHT_HOME 0
 #define LIGHT_BAR 26
 #define DARK_BAR 27
 

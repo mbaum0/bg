@@ -142,12 +142,12 @@ Checker* getTopCheckerOnPip(GameBoard* gb, Sint32 pipIndex) {
 
 Sint32 getNextPip(Sint32 pipIndex, Color player, Sint32 amount) {
     Sint32 oldPip = pipIndex;
-    Sint32 direction = (player == LIGHT) ? 1 : -1;
+    Sint32 direction = (player == LIGHT) ? -1 : 1;
     Sint32 newPip;
     if (oldPip == LIGHT_BAR) {
-        newPip = DARK_HOME + amount;
+        newPip = DARK_HOME + (direction * amount);
     } else if (oldPip == DARK_BAR) {
-        newPip = LIGHT_HOME - amount;
+        newPip = LIGHT_HOME + (direction * amount);
     } else {
         newPip = oldPip + (direction * amount);
     }
@@ -468,8 +468,8 @@ Sint32 getPlayerScore(GameBoard* gb, Color player) {
             score += 25;
         }
 
-        if (player == LIGHT) {
-            score += (LIGHT_HOME - pipIndex);
+        if (player == DARK) {
+            score += (DARK_HOME - pipIndex);
         } else {
             score += pipIndex;
         }
@@ -482,8 +482,8 @@ void deepCopy(GameBoard* dst, GameBoard* src) {
 }
 
 void initCheckerSetup(void) {
-    Sint32 lightSetup[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
-    Sint32 darkSetup[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
+    Sint32 darkSetup[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
+    Sint32 lightSetup[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
     // Sint32 darkSetup[] = { 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2 };
 
     Sint32 pipIndex;
