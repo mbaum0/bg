@@ -72,6 +72,7 @@ void freeSprites(ViewManager* vm) {
 void freeSnippets(ViewManager* vm) {
     Snippet** snippets = *vm->snippets;
     for (Sint32 i = 0; i < arrlen(snippets); i++) {
+        free(snippets[i]->text);
         free(snippets[i]);
     }
 }
