@@ -62,12 +62,16 @@ Sint32 getCheckerY(Checker* checker) {
         return CHECKER_BAR_BOT_Y;
     }
 
+    Uint32 checkerGap = CHECKER_GAP;
+    if (checker->numNeighbors > 5) {
+        checkerGap = (CHECKER_GAP * 5) / checker->numNeighbors;
+    }
     if (isBetween(pipIndex, 1, 12)) {
         offset = CHECKER_PIP_12_Y;
-        offset -= (checker->pipOffset * CHECKER_GAP);
+        offset -= (checker->pipOffset * checkerGap);
     } else {
         offset = CHECKER_PIP_13_Y;
-        offset += (checker->pipOffset * CHECKER_GAP);
+        offset += (checker->pipOffset * checkerGap);
     }
     return offset;
 }
@@ -91,16 +95,19 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
     float newY = getCheckerY(c);
     float x = Sprite_getX(sprite);
     float y = Sprite_getY(sprite);
-    if (c->pipIndex == LIGHT_BAR || c->pipIndex == DARK_BAR) {
-        Sprite_setZ(sprite, Z_BAR_CHECKERS);
-    } else {
-        Sprite_setZ(sprite, Z_CHECKERS);
-    }
+
     if (!isEqual(x, newX, CHECKER_VELOCITY) || !isEqual(y, newY, CHECKER_VELOCITY)) {
         float xVel = getHorizontalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
         float yVel = getVerticalVelocity(CHECKER_VELOCITY, x, y, newX, newY);
+        Sprite_setZ(sprite, Z_MOVING_CHECKERS);
         Sprite_setLocation(sprite, x + xVel, y + yVel);
     } else {
+        if (c->pipIndex == LIGHT_BAR || c->pipIndex == DARK_BAR) {
+            Sprite_setZ(sprite, Z_BAR_CHECKERS);
+        } else {
+            // add the pip offset so the overlap properly if compressed
+            Sprite_setZ(sprite, Z_CHECKERS + c->pipOffset);
+        }
         Sprite_setLocation(sprite, newX, newY);
     }
 }

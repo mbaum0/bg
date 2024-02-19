@@ -27,6 +27,7 @@ struct Checker {
     Sint32 pipIndex;  // pip the checker is on
     Sint32 pipOffset; // position of this checker on the pip
     Color color;
+    Uint32 numNeighbors; // number of checkers on the same pip
 };
 
 void createCheckerSprite(Checker* c);

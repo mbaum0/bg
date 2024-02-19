@@ -9,8 +9,8 @@ typedef struct GameBoard GameBoard;
 
 struct GameBoard {
     Checker lightCheckers[15];
-    Checker lightCheckersSave[15];
     Checker darkCheckers[15];
+    Checker lightCheckersSave[15];
     Checker darkCheckersSave[15];
     GameDie die1;
     GameDie die2;

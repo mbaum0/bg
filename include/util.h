@@ -12,14 +12,15 @@
 #define WINDOW_H (932)
 
 #define Z_BACKGROUND 0
-#define Z_BOARD 1
-#define Z_PIPS 2
-#define Z_CHECKERS 3
-#define Z_TRIM 4
-#define Z_BAR_CHECKERS 5
-#define Z_DICE 6
-#define Z_BUTTONS 7
-#define Z_DEBUG 8
+#define Z_BOARD 100
+#define Z_PIPS 200
+#define Z_CHECKERS 300
+#define Z_TRIM 400
+#define Z_BAR_CHECKERS 500
+#define Z_DICE 600
+#define Z_BUTTONS 700
+#define Z_MOVING_CHECKERS 800
+#define Z_DEBUG 900
 
 #define X(x) (Sage_convertHighDPI(x))
 

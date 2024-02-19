@@ -14,14 +14,13 @@
 #define SETUP_MODE_NORMAL 1
 #define SETUP_MODE_ALL_HOME 2
 
-
 #define SETUP_MODE SETUP_MODE_NORMAL
 #if SETUP_MODE == SETUP_MODE_ALL_HOME
-    Sint32 DARKSETUP[] = {19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24};
-    Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
+Sint32 DARKSETUP[] = {19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24};
+Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
 #else
-    Sint32 DARKSETUP[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
-    Sint32 LIGHTSETUP[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
+Sint32 DARKSETUP[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
+Sint32 LIGHTSETUP[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
 #endif
 
 extern FiniteStateMachine FSM;
@@ -445,6 +444,15 @@ bool playerHasMoves(GameBoard* gb) {
     return false;
 }
 
+void updateCheckerNeighbors(GameBoard* gb) {
+    for (Sint32 i = 0; i < 15; i++) {
+        Checker* checker = &gb->lightCheckers[i];
+        checker->numNeighbors = getNumCheckersOnPip(&FSM.gb, checker->pipIndex);
+        checker = &gb->darkCheckers[i];
+        checker->numNeighbors = getNumCheckersOnPip(&FSM.gb, checker->pipIndex);
+    }
+}
+
 void moveChecker(GameBoard* gb, GameMove gm) {
     Sint32 pipIndex = gm.srcPip;
     Sint32 nextPip = getNextPip(pipIndex, gm.player, gm.amount);
@@ -459,6 +467,7 @@ void moveChecker(GameBoard* gb, GameMove gm) {
 
     c->pipOffset = getNumCheckersOnPip(gb, nextPip);
     c->pipIndex = nextPip;
+    updateCheckerNeighbors(gb);
     log_debug("moved checker from pip %d to pip %d", pipIndex, nextPip);
 }
 
@@ -527,5 +536,11 @@ void gameboard_init(void) {
     for (Sint32 i = 0; i < 15; i++) {
         createCheckerSprite(&FSM.gb.lightCheckers[i]);
         createCheckerSprite(&FSM.gb.darkCheckers[i]);
+    }
+    for (Sint32 i = 0; i < 15; i++) {
+        Checker* checker = &FSM.gb.lightCheckers[i];
+        checker->numNeighbors = getNumCheckersOnPip(&FSM.gb, checker->pipIndex);
+        checker = &FSM.gb.darkCheckers[i];
+        checker->numNeighbors = getNumCheckersOnPip(&FSM.gb, checker->pipIndex);
     }
 }
