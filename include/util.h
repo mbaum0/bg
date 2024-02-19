@@ -16,11 +16,12 @@
 #define Z_PIPS 200
 #define Z_CHECKERS 300
 #define Z_TRIM 400
-#define Z_BAR_CHECKERS 500
-#define Z_DICE 600
-#define Z_BUTTONS 700
-#define Z_MOVING_CHECKERS 800
-#define Z_DEBUG 900
+#define Z_BOARD_OVERLAY 500
+#define Z_BAR_CHECKERS 600
+#define Z_DICE 700
+#define Z_BUTTONS 800
+#define Z_MOVING_CHECKERS 900
+#define Z_DEBUG 1000
 
 #define X(x) (Sage_convertHighDPI(x))
 
@@ -42,6 +43,13 @@
 #define BOARD_H X(BOARD_SRC_H)
 #define BOARD_X X(0)
 #define BOARD_Y X(17)
+
+#define BOARD_OVERLAY_SRC_W (403)
+#define BOARD_OVERLAY_SRC_H (618)
+#define BOARD_OVERLAY_W X(BOARD_OVERLAY_SRC_W)
+#define BOARD_OVERLAY_H X(BOARD_OVERLAY_SRC_H)
+#define BOARD_OVERLAY_X X(14)
+#define BOARD_OVERLAY_Y X(56.7)
 
 #define PIP_W X(34)
 #define PIP_H X(160)
