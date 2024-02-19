@@ -7,7 +7,7 @@
 #include "stb_ds.h"
 
 Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, Sint32 x, Sint32 y, Sint32 z) {
-    Sprite* sprite = calloc(1, sizeof(Sprite));
+    Sprite* sprite = SDL_calloc(1, sizeof(Sprite));
     sprite->id = 0;
     sprite->texture = texture;
     sprite->src_rect = src;
@@ -28,7 +28,7 @@ Sprite* Sprite_create(SDL_Texture* texture, SDL_FRect src, Sint32 x, Sint32 y, S
 }
 
 Sprite* Sprite_createEx(SDL_Texture* texture, SDL_FRect src, SDL_FRect dst, Sint32 z) {
-    Sprite* sprite = calloc(1, sizeof(Sprite));
+    Sprite* sprite = SDL_calloc(1, sizeof(Sprite));
     sprite->id = 0;
     sprite->texture = texture;
     sprite->src_rect = src;

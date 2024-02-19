@@ -17,8 +17,7 @@ void Snippet_setLocation(Snippet* snippet, Sint32 x, Sint32 y) {
 }
 
 void Snippet_setText(Snippet* snippet, char* text) {
-    free(snippet->text);
-    snippet->text = malloc(strlen(text) + 1);
+    snippet->text = SDL_realloc(snippet->text, strlen(text) + 1);
     strcpy(snippet->text, text);
     SDL_DestroyTexture(snippet->texture);
     SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
@@ -32,7 +31,7 @@ void Snippet_setVisible(Snippet* snippet, bool visible) {
 }
 
 Snippet* Snippet_create(TTF_Font* font, SDL_Color color, Sint32 x, Sint32 y, Sint32 z, bool visible) {
-    Snippet* snippet = malloc(sizeof(Snippet));
+    Snippet* snippet = SDL_malloc(sizeof(Snippet));
     snippet->id = 0;
     snippet->font = font;
     snippet->color = color;

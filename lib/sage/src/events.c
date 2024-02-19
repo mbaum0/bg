@@ -8,7 +8,7 @@
 #include "stb_ds.h"
 
 void EM_registerCallback(EventManager* em, Uint32 event_type, EventCallback_fn callback_fn, void* data) {
-    EventCallback* cb = malloc(sizeof(EventCallback));
+    EventCallback* cb = SDL_malloc(sizeof(EventCallback));
     cb->eventType = event_type;
     cb->callback = callback_fn;
     cb->data = data;
@@ -16,8 +16,8 @@ void EM_registerCallback(EventManager* em, Uint32 event_type, EventCallback_fn c
 }
 
 EventManager* EM_init(void) {
-    EventManager* em = malloc(sizeof(EventManager));
-    em->callbacks = malloc(sizeof(EventCallback**));
+    EventManager* em = SDL_malloc(sizeof(EventManager));
+    em->callbacks = SDL_malloc(sizeof(EventCallback**));
     *em->callbacks = NULL;
     return em;
 }

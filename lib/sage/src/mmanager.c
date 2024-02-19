@@ -52,7 +52,7 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
 }
 
 MediaManager* MM_init(char* title, int winWidth, int winHeight, bool fillDisplay) {
-    MediaManager* mm = calloc(1, sizeof(MediaManager));
+    MediaManager* mm = SDL_calloc(1, sizeof(MediaManager));
     if (mm == NULL) {
         log_error("Failed to allocate memory for the media manager");
         return NULL;
@@ -62,8 +62,8 @@ MediaManager* MM_init(char* title, int winWidth, int winHeight, bool fillDisplay
         free(mm);
         return NULL;
     }
-    mm->textures = malloc(sizeof(SDL_Texture**));
-    mm->fonts = malloc(sizeof(TTF_Font**));
+    mm->textures = SDL_malloc(sizeof(SDL_Texture**));
+    mm->fonts = SDL_malloc(sizeof(TTF_Font**));
     return mm;
 }
 

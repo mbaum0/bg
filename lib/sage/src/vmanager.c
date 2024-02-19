@@ -51,11 +51,11 @@ int handleEvent(void* data, SDL_Event* event) {
 }
 
 ViewManager* VM_init(SDL_Renderer* renderer) {
-    ViewManager* vm = calloc(1, sizeof(ViewManager));
+    ViewManager* vm = SDL_calloc(1, sizeof(ViewManager));
     vm->renderer = renderer;
-    vm->sprites = malloc(sizeof(Sprite**));
+    vm->sprites = SDL_malloc(sizeof(Sprite**));
     *vm->sprites = NULL;
-    vm->snippets = malloc(sizeof(Snippet**));
+    vm->snippets = SDL_malloc(sizeof(Snippet**));
     *vm->snippets = NULL;
     SDL_AddEventWatch(handleEvent, vm);
     vm->sortSpriteZNextFrame = false;
@@ -120,7 +120,6 @@ void VM_draw(ViewManager* vm) {
             }
             SDL_SetTextureAlphaMod(sprite->texture, sprite->alpha);
             SDL_RenderTexture(vm->renderer, sprite->texture, &sprite->src_rect, &newDst);
-            drawSpriteBorder(vm, newDst, sprite->outline);
         }
     }
     Snippet** snippets = *vm->snippets;
