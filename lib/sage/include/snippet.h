@@ -27,6 +27,10 @@ struct Snippet {
     SDL_Texture* texture;
     void* update_fn;
     void* update_data;
+    void* click_fn;
+    void* click_object;
+    void* click_context;
+    Sint32 click_code;
     SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
 };
 

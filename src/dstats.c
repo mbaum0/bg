@@ -12,6 +12,14 @@
 extern FiniteStateMachine FSM;
 extern Sage sage;
 
+void clickDstats(ViewManager* vm, Snippet* snippet, void* object, void* context, Sint32 code){
+    (void)vm;
+    (void)context;
+    (void)code;
+    (void)object;
+    snippet->visible = !snippet->visible;
+}
+
 void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
@@ -37,4 +45,5 @@ void DStats_create(void) {
     Sage_registerSnippet(snippet);
     Snippet_setText(snippet, debugText);
     Snippet_registerUpdateFn(snippet, DStats_update, NULL);
+    Snippet_registerClickFn(snippet, clickDstats, NULL, NULL, 0);
 }

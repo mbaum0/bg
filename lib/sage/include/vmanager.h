@@ -74,9 +74,15 @@ typedef void (*SnippetUpdate_fn)(ViewManager* vm, Snippet* snippet, void* data);
  */
 typedef void (*SpriteClick_fn)(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code);
 
+/**
+ * @brief Snippet click functions are called when the Snippet is clicked.
+ */
+typedef void (*SnippetClick_fn)(ViewManager* vm, Snippet* snippet, void* object, void* context, Sint32 code);
+
 void Sprite_registerUpdateFn(Sprite* sprite, SpriteUpdate_fn update_fn, void* object, void* context);
 void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* object, void* context, Sint32 code);
 void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void* data);
+void Snippet_registerClickFn(Snippet* snippet, SnippetClick_fn click_fn, void* object, void* context, Sint32 code);
 
 /**
  * @brief Update the z-value of a sprite
@@ -93,5 +99,7 @@ void VM_setSpriteZ(ViewManager* vm, Sprite* s, Sint32 newZ);
  * @return Sprite* The Sprite at the given coordinates, or NULL if no Sprite is found
  */
 Sprite* VM_findSpriteAtCoordinate(ViewManager* vm, Sint32 x, Sint32 y);
+
+Snippet* VM_findSnippetAtCoordinate(ViewManager* vm, Sint32 x, Sint32 y);
 
 Sprite* VM_findSpriteCollision(ViewManager* vm, Sprite* sprite);
