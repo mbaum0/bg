@@ -536,6 +536,7 @@ void gameboard_init(void) {
     for (Sint32 i = 0; i < 24; i++){
         FSM.gb.pips[i].alpha = 0;
         FSM.gb.pips[i].index = i + 1;
+        FSM.gb.pips[i].color = PIP_BLUE;
         createPipSprite(&FSM.gb.pips[i]);
     }
 

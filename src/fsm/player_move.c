@@ -101,10 +101,10 @@ Uint32 timeDoAiSwapDice(Uint32 interval, void* ctx) {
 }
 
 void doPlayerMove(GameBoard* gb, Pip* pip) {
-    SDL_AddTimer(10, timerPipClickFade, pip);
     Sint32 movesLeft = 0;
     Checker* c = getTopCheckerOnPip(gb, pip->index);
     if (c == NULL) {
+        pip->color = PIP_RED;
         return;
     }
 
@@ -114,7 +114,9 @@ void doPlayerMove(GameBoard* gb, Pip* pip) {
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
         movesLeft = incrementMoveCount(gb);
+        pip->color = PIP_BLUE;
     } else {
+        pip->color = PIP_RED;
         return;
     }
 
@@ -138,6 +140,7 @@ void player_move_state(FiniteStateMachine* fsm) {
             if (gb->activePlayer != gb->aiPlayer) {
                 Pip* pip = &fsm->gb.pips[event.code - 1]; // -1 bc array is 0-indexed but pips start at 1
                 doPlayerMove(gb, pip);
+                SDL_AddTimer(10, timerPipClickFade, pip); // fade pip after clicking
             }
         }
 
