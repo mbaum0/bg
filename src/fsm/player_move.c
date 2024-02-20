@@ -105,7 +105,6 @@ void doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
     Checker* c = getTopCheckerOnPip(gb, pipIndex);
     bool success = true;
     if (c == NULL) {
-        SET_PIP_COLOR(gb, pipIndex, PIP_RED)
         success = false;
         goto final;
     }
@@ -116,10 +115,8 @@ void doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
         movesLeft = incrementMoveCount(gb);
-        SET_PIP_COLOR(gb, pipIndex, PIP_BLUE)
         success = true;
     } else {
-        SET_PIP_COLOR(gb, pipIndex, PIP_RED)
         success = false;
         goto final;
     }
@@ -137,8 +134,7 @@ final:
         } else {
             pip->color = PIP_RED;
         }
-        pip->alpha = 255;
-        //SDL_AddTimer(20, timerPipClickFade, pip); // fade pip after clicking   
+        pip->alpha = 255; 
     }
 }
 
