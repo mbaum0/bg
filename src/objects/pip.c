@@ -31,6 +31,15 @@ void updatePip(ViewManager* vm, Sprite* sprite, void* object, void* context) {
     } else {
         srcRect.x = (p->color == PIP_BLUE) ? PIP_SRC_W * 2 : PIP_SRC_W * 6;
     }
+
+    // pips default to transparent and should always fade over time.
+    Uint32 newAlpha = p->alpha;
+    newAlpha -= 8;
+    if (newAlpha > 255){
+        p->alpha = 0;
+    } else {
+        p->alpha = newAlpha;
+    }
     Sprite_setSourceRect(sprite, srcRect);
     Sprite_setAlpha(sprite, p->alpha);
 }

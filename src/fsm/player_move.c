@@ -100,12 +100,14 @@ Uint32 timeDoAiSwapDice(Uint32 interval, void* ctx) {
     return 0;
 }
 
-void doPlayerMove(GameBoard* gb, Pip* pip) {
+void doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
     Sint32 movesLeft = 0;
-    Checker* c = getTopCheckerOnPip(gb, pip->index);
+    Checker* c = getTopCheckerOnPip(gb, pipIndex);
+    bool success = true;
     if (c == NULL) {
-        pip->color = PIP_RED;
-        return;
+        SET_PIP_COLOR(gb, pipIndex, PIP_RED)
+        success = false;
+        goto final;
     }
 
     Sint32 dieValue = getNextDieValue(gb);
@@ -114,16 +116,30 @@ void doPlayerMove(GameBoard* gb, Pip* pip) {
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
         movesLeft = incrementMoveCount(gb);
-        pip->color = PIP_BLUE;
+        SET_PIP_COLOR(gb, pipIndex, PIP_BLUE)
+        success = true;
     } else {
-        pip->color = PIP_RED;
-        return;
+        SET_PIP_COLOR(gb, pipIndex, PIP_RED)
+        success = false;
+        goto final;
     }
 
     if (movesLeft == 0) {
         fsm_transition(MOVE_CONFIRM_STATE);
     }
     SDL_AddTimer(1000, timerEndPlayerTurnIfNoMoves, gb);
+
+final:
+    if (pipIndex > 0 && pipIndex < 25){
+        Pip* pip = (Pip*)&gb->pips[pipIndex-1];
+        if (success){
+            pip->color = PIP_BLUE;
+        } else {
+            pip->color = PIP_RED;
+        }
+        pip->alpha = 255;
+        //SDL_AddTimer(20, timerPipClickFade, pip); // fade pip after clicking   
+    }
 }
 
 void doDiceSwap(GameBoard* gb) {
@@ -138,9 +154,7 @@ void player_move_state(FiniteStateMachine* fsm) {
         if (event.etype == PIP_CLICKED_EVENT) {
             // player can't pick for ai
             if (gb->activePlayer != gb->aiPlayer) {
-                Pip* pip = &fsm->gb.pips[event.code - 1]; // -1 bc array is 0-indexed but pips start at 1
-                doPlayerMove(gb, pip);
-                SDL_AddTimer(10, timerPipClickFade, pip); // fade pip after clicking
+                doPlayerMove(gb, event.code);
             }
         }
 
