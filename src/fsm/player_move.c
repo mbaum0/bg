@@ -38,6 +38,23 @@ Uint32 timerEndPlayerTurnIfNoMoves(Uint32 interval, void* ctx) {
     return 0;
 }
 
+Uint32 timerPipClickFade(Uint32 interval, void* ctx) {
+    Pip* pip = (Pip*)ctx;
+    if (pip->alpha == 0){
+        // start from full opacity
+        pip->alpha = 255;
+        return interval;
+    }
+
+    Sint32 newAlpha = pip->alpha - 10;
+    if (newAlpha <= 0){
+        pip->alpha = 0;
+        return 0;
+    }
+    pip->alpha = newAlpha;
+    return interval;
+}
+
 void doAiMove(GameBoard* gb, GameMove gm) {
     Checker* c = getTopCheckerOnPip(gb, gm.srcPip);
     if (c == NULL) {
@@ -83,9 +100,10 @@ Uint32 timeDoAiSwapDice(Uint32 interval, void* ctx) {
     return 0;
 }
 
-void doPlayerMove(GameBoard* gb, Sint32 pipIndex) {
+void doPlayerMove(GameBoard* gb, Pip* pip) {
+    SDL_AddTimer(10, timerPipClickFade, pip);
     Sint32 movesLeft = 0;
-    Checker* c = getTopCheckerOnPip(gb, pipIndex);
+    Checker* c = getTopCheckerOnPip(gb, pip->index);
     if (c == NULL) {
         return;
     }
@@ -118,8 +136,8 @@ void player_move_state(FiniteStateMachine* fsm) {
         if (event.etype == PIP_CLICKED_EVENT) {
             // player can't pick for ai
             if (gb->activePlayer != gb->aiPlayer) {
-                Uint32 pipIndex = event.code;
-                doPlayerMove(gb, pipIndex);
+                Pip* pip = &fsm->gb.pips[event.code - 1]; // -1 bc array is 0-indexed but pips start at 1
+                doPlayerMove(gb, pip);
             }
         }
 
@@ -130,13 +148,13 @@ void player_move_state(FiniteStateMachine* fsm) {
             }
         }
 
-        if (event.etype == AI_PIP_CLICKED_EVENT) {
-            // ai shouldn't cheat ;)
-            if (gb->activePlayer == gb->aiPlayer) {
-                Uint32 pipIndex = event.code;
-                doPlayerMove(gb, pipIndex);
-            }
-        }
+        // if (event.etype == AI_PIP_CLICKED_EVENT) {
+        //     // ai shouldn't cheat ;)
+        //     if (gb->activePlayer == gb->aiPlayer) {
+        //         Pip* pip = (Pip*)event.ctx;
+        //         doPlayerMove(gb, pip);
+        //     }
+        // }
 
         if (event.etype == UNDO_MOVE_EVENT) {
             loadCheckerState(gb);

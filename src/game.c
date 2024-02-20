@@ -530,9 +530,15 @@ void gameboard_init(void) {
     FSM.gb.aiPlayer = DARK;
     initCheckerSetup();
     createBoardSprites();
-    createPipSprites();
     createDiceSprites(&FSM.gb.die1, &FSM.gb.die2);
     createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll);
+
+    for (Sint32 i = 0; i < 24; i++){
+        FSM.gb.pips[i].alpha = 0;
+        FSM.gb.pips[i].index = i + 1;
+        createPipSprite(&FSM.gb.pips[i]);
+    }
+
     for (Sint32 i = 0; i < 15; i++) {
         createCheckerSprite(&FSM.gb.lightCheckers[i]);
         createCheckerSprite(&FSM.gb.darkCheckers[i]);

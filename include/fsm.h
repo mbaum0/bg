@@ -3,6 +3,7 @@
 #include "buttons.h"
 #include "checker.h"
 #include "dice.h"
+#include "pip.h"
 #include <stdbool.h>
 
 typedef struct GameBoard GameBoard;
@@ -12,6 +13,7 @@ struct GameBoard {
     Checker darkCheckers[15];
     Checker lightCheckersSave[15];
     Checker darkCheckersSave[15];
+    Pip pips[24];
     GameDie die1;
     GameDie die2;
     GameButton confirm;

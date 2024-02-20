@@ -51,8 +51,10 @@
 #define BOARD_OVERLAY_X X(14)
 #define BOARD_OVERLAY_Y X(56.7)
 
-#define PIP_W X(34)
-#define PIP_H X(160)
+#define PIP_SRC_W (34)
+#define PIP_SRC_H (160)
+#define PIP_W X(PIP_SRC_W)
+#define PIP_H X(PIP_SRC_H)
 
 #define PIP_6_X X(221)
 #define PIP_6_Y X(507)
