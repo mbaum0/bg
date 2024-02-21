@@ -63,7 +63,7 @@ MediaManager* MM_init(char* title, int winWidth, int winHeight, bool fillDisplay
         return NULL;
     }
     hmdefault(mm->textures, NULL);
-    mm->fonts = SDL_malloc(sizeof(TTF_Font**));
+    hmdefault(mm->fonts, NULL);
     return mm;
 }
 
@@ -81,17 +81,15 @@ void destroyTextures(MediaManager* mm) {
 }
 
 void destroyFonts(MediaManager* mm) {
-    TTF_Font** fonts = *mm->fonts;
-    for (Sint32 i = 0; i < arrlen(fonts); i++) {
-        TTF_CloseFont(fonts[i]);
+    for (Sint32 i = 0; i < hmlen(mm->fonts); i++) {
+        TTF_CloseFont(mm->fonts[i].value);
     }
     TTF_Quit();
 }
 
 void MM_free(MediaManager* mm) {
     destroyFonts(mm);
-    arrfree(*mm->fonts);
-    free(mm->fonts);
+    shfree(mm->fonts);
     destroyTextures(mm);
     shfree(mm->textures);
     destroySDL(mm);
@@ -126,12 +124,18 @@ SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint3
 }
 
 TTF_Font* MM_loadFont(MediaManager* mm, char* path, Sint32 size) {
+    size_t hash = stbds_hash_string(path, 0xFEED);
+    hash += size; // font+size are unique combination
+    TTF_Font* font = hmget(mm->fonts, hash);
+    if (font != NULL) {
+        return font;
+    }
     log_debug("Loading font: %s", path);
-    TTF_Font* font = TTF_OpenFont(path, size);
+    font = TTF_OpenFont(path, size);
     if (!font) {
         log_error("Failed to load font: %s", TTF_GetError());
         return NULL;
     }
-    arrput(*mm->fonts, font);
+    hmput(mm->fonts, hash, font);
     return font;
 }

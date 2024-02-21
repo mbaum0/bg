@@ -16,6 +16,11 @@ struct SageTexture {
     size_t key;
     SDL_Texture* value;
 };
+typedef struct SageFont SageFont;
+struct SageFont {
+    size_t key;
+    TTF_Font* value;
+};
 
 typedef struct MediaManager MediaManager;
 
@@ -23,7 +28,7 @@ struct MediaManager {
     SDL_Renderer* renderer;
     SDL_Window* window;
     SageTexture* textures;
-    TTF_Font*** fonts;
+    SageFont* fonts;
     float pixelScale;
 };
 
