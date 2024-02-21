@@ -12,9 +12,9 @@
 #define DOUBLES_ROLLED(gb) ((gb->die1.value == gb->die2.value))
 #define NUM_MOVES_MADE(gb) ((gb->die1.uses + gb->die2.uses))
 #define PLAYER_CHECKERS(gb, color) ((color == LIGHT) ? gb->lightCheckers : gb->darkCheckers)
-#define SET_PIP_COLOR(gb, pipIndex, pcolor) \
-    if ((pipIndex) > 0 && (pipIndex) < 25) { \
-        (gb)->pips[(pipIndex - 1)].color = (pcolor); \
+#define SET_PIP_COLOR(gb, pipIndex, pcolor)                                                                            \
+    if ((pipIndex) > 0 && (pipIndex) < 25) {                                                                           \
+        (gb)->pips[(pipIndex - 1)].color = (pcolor);                                                                   \
     }
 
 typedef struct GameMove GameMove;

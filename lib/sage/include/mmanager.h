@@ -11,12 +11,18 @@
 #include <SDL3_ttf/SDL_ttf.h>
 #include <stdbool.h>
 
+typedef struct SageTexture SageTexture;
+struct SageTexture {
+    size_t key;
+    SDL_Texture* value;
+};
+
 typedef struct MediaManager MediaManager;
 
 struct MediaManager {
     SDL_Renderer* renderer;
     SDL_Window* window;
-    SDL_Texture*** textures;
+    SageTexture* textures;
     TTF_Font*** fonts;
     float pixelScale;
 };

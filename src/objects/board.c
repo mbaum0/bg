@@ -33,7 +33,8 @@ void createBoardSprites(void) {
     SDL_Texture* overlayTexture = Sage_loadTexture("assets/boardoverlay2x.png");
     SDL_FRect boardOverlaySrcRect = {0, 0, BOARD_OVERLAY_SRC_W * 2, BOARD_OVERLAY_SRC_H * 2};
     SDL_FRect boardOverlayDstRect = {BOARD_OVERLAY_X, BOARD_OVERLAY_Y, BOARD_OVERLAY_W, BOARD_OVERLAY_H};
-    Sprite* boardOverlaySprite = Sprite_createEx(overlayTexture, boardOverlaySrcRect, boardOverlayDstRect, Z_BOARD_OVERLAY);
+    Sprite* boardOverlaySprite =
+        Sprite_createEx(overlayTexture, boardOverlaySrcRect, boardOverlayDstRect, Z_BOARD_OVERLAY);
     boardOverlaySprite->useViewport = true;
     Sage_registerSprite(boardOverlaySprite);
 }

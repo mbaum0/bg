@@ -12,7 +12,7 @@
 extern FiniteStateMachine FSM;
 extern Sage sage;
 
-void clickDstats(ViewManager* vm, Snippet* snippet, void* object, void* context, Sint32 code){
+void clickDstats(ViewManager* vm, Snippet* snippet, void* object, void* context, Sint32 code) {
     (void)vm;
     (void)context;
     (void)code;

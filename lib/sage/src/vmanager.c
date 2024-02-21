@@ -44,8 +44,8 @@ int handleEvent(void* data, SDL_Event* event) {
             }
         } else {
             Snippet* snippet = VM_findSnippetAtCoordinate(vm, mouseX, mouseY);
-            if (snippet != NULL){
-                if (snippet->click_fn != NULL){
+            if (snippet != NULL) {
+                if (snippet->click_fn != NULL) {
                     SnippetClick_fn fptr = (SnippetClick_fn)snippet->click_fn;
                     fptr(vm, snippet, snippet->click_object, snippet->click_context, snippet->click_code);
                 }
@@ -137,7 +137,7 @@ void VM_draw(ViewManager* vm) {
             SnippetUpdate_fn fptr = (SnippetUpdate_fn)snippet->update_fn;
             fptr(vm, snippet, snippet->update_data);
         }
-        if (snippet->visible){
+        if (snippet->visible) {
             SDL_RenderTexture(vm->renderer, snippet->texture, NULL, &snippet->dst_rect);
         }
     }
@@ -189,7 +189,7 @@ Sint32 VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
     return snippet->id;
 }
 
-void Snippet_registerClickFn(Snippet* snippet, SnippetClick_fn click_fn, void* object, void* context, Sint32 code){
+void Snippet_registerClickFn(Snippet* snippet, SnippetClick_fn click_fn, void* object, void* context, Sint32 code) {
     snippet->click_fn = (void*)click_fn;
     snippet->click_object = object;
     snippet->click_context = context;
@@ -201,11 +201,10 @@ void Snippet_registerUpdateFn(Snippet* snippet, SnippetUpdate_fn update_fn, void
     snippet->update_data = data;
 }
 
-
 /**
  * @brief Returns the first snippet found at the given location
  */
-Snippet* VM_findSnippetAtCoordinate(ViewManager* vm, Sint32 x, Sint32 y){
+Snippet* VM_findSnippetAtCoordinate(ViewManager* vm, Sint32 x, Sint32 y) {
     Snippet** snippets = *vm->snippets;
     for (Sint32 i = 0; i < arrlen(snippets); i++) {
         Snippet* snippet = snippets[i];

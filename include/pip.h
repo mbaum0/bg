@@ -13,8 +13,8 @@ typedef enum { PIP_BLUE, PIP_RED } PipColor;
 typedef struct Pip Pip;
 
 struct Pip {
-    Uint32 alpha; // transparency of the pip
-    Uint32 index; // index of this pip
+    Uint32 alpha;   // transparency of the pip
+    Uint32 index;   // index of this pip
     PipColor color; // color of the pip
 };
 

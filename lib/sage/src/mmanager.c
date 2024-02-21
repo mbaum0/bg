@@ -62,7 +62,7 @@ MediaManager* MM_init(char* title, int winWidth, int winHeight, bool fillDisplay
         free(mm);
         return NULL;
     }
-    mm->textures = SDL_malloc(sizeof(SDL_Texture**));
+    hmdefault(mm->textures, NULL);
     mm->fonts = SDL_malloc(sizeof(TTF_Font**));
     return mm;
 }
@@ -74,9 +74,8 @@ void destroySDL(MediaManager* mm) {
 }
 
 void destroyTextures(MediaManager* mm) {
-    SDL_Texture** textures = *mm->textures;
-    for (Sint32 i = 0; i < arrlen(textures); i++) {
-        SDL_DestroyTexture(textures[i]);
+    for (Sint32 i = 0; i < hmlen(mm->textures); i++) {
+        SDL_DestroyTexture(mm->textures[i].value);
     }
     IMG_Quit();
 }
@@ -91,23 +90,28 @@ void destroyFonts(MediaManager* mm) {
 
 void MM_free(MediaManager* mm) {
     destroyFonts(mm);
-    destroyTextures(mm);
-    arrfree(*mm->textures);
-    free(mm->textures);
     arrfree(*mm->fonts);
     free(mm->fonts);
+    destroyTextures(mm);
+    shfree(mm->textures);
     destroySDL(mm);
     free(mm);
 }
 
 SDL_Texture* MM_loadTexture(MediaManager* mm, char* path) {
+    size_t hash = stbds_hash_string(path, 0xFEED);
+    SDL_Texture* texture = hmget(mm->textures, hash);
+    if (texture != NULL) {
+        return texture;
+    }
     log_debug("Loading texture: %s", path);
-    SDL_Texture* texture = IMG_LoadTexture(mm->renderer, path);
+    texture = IMG_LoadTexture(mm->renderer, path);
     if (!texture) {
         log_error("Failed to load texture: %s", IMG_GetError());
         return NULL;
     }
-    arrput(*mm->textures, texture);
+
+    hmput(mm->textures, hash, texture);
     return texture;
 }
 

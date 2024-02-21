@@ -35,7 +35,7 @@ void updatePip(ViewManager* vm, Sprite* sprite, void* object, void* context) {
     // pips default to transparent and should always fade over time.
     Uint32 newAlpha = p->alpha;
     newAlpha -= 8;
-    if (newAlpha > 255){
+    if (newAlpha > 255) {
         p->alpha = 0;
     } else {
         p->alpha = newAlpha;

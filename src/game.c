@@ -533,7 +533,7 @@ void gameboard_init(void) {
     createDiceSprites(&FSM.gb.die1, &FSM.gb.die2);
     createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll);
 
-    for (Sint32 i = 0; i < 24; i++){
+    for (Sint32 i = 0; i < 24; i++) {
         FSM.gb.pips[i].alpha = 0;
         FSM.gb.pips[i].index = i + 1;
         FSM.gb.pips[i].color = PIP_BLUE;

@@ -40,14 +40,14 @@ Uint32 timerEndPlayerTurnIfNoMoves(Uint32 interval, void* ctx) {
 
 Uint32 timerPipClickFade(Uint32 interval, void* ctx) {
     Pip* pip = (Pip*)ctx;
-    if (pip->alpha == 0){
+    if (pip->alpha == 0) {
         // start from full opacity
         pip->alpha = 255;
         return interval;
     }
 
     Sint32 newAlpha = pip->alpha - 10;
-    if (newAlpha <= 0){
+    if (newAlpha <= 0) {
         pip->alpha = 0;
         return 0;
     }
@@ -127,14 +127,14 @@ void doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
     SDL_AddTimer(1000, timerEndPlayerTurnIfNoMoves, gb);
 
 final:
-    if (pipIndex > 0 && pipIndex < 25){
-        Pip* pip = (Pip*)&gb->pips[pipIndex-1];
-        if (success){
+    if (pipIndex > 0 && pipIndex < 25) {
+        Pip* pip = (Pip*)&gb->pips[pipIndex - 1];
+        if (success) {
             pip->color = PIP_BLUE;
         } else {
             pip->color = PIP_RED;
         }
-        pip->alpha = 255; 
+        pip->alpha = 255;
     }
 }
 
