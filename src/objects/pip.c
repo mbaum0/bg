@@ -26,7 +26,7 @@ void updatePip(ViewManager* vm, Sprite* sprite, void* object, void* context) {
     (void)context;
     Pip* p = (Pip*)object;
     SDL_FRect srcRect = sprite->src_rect;
-    if (p->index < 12) {
+    if (p->index < 13) {
         srcRect.x = (p->color == PIP_BLUE) ? 0 : PIP_SRC_W * 4;
     } else {
         srcRect.x = (p->color == PIP_BLUE) ? PIP_SRC_W * 2 : PIP_SRC_W * 6;
