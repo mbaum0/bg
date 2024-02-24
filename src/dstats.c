@@ -23,16 +23,13 @@ void clickDstats(ViewManager* vm, Snippet* snippet, void* object, void* context,
 void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
-    GameBoard gb = FSM.gb;
-    Sint32 lightScore = getPlayerScore(&gb, LIGHT);
-    Sint32 darkScore = getPlayerScore(&gb, DARK);
-    char debugText[200];
+    char debugText[100];
 
     Uint64 ticksNow = SDL_GetPerformanceCounter();
     float timestep = (float)(ticksNow - sage.ticks) / SDL_GetPerformanceFrequency();
     sage.ticks = ticksNow;
     float fps = (1.0 / timestep);
-    sprintf(debugText, "lightScore: %d\ndarkScore: %d\nfps: %f", lightScore, darkScore, fps);
+    sprintf(debugText, "fps: %f", fps);
     Snippet_setText(snippet, debugText);
 }
 

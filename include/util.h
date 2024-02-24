@@ -42,7 +42,7 @@
 #define BOARD_W X(BOARD_SRC_W)
 #define BOARD_H X(BOARD_SRC_H)
 #define BOARD_X X(0)
-#define BOARD_Y X(17)
+#define BOARD_Y X(60)
 
 // #define BOARD_OVERLAY_SRC_W (403)
 // #define BOARD_OVERLAY_SRC_H (618)
@@ -115,7 +115,7 @@
 
 #define SCORE_LEFT_X X(70)
 #define SCORE_RIGHT_X X(336)
-#define SCORE_Y X(63)
+#define SCORE_Y X(46)
 #define SCORE_FONT_SIZE X(18)
 
 #define DEBUG_FONT_SIZE X(20)

@@ -45,5 +45,6 @@ Snippet* Snippet_create(TTF_Font* font, SDL_Color color, Sint32 x, Sint32 y, Sin
     snippet->click_fn = NULL;
     snippet->click_object = NULL;
     snippet->click_context = NULL;
+    snippet->useViewport = false;
     return snippet;
 }

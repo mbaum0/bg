@@ -31,6 +31,7 @@ struct Snippet {
     void* click_object;
     void* click_context;
     Sint32 click_code;
+    bool useViewport;
     SDL_Renderer* renderer; // Snippets get a special pointer to the renderer so they can update their texture
 };
 

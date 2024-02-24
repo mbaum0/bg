@@ -138,7 +138,12 @@ void VM_draw(ViewManager* vm) {
             fptr(vm, snippet, snippet->update_data);
         }
         if (snippet->visible) {
-            SDL_RenderTexture(vm->renderer, snippet->texture, NULL, &snippet->dst_rect);
+            SDL_FRect newDst = snippet->dst_rect;
+            if (snippet->useViewport) {
+                newDst.x += vm->viewport.x;
+                newDst.y += vm->viewport.y;
+            }
+            SDL_RenderTexture(vm->renderer, snippet->texture, NULL, &newDst);
         }
     }
     SDL_RenderPresent(vm->renderer);

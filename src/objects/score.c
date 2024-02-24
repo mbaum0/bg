@@ -41,6 +41,8 @@ void createScore(void){
     TTF_Font* scoreFont = Sage_loadFont("assets/Montserrat-Regular.ttf", SCORE_FONT_SIZE);
     Snippet* lightSnippet = Snippet_create(scoreFont, color, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);
     Snippet* darkSnippet = Snippet_create(scoreFont, color, SCORE_LEFT_X, SCORE_Y, Z_DEBUG, true);
+    lightSnippet->useViewport = true;
+    darkSnippet->useViewport = true;
     Sage_registerSnippet(lightSnippet);
     Sage_registerSnippet(darkSnippet);
     Snippet_setText(lightSnippet, lightScore);
