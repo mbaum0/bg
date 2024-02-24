@@ -19,6 +19,7 @@ struct GameBoard {
     GameButton confirm;
     GameButton undo;
     GameButton roll;
+    GameButton dub;
     Color activePlayer;
     Color aiPlayer;
 };

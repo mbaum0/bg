@@ -9,6 +9,7 @@
 #include "fsm.h"
 #include "pip.h"
 #include "util.h"
+#include "score.h"
 #include <stdlib.h>
 
 #define SETUP_MODE_NORMAL 1
@@ -526,12 +527,13 @@ void gameboard_init(void) {
     FSM.gb.confirm = (GameButton){CONFIRM_BTN, false, BTN_RIGHT};
     FSM.gb.undo = (GameButton){UNDO_BTN, false, BTN_CENTER};
     FSM.gb.roll = (GameButton){ROLL_BTN, false, BTN_RIGHT};
+    FSM.gb.dub = (GameButton){DUB_BTN, true, BTN_TOP};
     FSM.gb.activePlayer = LIGHT;
     FSM.gb.aiPlayer = DARK;
     initCheckerSetup();
     createBoardSprites();
     createDiceSprites(&FSM.gb.die1, &FSM.gb.die2);
-    createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll);
+    createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll, &FSM.gb.dub);
 
     for (Sint32 i = 0; i < 24; i++) {
         FSM.gb.pips[i].alpha = 0;
@@ -550,4 +552,6 @@ void gameboard_init(void) {
         checker = &FSM.gb.darkCheckers[i];
         checker->numNeighbors = getNumCheckersOnPip(&FSM.gb, checker->pipIndex);
     }
+
+    createScore();
 }

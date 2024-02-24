@@ -10,7 +10,7 @@ void Snippet_setLocation(Snippet* snippet, Sint32 x, Sint32 y) {
     SDL_DestroyTexture(snippet->texture);
     snippet->x = x;
     snippet->y = y;
-    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
+    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(snippet->font, snippet->text, snippet->color, 0);
     snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
     snippet->dst_rect = (SDL_FRect){snippet->x, snippet->y, surface->w, surface->h};
     SDL_DestroySurface(surface);
@@ -20,7 +20,8 @@ void Snippet_setText(Snippet* snippet, char* text) {
     snippet->text = SDL_realloc(snippet->text, strlen(text) + 1);
     strcpy(snippet->text, text);
     SDL_DestroyTexture(snippet->texture);
-    SDL_Surface* surface = TTF_RenderText_Solid_Wrapped(snippet->font, snippet->text, snippet->color, 0);
+    SDL_Surface* surface = TTF_RenderText_Blended_Wrapped(snippet->font, snippet->text, snippet->color, 0);
+
     snippet->texture = SDL_CreateTextureFromSurface(snippet->renderer, surface);
     snippet->dst_rect = (SDL_FRect){snippet->x, snippet->y, surface->w, surface->h};
     SDL_DestroySurface(surface);

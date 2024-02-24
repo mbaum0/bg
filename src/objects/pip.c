@@ -10,8 +10,6 @@
 #include "util.h"
 #include <SDL3/SDL.h>
 
-extern Sage sage;
-
 void clickPip(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
     (void)vm;
     (void)sprite;
