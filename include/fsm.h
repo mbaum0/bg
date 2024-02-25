@@ -1,28 +1,7 @@
 #pragma once
 
-#include "buttons.h"
-#include "checker.h"
-#include "dice.h"
-#include "pip.h"
+#include "game.h"
 #include <stdbool.h>
-
-typedef struct GameBoard GameBoard;
-
-struct GameBoard {
-    Checker lightCheckers[15];
-    Checker darkCheckers[15];
-    Checker lightCheckersSave[15];
-    Checker darkCheckersSave[15];
-    Pip pips[24];
-    GameDie die1;
-    GameDie die2;
-    GameButton confirm;
-    GameButton undo;
-    GameButton roll;
-    GameButton dub;
-    Color activePlayer;
-    Color aiPlayer;
-};
 
 typedef enum {
     CONFIRMED_MOVE_EVENT,
