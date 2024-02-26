@@ -47,3 +47,35 @@ void fsm_transition(State next_state) {
     FSM.state_init_functions[next_state](&FSM);
     FSM.current_state = next_state;
 }
+
+void save_state(FiniteStateMachine* fsm){
+    FILE *file = fopen("state.save", "wb"); // "wb" mode for writing in binary format
+    if (file == NULL) {
+        log_error("Error opening file");
+        return;
+    }
+
+    fwrite(&fsm->gb, sizeof(GameBoard), 1, file);
+    fwrite(&fsm->current_state, sizeof(State), 1, file);
+    fclose(file);
+}
+
+void load_state(FiniteStateMachine* fsm){
+    FILE *file = fopen("state.save", "rb"); // "rb" mode for reading in binary format
+    if (file == NULL) {
+        log_error("Error opening file");
+        return;
+    }
+
+    if (fread(&fsm->gb, sizeof(GameBoard), 1, file) != 1) {
+        log_error("Error reading game board.");
+        goto close;
+    }
+
+    if (fread(&fsm->current_state, sizeof(State), 1, file) != 1) {
+        log_error("Error reading state.");
+        goto close;
+    }
+close:
+    fclose(file);
+}

@@ -59,3 +59,6 @@ void move_confirm_state(FiniteStateMachine* fsm);
 void move_confirm_init_state(FiniteStateMachine* fsm);
 void game_over_state(FiniteStateMachine* fsm);
 void game_over_init_state(FiniteStateMachine* fsm);
+
+void save_state(FiniteStateMachine* fsm);
+void load_state(FiniteStateMachine* fsm);
