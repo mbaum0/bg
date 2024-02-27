@@ -39,8 +39,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC include)
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
 target_link_libraries(${PROJECT_NAME} SDL3::SDL3)
 
-find_package(SDL3_ttf REQUIRED)
-target_link_libraries(${PROJECT_NAME} SDL3_ttf::SDL3_ttf)
+# find_package(SDL3_ttf REQUIRED)
+# target_link_libraries(${PROJECT_NAME} SDL3_ttf::SDL3_ttf)
 
 find_package(SDL3_image REQUIRED)
 target_link_libraries(${PROJECT_NAME} SDL3_image::SDL3_image)

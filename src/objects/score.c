@@ -37,16 +37,16 @@ void createScore(void){
     char lightScore[100];
     sprintf(darkScore, " ");
     sprintf(lightScore, " ");
-    SDL_Color color = {0, 0, 0, 255};
-    TTF_Font* scoreFont = Sage_loadFont("assets/Montserrat-Regular.ttf", SCORE_FONT_SIZE);
-    Snippet* lightSnippet = Snippet_create(scoreFont, color, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);
-    Snippet* darkSnippet = Snippet_create(scoreFont, color, SCORE_LEFT_X, SCORE_Y, Z_DEBUG, true);
-    lightSnippet->useViewport = true;
-    darkSnippet->useViewport = true;
-    Sage_registerSnippet(lightSnippet);
-    Sage_registerSnippet(darkSnippet);
-    Snippet_setText(lightSnippet, lightScore);
-    Snippet_setText(darkSnippet, darkScore);
-    Snippet_registerUpdateFn(lightSnippet, lightScoreUpdate, NULL);
-    Snippet_registerUpdateFn(darkSnippet, darkScoreUpdate, NULL);
+    //SDL_Color color = {0, 0, 0, 255};
+    // TTF_Font* scoreFont = Sage_loadFont("assets/Montserrat-Regular.ttf", SCORE_FONT_SIZE);
+    // Snippet* lightSnippet = Snippet_create(scoreFont, color, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);
+    // Snippet* darkSnippet = Snippet_create(scoreFont, color, SCORE_LEFT_X, SCORE_Y, Z_DEBUG, true);
+    // lightSnippet->useViewport = true;
+    // darkSnippet->useViewport = true;
+    // Sage_registerSnippet(lightSnippet);
+    // Sage_registerSnippet(darkSnippet);
+    // Snippet_setText(lightSnippet, lightScore);
+    // Snippet_setText(darkSnippet, darkScore);
+    // Snippet_registerUpdateFn(lightSnippet, lightScoreUpdate, NULL);
+    // Snippet_registerUpdateFn(darkSnippet, darkScoreUpdate, NULL);
 }

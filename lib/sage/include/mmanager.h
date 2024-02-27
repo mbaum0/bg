@@ -6,20 +6,20 @@
 
 #pragma once
 #include "log.h"
+#include "font.h"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
-#include <SDL3_ttf/SDL_ttf.h>
 #include <stdbool.h>
 
-typedef struct SageTexture SageTexture;
-struct SageTexture {
+typedef struct SageTextureEntry SageTextureEntry;
+struct SageTextureEntry {
     size_t key;
     SDL_Texture* value;
 };
-typedef struct SageFont SageFont;
-struct SageFont {
+typedef struct SageFontEntry SageFontEntry;
+struct SageFontEntry {
     size_t key;
-    TTF_Font* value;
+    SageFont* value;
 };
 
 typedef struct MediaManager MediaManager;
@@ -27,8 +27,8 @@ typedef struct MediaManager MediaManager;
 struct MediaManager {
     SDL_Renderer* renderer;
     SDL_Window* window;
-    SageTexture* textures;
-    SageFont* fonts;
+    SageTextureEntry* textures;
+    SageFontEntry* fonts;
     float pixelScale;
 };
 
@@ -60,11 +60,13 @@ SDL_Texture* MM_loadTexture(MediaManager* mm, char* path);
 SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint32 height);
 
 /**
- * @brief Loads a font from a file
- *
+ * @brief Load a Bitmap font as a SageFont and returns it.
+ * These are expected to be generated using fontbm from
+ * github.com/vladimirgamalyan/fontbm
+ * 
  * @param mm MediaManager instance
- * @param path Path to font file
- * @param size font size
- * @return TTF_Font* pointer to the font, NULL if failed to load
+ * @param imagePath Path to the .png font bitmap
+ * @param formatPath Path to the font format file
+ * @return Sage_Font* 
  */
-TTF_Font* MM_loadFont(MediaManager* mm, char* path, Sint32 size);
+SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath);

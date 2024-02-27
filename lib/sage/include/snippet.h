@@ -4,8 +4,8 @@
  * @brief Spinnet implementation for the game engine
  */
 #pragma once
+#include "font.h"
 #include <SDL3/SDL.h>
-#include <SDL3_ttf/SDL_ttf.h>
 #include <stdbool.h>
 
 /**
@@ -16,7 +16,7 @@ typedef struct Snippet Snippet;
 
 struct Snippet {
     Sint32 id;
-    TTF_Font* font;
+    SageFont* font;
     SDL_Color color;
     Sint32 x;
     Sint32 y;
@@ -46,7 +46,7 @@ struct Snippet {
  * @param visible Whether or not the Snippet is visible
  * @return Snippet*
  */
-Snippet* Snippet_create(TTF_Font* font, SDL_Color color, Sint32 x, Sint32 y, Sint32 z, bool visible);
+Snippet* Snippet_create(SageFont* font, SDL_Color color, Sint32 x, Sint32 y, Sint32 z, bool visible);
 /**
  * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks
  */

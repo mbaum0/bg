@@ -50,13 +50,15 @@ SDL_Texture* Sage_loadSVGTexture(char* path, Sint32 width, Sint32 height);
 float Sage_convertHighDPI(float value);
 
 /**
- * @brief Load a font from a file
- *
- * @param path The path to the font file
- * @param size Font size
- * @return TTF_Font*
+ * @brief Load a Bitmap font as a SageFont and returns it.
+ * These are expected to be generated using fontbm from
+ * github.com/vladimirgamalyan/fontbm
+ * 
+ * @param imagePath Path to the .png font bitmap
+ * @param formatPath Path to the font format file
+ * @return Sage_Font* 
  */
-TTF_Font* Sage_loadFont(char* path, Sint32 size);
+SageFont* Sage_loadBitmapFont(char* imagePath, char* formatPath);
 
 /**
  * @brief Register a sprite with the SAGE engine

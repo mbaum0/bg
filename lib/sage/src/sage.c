@@ -48,10 +48,6 @@ float Sage_convertHighDPI(float value) {
     return sage.mm->pixelScale * value;
 }
 
-TTF_Font* Sage_loadFont(char* path, Sint32 size) {
-    return MM_loadFont(sage.mm, path, size);
-}
-
 Sint32 Sage_registerSprite(Sprite* sprite) {
     return VM_registerSprite(sage.vm, sprite);
 }
@@ -66,4 +62,8 @@ void Sage_registerEventCallback(Uint32 eventType, EventCallback_fn callback_fn, 
 
 void Sprite_setZ(Sprite* s, Sint32 newZ) {
     VM_setSpriteZ(sage.vm, s, newZ);
+}
+
+SageFont* Sage_loadBitmapFont(char* imagePath, char* formatPath) {
+    return MM_loadBitmapFont(sage.mm, imagePath, formatPath);
 }

@@ -34,7 +34,8 @@
         "ios": "c",
         "chrono": "c",
         "complex": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "__threading_support": "c"
     },
     "doxdocgen.generic.authorName": "Michael Baumgarten",
     "doxdocgen.file.fileOrder": [

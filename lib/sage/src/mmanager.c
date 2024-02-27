@@ -38,11 +38,6 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
         return false;
     }
 
-    if (TTF_Init() < 0) {
-        log_error("Couldn't initialize SDL_ttf: %s", TTF_GetError());
-        return false;
-    }
-
     if (IMG_Init(IMG_INIT_PNG) == 0) {
         log_error("Couldn't initialize SDL_image: %s", IMG_GetError());
         return false;
@@ -82,9 +77,8 @@ void destroyTextures(MediaManager* mm) {
 
 void destroyFonts(MediaManager* mm) {
     for (Sint32 i = 0; i < hmlen(mm->fonts); i++) {
-        TTF_CloseFont(mm->fonts[i].value);
+        BMFont_DestroyFont(mm->fonts[i].value->layout);
     }
-    TTF_Quit();
 }
 
 void MM_free(MediaManager* mm) {
@@ -123,19 +117,20 @@ SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint3
     return t;
 }
 
-TTF_Font* MM_loadFont(MediaManager* mm, char* path, Sint32 size) {
-    size_t hash = stbds_hash_string(path, 0xFEED);
-    hash += size; // font+size are unique combination
-    TTF_Font* font = hmget(mm->fonts, hash);
-    if (font != NULL) {
+SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath){
+    size_t hash = stbds_hash_string(imagePath, 0xFEED);
+    hash += stbds_hash_string(formatPath, 0xFEED);
+    SageFont* font = hmget(mm->fonts, hash);
+    if (font != NULL){
         return font;
     }
-    log_debug("Loading font: %s", path);
-    font = TTF_OpenFont(path, size);
-    if (!font) {
-        log_error("Failed to load font: %s", TTF_GetError());
+    font = malloc(sizeof(SageFont));
+    log_debug("Loading font: %s", imagePath);
+    if (BMFont_OpenFont(formatPath, font->layout)){
+        log_error("Failed to load font formatting");
+        free(font);
         return NULL;
     }
-    hmput(mm->fonts, hash, font);
+    font->texture = MM_loadTexture(mm, imagePath);
     return font;
 }
