@@ -9,5 +9,5 @@
 
 typedef struct  {
     SDL_Texture* texture;
-    BMFont* layout;
+    BMFont layout;
 } SageFont;

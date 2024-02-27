@@ -77,7 +77,7 @@ void destroyTextures(MediaManager* mm) {
 
 void destroyFonts(MediaManager* mm) {
     for (Sint32 i = 0; i < hmlen(mm->fonts); i++) {
-        BMFont_DestroyFont(mm->fonts[i].value->layout);
+        BMFont_DestroyFont(&mm->fonts[i].value->layout);
     }
 }
 
@@ -126,7 +126,7 @@ SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath)
     }
     font = malloc(sizeof(SageFont));
     log_debug("Loading font: %s", imagePath);
-    if (BMFont_OpenFont(formatPath, font->layout)){
+    if (BMFont_OpenFont(formatPath, &font->layout)){
         log_error("Failed to load font formatting");
         free(font);
         return NULL;

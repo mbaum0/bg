@@ -36,11 +36,12 @@ void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
 void DStats_create(void) {
     char debugText[200];
     sprintf(debugText, "  ");
-    //SDL_Color color = {255, 255, 255, 255};
-    // TTF_Font* debugFont = Sage_loadFont("assets/VeraMono.ttf", DEBUG_FONT_SIZE);
-    // Snippet* snippet = Snippet_create(debugFont, color, DEBUG_X, DEBUG_Y, Z_DEBUG, true);
-    // Sage_registerSnippet(snippet);
-    // Snippet_setText(snippet, debugText);
-    // Snippet_registerUpdateFn(snippet, DStats_update, NULL);
-    // Snippet_registerClickFn(snippet, clickDstats, NULL, NULL, 0);
+    SDL_Color color = {255, 0, 0, 255};
+    SageFont* sf = Sage_loadBitmapFont( "assets/Montserrat-Regular_0.png", "assets/Montserrat-Regular.fnt");
+
+    Snippet* snippet = Snippet_create(sf, color, DEBUG_X, DEBUG_Y, Z_DEBUG, true);
+    Sage_registerSnippet(snippet);
+    Snippet_setText(snippet, debugText);
+    Snippet_registerUpdateFn(snippet, DStats_update, NULL);
+    Snippet_registerClickFn(snippet, clickDstats, NULL, NULL, 0);
 }

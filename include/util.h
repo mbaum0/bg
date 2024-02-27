@@ -115,7 +115,7 @@
 
 #define SCORE_LEFT_X X(70)
 #define SCORE_RIGHT_X X(336)
-#define SCORE_Y X(46)
+#define SCORE_Y X(65)
 #define SCORE_FONT_SIZE X(18)
 
 #define DEBUG_FONT_SIZE X(20)

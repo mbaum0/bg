@@ -138,12 +138,17 @@ void VM_draw(ViewManager* vm) {
             fptr(vm, snippet, snippet->update_data);
         }
         if (snippet->visible) {
-            SDL_FRect newDst = snippet->dst_rect;
-            if (snippet->useViewport) {
-                newDst.x += vm->viewport.x;
-                newDst.y += vm->viewport.y;
+            for (Sint32 i = 0; i < snippet->textLen; i++) {
+                SnippetChar sc = snippet->chars[i];
+                SDL_FRect newDst = sc.dst;
+                if (snippet->useViewport) {
+                    newDst.x += vm->viewport.x;
+                    newDst.y += vm->viewport.y;
+                }
+                SDL_RenderTexture(vm->renderer, snippet->font->texture, &sc.src, &newDst);
             }
-            SDL_RenderTexture(vm->renderer, snippet->texture, NULL, &newDst);
+
+            // SDL_RenderTexture(vm->renderer, snippet->texture, NULL, &newDst);
         }
     }
     SDL_RenderPresent(vm->renderer);
@@ -188,7 +193,6 @@ void Sprite_registerClickFn(Sprite* sprite, SpriteClick_fn click_fn, void* objec
 }
 
 Sint32 VM_registerSnippet(ViewManager* vm, Snippet* snippet) {
-    snippet->renderer = vm->renderer;
     snippet->id = (Sint32)arrlen(*vm->snippets);
     arrput(*vm->snippets, snippet);
     return snippet->id;
@@ -215,7 +219,7 @@ Snippet* VM_findSnippetAtCoordinate(ViewManager* vm, Sint32 x, Sint32 y) {
         Snippet* snippet = snippets[i];
         if (snippet->click_fn != NULL) {
             SDL_FPoint p = {x, y};
-            SDL_FRect dst = snippet->dst_rect;
+            SDL_FRect dst = snippet->boundBox;
             // if (snippet->useViewport) {
             //     dst.x += vm->viewport.x;
             //     dst.y += vm->viewport.y;
