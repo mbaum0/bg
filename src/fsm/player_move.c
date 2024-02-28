@@ -26,6 +26,13 @@ Uint32 timerEndPlayerTurnIfNoMoves(Uint32 interval, void* ctx) {
     GameDie* die1 = FIRST_DIE(gb);
     bool hasBothDiceLeft = (die1->uses == 0);
 
+    if (gb->activePlayer == gb->aiPlayer){
+        // this function may get called after a player has finished their turn and incidentially
+        // run while the ai has just begun their turn. This timer does not apply to the AI, as
+        // their code handles the zero-move scenario.
+        return 0;
+    }
+
     if (!playerHasMoves(gb)) {
         log_debug("Active player has no moves available");
         if (hasBothDiceLeft) {
@@ -88,8 +95,16 @@ Uint32 timerDoAiMove(Uint32 interval, void* ctx) {
 Uint32 timerEndAiMove(Uint32 interval, void* ctx) {
     (void)interval;
     GameBoard* gb = (GameBoard*)ctx;
+    gb->nomoves.visible = false; // hide this in case it was made visible
     gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
     fsm_transition(WAIT_FOR_ROLL_STATE);
+    return 0;
+}
+
+Uint32 timerSetNoMovesVisible(Uint32 interval, void* ctx){
+    (void)interval;
+    GameBoard* gb = (GameBoard*)ctx;
+    gb->nomoves.visible = true;
     return 0;
 }
 
@@ -123,8 +138,9 @@ void doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
 
     if (movesLeft == 0) {
         fsm_transition(MOVE_CONFIRM_STATE);
+    } else {
+        SDL_AddTimer(1000, timerEndPlayerTurnIfNoMoves, gb);
     }
-    SDL_AddTimer(1000, timerEndPlayerTurnIfNoMoves, gb);
 
 final:
     if (pipIndex > 0 && pipIndex < 25) {
@@ -201,6 +217,10 @@ void player_move_init_state(FiniteStateMachine* fsm) {
                 SDL_AddTimer(delay, timerDoAiMove, gbm);
                 delay += 500;
             }
+        } else {
+            // end the ai turn after showing the noMoves symbol.
+            SDL_AddTimer(delay, timerSetNoMovesVisible, gb);
+            delay += 1000;
         }
         // end ai turn
         SDL_AddTimer(delay, timerEndAiMove, gb);

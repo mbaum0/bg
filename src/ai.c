@@ -157,8 +157,8 @@ void findBestMoveSequence(GameBoard* gb, Color player, GameMoveSequence* result)
         }
     }
     Sint32 currentScore = evaluateBoard(gb, player);
-    log_debug("AI found %d move options. Best option will alter game by %d points", numOptions,
-              (currentScore - best.resultScore));
+    Sint32 scoreDelta = (numOptions == 0) ? 0 : (currentScore - best.resultScore);
+    log_debug("AI found %d move options. Best option will alter game by %d points", numOptions, scoreDelta);
     *result = best;
 }
 

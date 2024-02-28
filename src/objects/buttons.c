@@ -91,7 +91,20 @@ void updateDubBtn(ViewManager* vm, Sprite* sprite, void* object, void* context) 
     (void)sprite;
 }
 
-void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll, GameButton* dub) {
+void updateNomovesBtn(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+    (void)vm;
+    (void)context;
+
+    GameButton* btn = (GameButton*)object;
+    int x, y;
+    y = GAME_BTN_Y;
+    x = (btn->location == BTN_LEFT) ? GAME_BTN_LEFT_X : GAME_BTN_RIGHT_X;
+
+    Sprite_setVisible(sprite, btn->visible);
+    Sprite_setLocation(sprite, x, y);
+}
+
+void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll, GameButton* dub, GameButton* nomoves) {
     // SDL_Texture* btnTexture = Sage_loadSVGTexture("assets/buttons.svg", BTN_W * 2, BTN_W);
     SDL_Texture* btnTexture = Sage_loadTexture("assets/buttons2x.png");
 
@@ -135,6 +148,15 @@ void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll
     Sprite_setVisible(s, dub->visible);
     Sprite_registerClickFn(s, clickDub, NULL, NULL, 0);
     Sprite_registerUpdateFn(s, updateDubBtn, dub, NULL);
+    s->useViewport = true;
+    Sage_registerSprite(s);
+
+    // no moves btn
+    src_rect.x = (GAME_BTN_SRC_OFFSET_NOMOVES * 2);
+    dst_rect.x = x;
+    s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
+    Sprite_setVisible(s, nomoves->visible);
+    Sprite_registerUpdateFn(s, updateNomovesBtn, nomoves, NULL);
     s->useViewport = true;
     Sage_registerSprite(s);
 }

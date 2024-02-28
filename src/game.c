@@ -14,10 +14,14 @@
 
 #define SETUP_MODE_NORMAL 1
 #define SETUP_MODE_ALL_HOME 2
+#define SETUP_MODE_AI_BARRED 3
 
-#define SETUP_MODE SETUP_MODE_NORMAL
+#define SETUP_MODE SETUP_MODE_AI_BARRED
 #if SETUP_MODE == SETUP_MODE_ALL_HOME
 Sint32 DARKSETUP[] = {19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24};
+Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
+#elif SETUP_MODE == SETUP_MODE_AI_BARRED
+Sint32 DARKSETUP[] = {DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR};
 Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
 #else
 Sint32 DARKSETUP[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
@@ -356,9 +360,11 @@ void initBoardForPlayerMove(GameBoard* gb) {
     if (gb->activePlayer == gb->aiPlayer) {
         gb->die1.side = 0;
         gb->die2.side = 0;
+        gb->nomoves.location = BTN_LEFT;
     } else {
         gb->die1.side = 1;
         gb->die2.side = 1;
+        gb->nomoves.location = BTN_RIGHT;
     }
 }
 
@@ -378,11 +384,12 @@ void initBoardForDiceRoll(GameBoard* gb) {
     gb->confirm.visible = false;
     gb->undo.visible = false;
 
-    if (gb->activePlayer == gb->aiPlayer) {
-        gb->roll.visible = false;
-    } else {
-        gb->roll.visible = true;
-    }
+    gb->roll.visible = false;
+    // if (gb->activePlayer == gb->aiPlayer) {
+    //     gb->roll.visible = false;
+    // } else {
+    //     gb->roll.visible = true;
+    // }
 
     if (gb->activePlayer == gb->aiPlayer) {
         gb->die1.side = 0;
@@ -528,12 +535,13 @@ void gameboard_init(void) {
     FSM.gb.undo = (GameButton){UNDO_BTN, false, BTN_CENTER};
     FSM.gb.roll = (GameButton){ROLL_BTN, false, BTN_RIGHT};
     FSM.gb.dub = (GameButton){DUB_BTN, true, BTN_TOP};
+    FSM.gb.nomoves = (GameButton){NM_BTN, false, BTN_RIGHT};
     FSM.gb.activePlayer = LIGHT;
     FSM.gb.aiPlayer = DARK;
     initCheckerSetup();
     createBoardSprites();
     createDiceSprites(&FSM.gb.die1, &FSM.gb.die2);
-    createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll, &FSM.gb.dub);
+    createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll, &FSM.gb.dub, &FSM.gb.nomoves);
 
     for (Sint32 i = 0; i < 24; i++) {
         FSM.gb.pips[i].alpha = 0;

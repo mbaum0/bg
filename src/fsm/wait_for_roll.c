@@ -15,6 +15,13 @@ Uint32 timerAiRoll(Uint32 interval, void* ctx) {
     return 0;
 }
 
+Uint32 timerShowRollBtn(Uint32 interval, void* ctx){
+    (void)interval;
+    GameBoard* gb = (GameBoard*)ctx;
+    gb->roll.visible = true;
+    return 0;
+}
+
 void wait_for_roll_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     FSMEvent event;
@@ -44,5 +51,8 @@ void wait_for_roll_init_state(FiniteStateMachine* fsm) {
     // auto-roll for the ai
     if (gb->activePlayer == gb->aiPlayer) {
         SDL_AddTimer(500, timerAiRoll, gb);
+    } else {
+        // only players need the roll btn. delay for aesthetics
+        SDL_AddTimer(300, timerShowRollBtn, gb);
     }
 }
