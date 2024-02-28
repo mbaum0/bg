@@ -132,5 +132,6 @@ SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath)
         return NULL;
     }
     font->texture = MM_loadTexture(mm, imagePath);
+    font->scale = mm->pixelScale;
     return font;
 }

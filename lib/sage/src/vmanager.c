@@ -145,10 +145,9 @@ void VM_draw(ViewManager* vm) {
                     newDst.x += vm->viewport.x;
                     newDst.y += vm->viewport.y;
                 }
+                SDL_SetTextureColorMod(snippet->font->texture, snippet->color.r, snippet->color.g, snippet->color.b);
                 SDL_RenderTexture(vm->renderer, snippet->font->texture, &sc.src, &newDst);
             }
-
-            // SDL_RenderTexture(vm->renderer, snippet->texture, NULL, &newDst);
         }
     }
     SDL_RenderPresent(vm->renderer);
@@ -220,10 +219,10 @@ Snippet* VM_findSnippetAtCoordinate(ViewManager* vm, Sint32 x, Sint32 y) {
         if (snippet->click_fn != NULL) {
             SDL_FPoint p = {x, y};
             SDL_FRect dst = snippet->boundBox;
-            // if (snippet->useViewport) {
-            //     dst.x += vm->viewport.x;
-            //     dst.y += vm->viewport.y;
-            // }
+            if (snippet->useViewport) {
+                dst.x += vm->viewport.x;
+                dst.y += vm->viewport.y;
+            }
             if (SDL_PointInRectFloat(&p, &dst)) {
                 return snippet;
             }

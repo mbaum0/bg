@@ -5,6 +5,8 @@ LIB_DIR = lib
 BUILD_DIR = build
 OBJ_NAME = bg
 BUILD_TARGET = $(BUILD_DIR)/$(OBJ_NAME)
+FONT_FILE=assets/NotoSans-Medium.ttf
+FONT_TARGET=assets/NotoSans-Medium
 
 SRC_FILES = $(shell find $(SRC_DIR) -type f \( -name '*.c' \))
 HEADER_FILES = $(wildcard $(INC_DIR)/*.h)
@@ -34,3 +36,6 @@ static:
 
 run: $(BUILD_TARGET)
 	./$(BUILD_TARGET)
+
+font:
+	fontbm --font-file $(FONT_FILE) --font-size 40 --output $(FONT_TARGET) --data-format bin

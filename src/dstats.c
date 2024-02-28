@@ -29,7 +29,7 @@ void DStats_update(ViewManager* vm, Snippet* snippet, void* data) {
     float timestep = (float)(ticksNow - sage.ticks) / SDL_GetPerformanceFrequency();
     sage.ticks = ticksNow;
     float fps = (1.0 / timestep);
-    sprintf(debugText, "fps: %f", fps);
+    sprintf(debugText, "fps: %.1f", fps);
     Snippet_setText(snippet, debugText);
 }
 
@@ -37,7 +37,7 @@ void DStats_create(void) {
     char debugText[200];
     sprintf(debugText, "  ");
     SDL_Color color = {255, 0, 0, 255};
-    SageFont* sf = Sage_loadBitmapFont( "assets/Montserrat-Regular_0.png", "assets/Montserrat-Regular.fnt");
+    SageFont* sf = Sage_loadBitmapFont( "assets/NotoSans-Medium_0.png", "assets/NotoSans-Medium.fnt");
 
     Snippet* snippet = Snippet_create(sf, color, DEBUG_X, DEBUG_Y, Z_DEBUG, true);
     Sage_registerSnippet(snippet);

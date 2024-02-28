@@ -36,7 +36,8 @@
         "complex": "c",
         "cstdlib": "c",
         "__threading_support": "c",
-        "cstring": "c"
+        "cstring": "c",
+        "memory": "c"
     },
     "doxdocgen.generic.authorName": "Michael Baumgarten",
     "doxdocgen.file.fileOrder": [

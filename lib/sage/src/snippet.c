@@ -4,6 +4,7 @@
  * @brief Snippet implementation for the game engine
  */
 #include "snippet.h"
+#include "util.h"
 #include <stdlib.h>
 
 void Snippet_setLocation(Snippet* snippet, Sint32 x, Sint32 y) {
@@ -37,6 +38,7 @@ void Snippet_setText(Snippet* snippet, char* text) {
     SDL_FRect src, dst;
     BMFontChar bmchar;
     char c;
+    float fontScale = snippet->font->scale;
     Sint32 cOffset = 0;
     for (Sint32 i = 0; i < snippet->textLen; i++){
         c = text[i];
@@ -48,16 +50,16 @@ void Snippet_setText(Snippet* snippet, char* text) {
         dst.h = bmchar.height;
         dst.w = bmchar.width;
         dst.x = snippet->x + cOffset;
-        dst.y = snippet->y - bmchar.height;
+        dst.y = snippet->y + bmchar.yoffset;
         snippet->chars[i].c = c;
         snippet->chars[i].src = src;
         snippet->chars[i].dst = dst;
         cOffset += bmchar.xadvance;
     }
-    snippet->boundBox.w = bmchar.width * snippet->textLen;
-    snippet->boundBox.h = bmchar.height;
-    snippet->boundBox.x = snippet->x;
-    snippet->boundBox.y = snippet->y;
+    snippet->boundBox.w = bmchar.width * snippet->textLen * fontScale;
+    snippet->boundBox.h = bmchar.height * fontScale;
+    snippet->boundBox.x = snippet->x * fontScale;
+    snippet->boundBox.y = snippet->y * fontScale;
 }
 
 void Snippet_setVisible(Snippet* snippet, bool visible) {
@@ -79,6 +81,6 @@ Snippet* Snippet_create(SageFont* font, SDL_Color color, Sint32 x, Sint32 y, Sin
     snippet->click_context = NULL;
     snippet->useViewport = false;
     snippet->textLen = 0;
-    SDL_SetTextureColorMod(font->texture, color.r, color.g, color.b);
+    snippet->color = color;
     return snippet;
 }

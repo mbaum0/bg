@@ -31,6 +31,7 @@ struct Snippet {
     SnippetChar* chars;
     Sint32 textLen;
     SDL_FRect boundBox;
+    SDL_Color color;
     void* update_fn;
     void* update_data;
     void* click_fn;
