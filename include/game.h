@@ -122,6 +122,11 @@ Sint32 incrementMoveCount(GameBoard* gb);
 void initBoardForPlayerMove(GameBoard* gb);
 
 /**
+ * @brief Inits the board for the roll for first state.
+ */
+void initBoardForRollForFirst(GameBoard* gb);
+
+/**
  * @brief Updates the display of the board during the player move state.
  */
 void updateBoardForPlayerMove(GameBoard* gb);

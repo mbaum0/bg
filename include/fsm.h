@@ -10,7 +10,8 @@ typedef enum {
     AI_ROLL_DICE_EVENT,
     DICE_CLICKED_EVENT,
     PIP_CLICKED_EVENT,
-    AI_PIP_CLICKED_EVENT
+    GOT_FIRST_PLAYER_EVENT,
+    TRANSITION_TO_PLAYER_STATE_EVENT,
 } FSMEventType;
 
 typedef struct {
@@ -21,6 +22,7 @@ typedef struct {
 
 typedef enum {
     INIT_STATE,
+    ROLL_FOR_FIRST_STATE,
     WAIT_FOR_ROLL_STATE,
     PLAYER_MOVE_STATE,
     MOVE_CONFIRM_STATE,
@@ -51,6 +53,8 @@ void fsm_transition(State next_state);
 
 void init_state(FiniteStateMachine* fsm);
 void init_init_state(FiniteStateMachine* fsm);
+void roll_for_first_state(FiniteStateMachine* fsm);
+void roll_for_first_init_state(FiniteStateMachine* fsm);
 void wait_for_roll_state(FiniteStateMachine* fsm);
 void wait_for_roll_init_state(FiniteStateMachine* fsm);
 void player_move_state(FiniteStateMachine* fsm);

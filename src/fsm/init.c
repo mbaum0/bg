@@ -6,7 +6,7 @@ void init_state(FiniteStateMachine* fsm) {
     log_debug("Entered state: INIT");
     GameBoard* gb = &fsm->gb;
     initBoardForInit(gb);
-    fsm_transition(WAIT_FOR_ROLL_STATE);
+    fsm_transition(ROLL_FOR_FIRST_STATE);
 }
 
 void init_init_state(FiniteStateMachine* fsm) {

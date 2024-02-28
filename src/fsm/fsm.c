@@ -8,6 +8,8 @@ FiniteStateMachine FSM = {0};
 void fsm_init(void) {
     FSM.state_functions[INIT_STATE] = init_state;
     FSM.state_init_functions[INIT_STATE] = init_init_state;
+    FSM.state_init_functions[ROLL_FOR_FIRST_STATE] = roll_for_first_init_state;
+    FSM.state_functions[ROLL_FOR_FIRST_STATE] = roll_for_first_state;
     FSM.state_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_state;
     FSM.state_init_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_init_state;
     FSM.state_functions[PLAYER_MOVE_STATE] = player_move_state;

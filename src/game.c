@@ -16,7 +16,7 @@
 #define SETUP_MODE_ALL_HOME 2
 #define SETUP_MODE_AI_BARRED 3
 
-#define SETUP_MODE SETUP_MODE_AI_BARRED
+#define SETUP_MODE SETUP_MODE_NORMAL
 #if SETUP_MODE == SETUP_MODE_ALL_HOME
 Sint32 DARKSETUP[] = {19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24};
 Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
@@ -398,6 +398,16 @@ void initBoardForDiceRoll(GameBoard* gb) {
         gb->die1.side = 1;
         gb->die2.side = 1;
     }
+}
+
+void initBoardForRollForFirst(GameBoard* gb) {
+    gb->die1.uses = 0;
+    gb->die2.uses = 0;
+    gb->die1.animation = DICE_MOVE;
+    gb->die2.animation = DICE_MOVE;
+    gb->die1.side = 0;
+    gb->die2.side = 1;
+    gb->roll.visible = false;
 }
 
 void initBoardForInit(GameBoard* gb) {
