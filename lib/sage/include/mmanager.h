@@ -67,6 +67,8 @@ SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint3
  * @param mm MediaManager instance
  * @param imagePath Path to the .png font bitmap
  * @param formatPath Path to the font format file
+ * @param srcSize pt size of the source font
+ * @param dstSize desired pt rendering size
  * @return Sage_Font* 
  */
-SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath);
+SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath, Uint32 srcSize, Uint32 dstSize);

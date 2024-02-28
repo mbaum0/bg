@@ -4,7 +4,6 @@
  * @brief Snippet implementation for the game engine
  */
 #include "snippet.h"
-#include "util.h"
 #include <stdlib.h>
 
 void Snippet_setLocation(Snippet* snippet, Sint32 x, Sint32 y) {
@@ -39,6 +38,8 @@ void Snippet_setText(Snippet* snippet, char* text) {
     BMFontChar bmchar;
     char c;
     float fontScale = snippet->font->scale;
+    Uint32 fontSrcSize = snippet->font->srcSize;
+    Uint32 fontDstSize = snippet->font->dstSize;
     Sint32 cOffset = 0;
     for (Sint32 i = 0; i < snippet->textLen; i++){
         c = text[i];
@@ -47,10 +48,10 @@ void Snippet_setText(Snippet* snippet, char* text) {
         src.w = bmchar.width;
         src.x = bmchar.x;
         src.y = bmchar.y;
-        dst.h = bmchar.height;
-        dst.w = bmchar.width;
-        dst.x = snippet->x + cOffset;
-        dst.y = snippet->y + bmchar.yoffset;
+        dst.h = NORMALIZE_FONT(bmchar.height, fontSrcSize, fontDstSize);
+        dst.w = NORMALIZE_FONT(bmchar.width, fontSrcSize, fontDstSize);
+        dst.x = snippet->x + NORMALIZE_FONT(cOffset, fontSrcSize, fontDstSize);
+        dst.y = snippet->y + NORMALIZE_FONT(bmchar.yoffset, fontSrcSize, fontDstSize);
         snippet->chars[i].c = c;
         snippet->chars[i].src = src;
         snippet->chars[i].dst = dst;

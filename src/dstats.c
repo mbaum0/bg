@@ -37,7 +37,7 @@ void DStats_create(void) {
     char debugText[200];
     sprintf(debugText, "  ");
     SDL_Color color = {255, 0, 0, 255};
-    SageFont* sf = Sage_loadBitmapFont( "assets/NotoSans-Medium_0.png", "assets/NotoSans-Medium.fnt");
+    SageFont* sf = Sage_loadBitmapFont( "assets/NotoSans-Medium_0.png", "assets/NotoSans-Medium.fnt", DEBUG_FONT_SRC_SIZE, DEBUG_FONT_SIZE);
 
     Snippet* snippet = Snippet_create(sf, color, DEBUG_X, DEBUG_Y, Z_DEBUG, true);
     Sage_registerSnippet(snippet);

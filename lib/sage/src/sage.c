@@ -64,6 +64,6 @@ void Sprite_setZ(Sprite* s, Sint32 newZ) {
     VM_setSpriteZ(sage.vm, s, newZ);
 }
 
-SageFont* Sage_loadBitmapFont(char* imagePath, char* formatPath) {
-    return MM_loadBitmapFont(sage.mm, imagePath, formatPath);
+SageFont* Sage_loadBitmapFont(char* imagePath, char* formatPath, Uint32 srcSize, Uint32 dstSize) {
+    return MM_loadBitmapFont(sage.mm, imagePath, formatPath, srcSize, dstSize);
 }

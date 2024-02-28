@@ -117,7 +117,7 @@ SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint3
     return t;
 }
 
-SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath){
+SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath, Uint32 srcSize, Uint32 dstSize){
     size_t hash = stbds_hash_string(imagePath, 0xFEED);
     hash += stbds_hash_string(formatPath, 0xFEED);
     SageFont* font = hmget(mm->fonts, hash);
@@ -133,5 +133,7 @@ SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath)
     }
     font->texture = MM_loadTexture(mm, imagePath);
     font->scale = mm->pixelScale;
+    font->srcSize = srcSize;
+    font->dstSize = dstSize;
     return font;
 }

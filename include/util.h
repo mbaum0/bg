@@ -113,11 +113,14 @@
 #define CHECKER_VELOCITY X(20)
 #define DICE_VELOCITY X(5)
 
-#define SCORE_LEFT_X X(70)
-#define SCORE_RIGHT_X X(336)
-#define SCORE_Y X(46)
-#define SCORE_FONT_SIZE X(18)
+#define SCORE_LEFT_X X(65)
+#define SCORE_RIGHT_X X(331)
+#define SCORE_Y X(43)
 
+#define SCORE_FONT_SRC_SIZE (30)
+#define SCORE_FONT_SIZE X(15)
+
+#define DEBUG_FONT_SRC_SIZE (30)
 #define DEBUG_FONT_SIZE X(20)
 #define DEBUG_X X(2)
 #define DEBUG_Y BOARD_Y + BOARD_H

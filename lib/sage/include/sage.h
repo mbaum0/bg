@@ -56,9 +56,11 @@ float Sage_convertHighDPI(float value);
  * 
  * @param imagePath Path to the .png font bitmap
  * @param formatPath Path to the font format file
+ * @param srcSize pt size of the source font
+ * @param dstSize desired pt rendering size
  * @return Sage_Font* 
  */
-SageFont* Sage_loadBitmapFont(char* imagePath, char* formatPath);
+SageFont* Sage_loadBitmapFont(char* imagePath, char* formatPath, Uint32 srcSize, Uint32 dstSize);
 
 /**
  * @brief Register a sprite with the SAGE engine

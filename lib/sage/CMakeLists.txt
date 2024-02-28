@@ -18,6 +18,7 @@ add_library(${PROJECT_NAME} STATIC
     src/log.c
     src/sage.c
     src/input.c
+    src/bmfont.c
 )
 
 # Specify include directories for the library
