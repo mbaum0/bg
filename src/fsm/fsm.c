@@ -24,14 +24,17 @@ void fsm_init(void) {
 }
 
 Uint32 delay_enqueue_event(Uint32 interval, void* ctx){
+    (void)interval;
     FSMEvent* e = (FSMEvent*)ctx;
     fsm_enqueue_event(*e);
     SDL_free(e);
+    return 0;
 }
 
-void fsm_enqueue_event_delay(FSMEvent event, Uint32 delay){
-    FSMEvent* cpy = malloc(sizeof(FSMEvent));
-    SDL_AddTimer(delay, delay_enqueue_event, cpy);
+void fsm_enqueue_event_delay(Uint32 delay, FSMEvent e){
+    FSMEvent* newEvent = SDL_malloc(sizeof(FSMEvent));
+    *newEvent = e;
+    SDL_AddTimer(delay, delay_enqueue_event, newEvent);
 }
 
 void fsm_enqueue_event(FSMEvent event) {

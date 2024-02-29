@@ -16,6 +16,7 @@ typedef enum {
     AI_START_TURN_EVENT,
     AI_END_TURN_EVENT,
     AI_SWAP_DICE_EVENT,
+    AI_MOVE_EVENT,
     SHOW_NO_MOVES_ICON_EVENT,
 } FSMEventType;
 
@@ -52,7 +53,7 @@ typedef struct FiniteStateMachine {
 
 void fsm_init(void);
 void fsm_enqueue_event(FSMEvent event);
-void fsm_enqueue_event_delay(FSMEvent event, Uint32 delay);
+void fsm_enqueue_event_delay(Uint32 delay, FSMEvent e);
 bool fsm_dequeue_event(FSMEvent* event);
 void fsm_step(void);
 
