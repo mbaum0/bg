@@ -25,7 +25,7 @@ Uint32 timerGetFirstPlayer(Uint32 interval, void* ctx){
         firstPlayer = LIGHT;
     }
 
-    FSMEvent e = {GOT_FIRST_PLAYER_EVENT, firstPlayer, NULL};
+    FSMEvent e = {ROLLED_FOR_FIRST_EVENT, firstPlayer, NULL};
     fsm_enqueue_event(e);
     return 0;
 }
@@ -33,7 +33,7 @@ Uint32 timerGetFirstPlayer(Uint32 interval, void* ctx){
 Uint32 timerTransitionToPlayerState(Uint32 interval, void* ctx){
     (void)interval;
     (void)ctx;
-    FSMEvent e = {TRANSITION_TO_PLAYER_STATE_EVENT, 0, NULL};
+    FSMEvent e = {GOT_FIRST_PLAYER_EVENT, 0, NULL};
     fsm_enqueue_event(e);
     return 0;
 }
@@ -49,16 +49,25 @@ void roll_for_first_state(FiniteStateMachine* fsm){
             SDL_AddTimer(500, timerGetFirstPlayer, gb);
         }
 
-        if (event.etype == GOT_FIRST_PLAYER_EVENT){
+        if (event.etype == ROLLED_FOR_FIRST_EVENT){
             if (event.code == LIGHT){
                 gb->activePlayer = LIGHT;
+                gb->die1.side = 1;
+                gb->die2.side = 1;
+                SDL_AddTimer(400, timerTransitionToPlayerState, NULL);
             } else if (event.code == DARK){
                 gb->activePlayer = DARK;
+                gb->die1.side = 0;
+                gb->die2.side = 0;
+                SDL_AddTimer(400, timerTransitionToPlayerState, NULL);
             } else {
                 // do another roll
                 SDL_AddTimer(500, timerRollDice, gb);
                 continue;
             }
+        }
+
+        if (event.etype == GOT_FIRST_PLAYER_EVENT){
             fsm_transition(PLAYER_MOVE_STATE);
         }
     }
