@@ -23,24 +23,17 @@ struct GameBoardMove {
 Uint32 timerEndPlayerTurnIfNoMoves(Uint32 interval, void* ctx) {
     (void)interval;
     GameBoard* gb = (GameBoard*)ctx;
-    GameDie* die1 = FIRST_DIE(gb);
-    bool hasBothDiceLeft = (die1->uses == 0);
 
-    if (gb->activePlayer == gb->aiPlayer){
-        // this function may get called after a player has finished their turn and incidentially
-        // run while the ai has just begun their turn. This timer does not apply to the AI, as
-        // their code handles the zero-move scenario.
-        return 0;
-    }
+    // if (gb->activePlayer == gb->aiPlayer){
+    //     // this function may get called after a player has finished their turn and incidentially
+    //     // run while the ai has just begun their turn. This timer does not apply to the AI, as
+    //     // their code handles the zero-move scenario.
+    //     return 0;
+    // }
 
     if (!playerHasMoves(gb)) {
-        log_debug("Active player has no moves available");
-        if (hasBothDiceLeft) {
-            gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
-            fsm_transition(WAIT_FOR_ROLL_STATE);
-        } else {
-            fsm_transition(MOVE_CONFIRM_STATE);
-        }
+        FSMEvent e = {PLAYER_HAS_NO_MOVES_EVENT, 0, NULL};
+        fsm_enqueue_event(e);
     }
     return 0;
 }
@@ -108,7 +101,7 @@ Uint32 timerSetNoMovesVisible(Uint32 interval, void* ctx){
     return 0;
 }
 
-Uint32 timeDoAiSwapDice(Uint32 interval, void* ctx) {
+Uint32 timerDoAiSwapDice(Uint32 interval, void* ctx) {
     (void)interval;
     GameBoard* gb = (GameBoard*)ctx;
     swapDiceIfAllowed(gb);
@@ -136,6 +129,10 @@ void doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
         goto final;
     }
 
+    if (matchHasWinner(gb)){
+        fsm_transition(MATCH_OVER_STATE);
+        return;
+    }
     if (movesLeft == 0) {
         fsm_transition(MOVE_CONFIRM_STATE);
     } else {
@@ -181,6 +178,18 @@ void player_move_state(FiniteStateMachine* fsm) {
             loadCheckerState(gb);
             fsm_transition(PLAYER_MOVE_STATE);
         }
+
+        if (event.etype == PLAYER_HAS_NO_MOVES_EVENT){
+            log_debug("Active player has no moves available");
+            GameDie* die1 = FIRST_DIE(gb);
+            bool hasBothDiceLeft = (die1->uses == 0);
+            if (hasBothDiceLeft) {
+                gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
+                fsm_transition(WAIT_FOR_ROLL_STATE);
+            } else {
+                fsm_transition(MOVE_CONFIRM_STATE);
+            }
+        }
     }
 }
 
@@ -199,7 +208,7 @@ void player_move_init_state(FiniteStateMachine* fsm) {
 
         if (gms.numMoves > 0) {
             if (gms.swapDice) {
-                SDL_AddTimer(delay, timeDoAiSwapDice, gb);
+                SDL_AddTimer(delay, timerDoAiSwapDice, gb);
                 delay += 500;
             }
             for (i = 0; i < gms.numMoves; i++) {
@@ -208,6 +217,9 @@ void player_move_init_state(FiniteStateMachine* fsm) {
                 gbm->move = gms.moves[i];
                 SDL_AddTimer(delay, timerDoAiMove, gbm);
                 delay += 500;
+            }
+            if (matchHasWinner(gb)){
+                fsm_transition(MATCH_OVER_STATE);
             }
         } else {
             // end the ai turn after showing the noMoves symbol.

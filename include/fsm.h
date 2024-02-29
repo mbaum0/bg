@@ -12,6 +12,7 @@ typedef enum {
     PIP_CLICKED_EVENT,
     ROLLED_FOR_FIRST_EVENT,
     GOT_FIRST_PLAYER_EVENT,
+    PLAYER_HAS_NO_MOVES_EVENT,
 } FSMEventType;
 
 typedef struct {
@@ -26,7 +27,7 @@ typedef enum {
     WAIT_FOR_ROLL_STATE,
     PLAYER_MOVE_STATE,
     MOVE_CONFIRM_STATE,
-    GAME_OVER_STATE,
+    MATCH_OVER_STATE,
     NUM_STATES
 } State;
 
@@ -61,8 +62,8 @@ void player_move_state(FiniteStateMachine* fsm);
 void player_move_init_state(FiniteStateMachine* fsm);
 void move_confirm_state(FiniteStateMachine* fsm);
 void move_confirm_init_state(FiniteStateMachine* fsm);
-void game_over_state(FiniteStateMachine* fsm);
-void game_over_init_state(FiniteStateMachine* fsm);
+void match_over_state(FiniteStateMachine* fsm);
+void match_over_init_state(FiniteStateMachine* fsm);
 
 void save_state(FiniteStateMachine* fsm);
 void load_state(FiniteStateMachine* fsm);

@@ -15,14 +15,18 @@
 #define SETUP_MODE_NORMAL 1
 #define SETUP_MODE_ALL_HOME 2
 #define SETUP_MODE_AI_BARRED 3
+#define SETUP_1_MOVE_FROM_WINNING 4
 
-#define SETUP_MODE SETUP_MODE_NORMAL
+#define SETUP_MODE SETUP_1_MOVE_FROM_WINNING
 #if SETUP_MODE == SETUP_MODE_ALL_HOME
 Sint32 DARKSETUP[] = {19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24};
 Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
 #elif SETUP_MODE == SETUP_MODE_AI_BARRED
 Sint32 DARKSETUP[] = {DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR};
 Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
+#elif SETUP_MODE == SETUP_1_MOVE_FROM_WINNING
+Sint32 DARKSETUP[] = {DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR};
+Sint32 LIGHTSETUP[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 #else
 Sint32 DARKSETUP[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
 Sint32 LIGHTSETUP[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
@@ -47,6 +51,16 @@ bool isPipOpponentBlot(GameBoard* gb, Sint32 pipIndex) {
     if (numCheckers == 1) {
         Checker* c = getTopCheckerOnPip(gb, pipIndex);
         return (c->color == opponent);
+    }
+    return false;
+}
+
+bool matchHasWinner(GameBoard* gb){
+    Uint32 lightScore = getPlayerScore(gb, LIGHT);
+    Uint32 darkScore = getPlayerScore(gb, DARK);
+
+    if (lightScore == 0 || darkScore == 0){
+        return true;
     }
     return false;
 }
@@ -546,6 +560,7 @@ void gameboard_init(void) {
     FSM.gb.roll = (GameButton){ROLL_BTN, false, BTN_RIGHT};
     FSM.gb.dub = (GameButton){DUB_BTN, true, BTN_TOP};
     FSM.gb.nomoves = (GameButton){NM_BTN, false, BTN_RIGHT};
+    FSM.gb.dialog = (Dialog){false, false, 0, 0, 0};
     FSM.gb.activePlayer = LIGHT;
     FSM.gb.aiPlayer = DARK;
     initCheckerSetup();
@@ -572,4 +587,5 @@ void gameboard_init(void) {
     }
 
     createScore();
+    createDialogSprite(&FSM.gb.dialog);
 }

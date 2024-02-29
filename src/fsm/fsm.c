@@ -16,8 +16,8 @@ void fsm_init(void) {
     FSM.state_init_functions[PLAYER_MOVE_STATE] = player_move_init_state;
     FSM.state_functions[MOVE_CONFIRM_STATE] = move_confirm_state;
     FSM.state_init_functions[MOVE_CONFIRM_STATE] = move_confirm_init_state;
-    FSM.state_functions[GAME_OVER_STATE] = game_over_state;
-    FSM.state_init_functions[GAME_OVER_STATE] = game_over_init_state;
+    FSM.state_functions[MATCH_OVER_STATE] = match_over_state;
+    FSM.state_init_functions[MATCH_OVER_STATE] = match_over_init_state;
     FSM.current_state = INIT_STATE;
     FSM.eventQueue.front = 0;
     FSM.eventQueue.rear = 0;

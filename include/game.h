@@ -8,6 +8,7 @@
 #include "buttons.h"
 #include "dice.h"
 #include "pip.h"
+#include "dialog.h"
 #include <stdbool.h>
 
 #define FIRST_DIE(gb) ((gb->die1.index == 0) ? &gb->die1 : &gb->die2)
@@ -35,6 +36,7 @@ struct GameBoard {
     GameButton roll;
     GameButton dub;
     GameButton nomoves;
+    Dialog dialog;
     Color activePlayer;
     Color aiPlayer;
 };
@@ -193,6 +195,12 @@ bool playerHasMoves(GameBoard* gb);
  * to their home. Less is better
  */
 Sint32 getPlayerScore(GameBoard* gb, Color player);
+
+/**
+ * @brief Returns true if the match has a winner
+ * ie someone's score is zero
+ */
+bool matchHasWinner(GameBoard* gb);
 
 /**
  * @brief Creates a deep copy of the src GameBoard and places
