@@ -13,6 +13,10 @@ typedef enum {
     ROLLED_FOR_FIRST_EVENT,
     GOT_FIRST_PLAYER_EVENT,
     PLAYER_HAS_NO_MOVES_EVENT,
+    AI_START_TURN_EVENT,
+    AI_END_TURN_EVENT,
+    AI_SWAP_DICE_EVENT,
+    SHOW_NO_MOVES_ICON_EVENT,
 } FSMEventType;
 
 typedef struct {
@@ -48,8 +52,11 @@ typedef struct FiniteStateMachine {
 
 void fsm_init(void);
 void fsm_enqueue_event(FSMEvent event);
+void fsm_enqueue_event_delay(FSMEvent event, Uint32 delay);
 bool fsm_dequeue_event(FSMEvent* event);
 void fsm_step(void);
+
+// always return immediately after calling
 void fsm_transition(State next_state);
 
 void init_state(FiniteStateMachine* fsm);
