@@ -1,14 +1,14 @@
 /**
  * @file score.c
  * @author Michael Baumgarten (you@domain.com)
- * @brief 
+ * @brief
  */
 #include "score.h"
 #include "fsm.h"
-#include "snippet.h"
 #include "game.h"
-#include "util.h"
 #include "sage.h"
+#include "snippet.h"
+#include "util.h"
 
 extern FiniteStateMachine FSM;
 
@@ -32,12 +32,13 @@ void darkScoreUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     Snippet_setText(snippet, text);
 }
 
-void createScore(void){
+void createScore(void) {
     char darkScore[100];
     char lightScore[100];
     sprintf(darkScore, " ");
     sprintf(lightScore, " ");
-    SageFont* sf = Sage_loadBitmapFont( "assets/NotoSans-Medium_0.png", "assets/NotoSans-Medium.fnt", SCORE_FONT_SRC_SIZE, SCORE_FONT_SIZE);
+    SageFont* sf = Sage_loadBitmapFont("assets/NotoSans-Medium_0.png", "assets/NotoSans-Medium.fnt",
+                                       SCORE_FONT_SRC_SIZE, SCORE_FONT_SIZE);
 
     SDL_Color fontColor = {0, 0, 0, 255};
     Snippet* lightSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);

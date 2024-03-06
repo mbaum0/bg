@@ -1,11 +1,11 @@
 /**
  * @file dialog.h
  * @author Michael Baumgarten (you@domain.com)
- * @brief 
+ * @brief
  */
 #pragma once
-#include <stdbool.h>
 #include <SDL3/SDL.h>
+#include <stdbool.h>
 
 typedef struct Dialog Dialog;
 

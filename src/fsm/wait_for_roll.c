@@ -7,21 +7,6 @@
 #include "game.h"
 #include <stdio.h>
 
-Uint32 timerAiRoll(Uint32 interval, void* ctx) {
-    (void)interval;
-    (void)ctx;
-    FSMEvent e = {AI_ROLL_DICE_EVENT, 0, NULL};
-    fsm_enqueue_event(e);
-    return 0;
-}
-
-Uint32 timerShowRollBtn(Uint32 interval, void* ctx){
-    (void)interval;
-    GameBoard* gb = (GameBoard*)ctx;
-    gb->roll.visible = true;
-    return 0;
-}
-
 void wait_for_roll_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     FSMEvent event;
@@ -31,6 +16,7 @@ void wait_for_roll_state(FiniteStateMachine* fsm) {
             if (gb->activePlayer != gb->aiPlayer) {
                 rollDice(gb);
                 fsm_transition(PLAYER_MOVE_STATE);
+                break;
             }
         }
 
@@ -38,8 +24,18 @@ void wait_for_roll_state(FiniteStateMachine* fsm) {
             // ai shouldn't cheat ;)
             if (gb->activePlayer == gb->aiPlayer) {
                 rollDice(gb);
-                fsm_transition(PLAYER_MOVE_STATE);
+                FSMEvent e = {AI_END_ROLL_EVENT, 0, NULL};
+                fsm_enqueue_event_delay(500, e);
             }
+        }
+
+        if (event.etype == AI_END_ROLL_EVENT) {
+            fsm_transition(PLAYER_MOVE_STATE);
+            break;
+        }
+
+        if (event.etype == SHOW_ROLL_BTN_EVENT) {
+            gb->roll.visible = true;
         }
     }
 }
@@ -50,9 +46,11 @@ void wait_for_roll_init_state(FiniteStateMachine* fsm) {
 
     // auto-roll for the ai
     if (gb->activePlayer == gb->aiPlayer) {
-        SDL_AddTimer(500, timerAiRoll, gb);
+        FSMEvent e = {AI_ROLL_DICE_EVENT, 0, NULL};
+        fsm_enqueue_event_delay(500, e);
     } else {
         // only players need the roll btn. delay for aesthetics
-        SDL_AddTimer(300, timerShowRollBtn, gb);
+        FSMEvent e = {SHOW_ROLL_BTN_EVENT, 0, NULL};
+        fsm_enqueue_event_delay(300, e);
     }
 }

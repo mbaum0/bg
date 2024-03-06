@@ -1,11 +1,11 @@
 /**
  * @file dialog.c
  * @author Michael Baumgarten (you@domain.com)
- * @brief 
+ * @brief
  */
-#include "util.h"
 #include "dialog.h"
 #include "sage.h"
+#include "util.h"
 #include <SDL3/SDL.h>
 
 void updateDialog(ViewManager* vm, Sprite* sprite, void* object, void* context) {
@@ -16,7 +16,7 @@ void updateDialog(ViewManager* vm, Sprite* sprite, void* object, void* context) 
     Sprite_setVisible(sprite, d->visible);
 }
 
-void createDialogSprite(Dialog* d){
+void createDialogSprite(Dialog* d) {
     SDL_Texture* texture = Sage_loadTexture("assets/dialog2x.png");
     SDL_FRect src = {0, 0, DIALOG_SRC_W * 2, DIALOG_SRC_H * 2};
     SDL_FRect dst = {DIALOG_X, DIALOG_Y, DIALOG_W, DIALOG_H};

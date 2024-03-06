@@ -23,7 +23,7 @@ void fsm_init(void) {
     FSM.eventQueue.rear = 0;
 }
 
-Uint32 delay_enqueue_event(Uint32 interval, void* ctx){
+Uint32 delay_enqueue_event(Uint32 interval, void* ctx) {
     (void)interval;
     FSMEvent* e = (FSMEvent*)ctx;
     fsm_enqueue_event(*e);
@@ -31,7 +31,7 @@ Uint32 delay_enqueue_event(Uint32 interval, void* ctx){
     return 0;
 }
 
-void fsm_enqueue_event_delay(Uint32 delay, FSMEvent e){
+void fsm_enqueue_event_delay(Uint32 delay, FSMEvent e) {
     FSMEvent* newEvent = SDL_malloc(sizeof(FSMEvent));
     *newEvent = e;
     SDL_AddTimer(delay, delay_enqueue_event, newEvent);
@@ -62,14 +62,15 @@ void fsm_step(void) {
 void fsm_transition(State next_state) {
     // empty out the queue
     FSMEvent e;
-    while(fsm_dequeue_event(&e));
+    while (fsm_dequeue_event(&e))
+        ;
 
     FSM.state_init_functions[next_state](&FSM);
     FSM.current_state = next_state;
 }
 
-void save_state(FiniteStateMachine* fsm){
-    FILE *file = fopen("state.save", "wb"); // "wb" mode for writing in binary format
+void save_state(FiniteStateMachine* fsm) {
+    FILE* file = fopen("state.save", "wb"); // "wb" mode for writing in binary format
     if (file == NULL) {
         log_error("Error opening file");
         return;
@@ -80,8 +81,8 @@ void save_state(FiniteStateMachine* fsm){
     fclose(file);
 }
 
-void load_state(FiniteStateMachine* fsm){
-    FILE *file = fopen("state.save", "rb"); // "rb" mode for reading in binary format
+void load_state(FiniteStateMachine* fsm) {
+    FILE* file = fopen("state.save", "rb"); // "rb" mode for reading in binary format
     if (file == NULL) {
         log_error("Error opening file");
         return;

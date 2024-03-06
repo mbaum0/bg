@@ -53,12 +53,12 @@ float Sage_convertHighDPI(float value);
  * @brief Load a Bitmap font as a SageFont and returns it.
  * These are expected to be generated using fontbm from
  * github.com/vladimirgamalyan/fontbm
- * 
+ *
  * @param imagePath Path to the .png font bitmap
  * @param formatPath Path to the font format file
  * @param srcSize pt size of the source font
  * @param dstSize desired pt rendering size
- * @return Sage_Font* 
+ * @return Sage_Font*
  */
 SageFont* Sage_loadBitmapFont(char* imagePath, char* formatPath, Uint32 srcSize, Uint32 dstSize);
 

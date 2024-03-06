@@ -32,7 +32,7 @@ void Snippet_setText(Snippet* snippet, char* text) {
     snippet->text = SDL_realloc(snippet->text, snippet->textLen + 1);
     strcpy(snippet->text, text);
 
-    snippet->chars = SDL_realloc(snippet->chars,snippet->textLen * sizeof(SnippetChar));
+    snippet->chars = SDL_realloc(snippet->chars, snippet->textLen * sizeof(SnippetChar));
 
     SDL_FRect src, dst;
     BMFontChar bmchar;
@@ -41,7 +41,7 @@ void Snippet_setText(Snippet* snippet, char* text) {
     Uint32 fontSrcSize = snippet->font->srcSize;
     Uint32 fontDstSize = snippet->font->dstSize;
     Sint32 cOffset = 0;
-    for (Sint32 i = 0; i < snippet->textLen; i++){
+    for (Sint32 i = 0; i < snippet->textLen; i++) {
         c = text[i];
         bmchar = snippet->font->layout.chars.chars[c - 32];
         src.h = bmchar.height;

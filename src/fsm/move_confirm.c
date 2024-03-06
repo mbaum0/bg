@@ -17,10 +17,12 @@ void move_confirm_state(FiniteStateMachine* fsm) {
         if (event.etype == CONFIRMED_MOVE_EVENT) {
             doConfirmMove(gb);
             fsm_transition(WAIT_FOR_ROLL_STATE);
+            break;
         }
         if (event.etype == UNDO_MOVE_EVENT) {
             loadCheckerState(gb);
             fsm_transition(PLAYER_MOVE_STATE);
+            break;
         }
     }
 }

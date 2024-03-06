@@ -7,8 +7,6 @@
 #include "fsm.h"
 #include "game.h"
 
-#define MAX_SEQUENCES (15 * 15)
-
 /**
  * @brief Evaluate the score of the gameboard in terms
  * of the given player

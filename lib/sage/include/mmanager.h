@@ -5,8 +5,8 @@
  */
 
 #pragma once
-#include "log.h"
 #include "font.h"
+#include "log.h"
 #include <SDL3/SDL.h>
 #include <SDL3_image/SDL_image.h>
 #include <stdbool.h>
@@ -63,12 +63,12 @@ SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint3
  * @brief Load a Bitmap font as a SageFont and returns it.
  * These are expected to be generated using fontbm from
  * github.com/vladimirgamalyan/fontbm
- * 
+ *
  * @param mm MediaManager instance
  * @param imagePath Path to the .png font bitmap
  * @param formatPath Path to the font format file
  * @param srcSize pt size of the source font
  * @param dstSize desired pt rendering size
- * @return Sage_Font* 
+ * @return Sage_Font*
  */
 SageFont* MM_loadBitmapFont(MediaManager* mm, char* imagePath, char* formatPath, Uint32 srcSize, Uint32 dstSize);

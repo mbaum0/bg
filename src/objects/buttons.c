@@ -44,8 +44,8 @@ void clickDub(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint
     (void)sprite;
     (void)object;
     (void)code;
-    //FSMEvent e = {ROLL_DICE_EVENT, 0, NULL};
-    //fsm_enqueue_event(e);
+    // FSMEvent e = {ROLL_DICE_EVENT, 0, NULL};
+    // fsm_enqueue_event(e);
 }
 
 void updateConfirmBtn(ViewManager* vm, Sprite* sprite, void* object, void* context) {
@@ -104,14 +104,15 @@ void updateNomovesBtn(ViewManager* vm, Sprite* sprite, void* object, void* conte
     Sprite_setLocation(sprite, x, y);
 }
 
-void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll, GameButton* dub, GameButton* nomoves) {
+void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll, GameButton* dub,
+                         GameButton* nomoves) {
     // SDL_Texture* btnTexture = Sage_loadSVGTexture("assets/buttons.svg", BTN_W * 2, BTN_W);
     SDL_Texture* btnTexture = Sage_loadTexture("assets/buttons2x.png");
 
     Sint32 x = (confirm->location == BTN_LEFT) ? GAME_BTN_LEFT_X : GAME_BTN_RIGHT_X;
 
     // confirm btn
-    SDL_FRect src_rect = {GAME_BTN_SRC_OFFSET_CONF*2, 0, GAME_BTN_SRC_W * 2, GAME_BTN_SRC_W * 2};
+    SDL_FRect src_rect = {GAME_BTN_SRC_OFFSET_CONF * 2, 0, GAME_BTN_SRC_W * 2, GAME_BTN_SRC_W * 2};
     SDL_FRect dst_rect = {x, GAME_BTN_Y, GAME_BTN_W, GAME_BTN_W};
     Sprite* s = Sprite_createEx(btnTexture, src_rect, dst_rect, Z_BUTTONS);
     Sprite_setVisible(s, confirm->visible);

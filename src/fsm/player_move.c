@@ -172,11 +172,11 @@ void doAiTurn(GameBoard* gb) {
         }
         // do each move with a delay
         for (i = 0; i < gms.numMoves; i++) {
-            GameBoardMove* gbm = SDL_malloc(sizeof(GameBoardMove));
-            gbm->gb = gb;
-            gbm->move = gms.moves[i];
+            GameMove* gm = SDL_malloc(sizeof(GameMove));
+            // gbm->gb = gb;
+            *gm = gms.moves[i];
             // SDL_AddTimer(delay, timerDoAiMove, gbm);
-            FSMEvent e = {AI_MOVE_EVENT, 0, gbm};
+            FSMEvent e = {AI_MOVE_EVENT, 0, gm};
             fsm_enqueue_event_delay(delay, e);
             delay += 500;
         }
@@ -188,7 +188,7 @@ void doAiTurn(GameBoard* gb) {
     }
     // end ai turn
     FSMEvent e = {AI_END_TURN_EVENT, 0, NULL};
-    fsm_enqueue_event(e);
+    fsm_enqueue_event_delay(delay, e);
 }
 
 void player_move_state(FiniteStateMachine* fsm) {
@@ -206,6 +206,7 @@ void player_move_state(FiniteStateMachine* fsm) {
             gb->nomoves.visible = false; // hide this in case it was made visible
             gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
             fsm_transition(WAIT_FOR_ROLL_STATE);
+            break;
         }
 
         if (event.etype == AI_SWAP_DICE_EVENT) {
@@ -243,18 +244,20 @@ void player_move_state(FiniteStateMachine* fsm) {
         if (event.etype == UNDO_MOVE_EVENT) {
             loadCheckerState(gb);
             fsm_transition(PLAYER_MOVE_STATE);
-            continue;
+            break;
         }
 
-        if (event.etype == PLAYER_HAS_NO_MOVES_EVENT){
+        if (event.etype == PLAYER_HAS_NO_MOVES_EVENT) {
             log_debug("Active player has no moves available");
             GameDie* die1 = FIRST_DIE(gb);
             bool hasBothDiceLeft = (die1->uses == 0);
             if (hasBothDiceLeft) {
                 gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
                 fsm_transition(WAIT_FOR_ROLL_STATE);
+                break;
             } else {
                 fsm_transition(MOVE_CONFIRM_STATE);
+                break;
             }
         }
     }
@@ -269,6 +272,15 @@ void player_move_init_state(FiniteStateMachine* fsm) {
     if (gb->activePlayer == gb->aiPlayer) {
         FSMEvent e = {AI_START_TURN_EVENT, 0, NULL};
         fsm_enqueue_event(e);
+    }
+
+    if (gb->activePlayer != gb->aiPlayer) {
+        if (!playerHasMoves(gb)) {
+            FSMEvent e = {SHOW_NO_MOVES_ICON_EVENT, 0, NULL};
+            fsm_enqueue_event_delay(500, e);
+            e = (FSMEvent){PLAYER_HAS_NO_MOVES_EVENT, 0, NULL};
+            fsm_enqueue_event_delay(1000, e);
+        }
     }
     // if (gb->activePlayer == gb->aiPlayer) {
     //     // queue up moves

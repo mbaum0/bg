@@ -4,11 +4,11 @@
  * @brief
  */
 #pragma once
-#include "checker.h"
 #include "buttons.h"
+#include "checker.h"
+#include "dialog.h"
 #include "dice.h"
 #include "pip.h"
-#include "dialog.h"
 #include <stdbool.h>
 
 #define FIRST_DIE(gb) ((gb->die1.index == 0) ? &gb->die1 : &gb->die2)
@@ -21,25 +21,7 @@
         (gb)->pips[(pipIndex - 1)].color = (pcolor);                                                                   \
     }
 
-typedef struct GameBoard GameBoard;
-
-struct GameBoard {
-    Checker lightCheckers[15];
-    Checker darkCheckers[15];
-    Checker lightCheckersSave[15];
-    Checker darkCheckersSave[15];
-    Pip pips[24];
-    GameDie die1;
-    GameDie die2;
-    GameButton confirm;
-    GameButton undo;
-    GameButton roll;
-    GameButton dub;
-    GameButton nomoves;
-    Dialog dialog;
-    Color activePlayer;
-    Color aiPlayer;
-};
+#define MAX_AI_SEQUENCES (15 * 15)
 
 typedef struct GameMove GameMove;
 struct GameMove {
@@ -59,6 +41,27 @@ struct GameMoveSequence {
     Sint32 numMoves;
     Sint32 resultScore;
     bool swapDice;
+};
+
+typedef struct GameBoard GameBoard;
+
+struct GameBoard {
+    Checker lightCheckers[15];
+    Checker darkCheckers[15];
+    Checker lightCheckersSave[15];
+    Checker darkCheckersSave[15];
+    Pip pips[24];
+    GameDie die1;
+    GameDie die2;
+    GameButton confirm;
+    GameButton undo;
+    GameButton roll;
+    GameButton dub;
+    GameButton nomoves;
+    Dialog dialog;
+    Color activePlayer;
+    Color aiPlayer;
+    GameMoveSequence* aiMoves;
 };
 
 /**

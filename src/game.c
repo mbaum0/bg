@@ -8,8 +8,8 @@
 #include "dice.h"
 #include "fsm.h"
 #include "pip.h"
-#include "util.h"
 #include "score.h"
+#include "util.h"
 #include <stdlib.h>
 
 #define SETUP_MODE_NORMAL 1
@@ -22,10 +22,12 @@
 Sint32 DARKSETUP[] = {19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24};
 Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
 #elif SETUP_MODE == SETUP_MODE_AI_BARRED
-Sint32 DARKSETUP[] = {DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR};
+Sint32 DARKSETUP[] = {DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR,
+                      DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR};
 Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
 #elif SETUP_MODE == SETUP_1_MOVE_FROM_WINNING
-Sint32 DARKSETUP[] = {DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR};
+Sint32 DARKSETUP[] = {DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR,
+                      DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR, DARK_BAR};
 Sint32 LIGHTSETUP[] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
 #else
 Sint32 DARKSETUP[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
@@ -55,11 +57,11 @@ bool isPipOpponentBlot(GameBoard* gb, Sint32 pipIndex) {
     return false;
 }
 
-bool matchHasWinner(GameBoard* gb){
+bool matchHasWinner(GameBoard* gb) {
     Uint32 lightScore = getPlayerScore(gb, LIGHT);
     Uint32 darkScore = getPlayerScore(gb, DARK);
 
-    if (lightScore == 0 || darkScore == 0){
+    if (lightScore == 0 || darkScore == 0) {
         return true;
     }
     return false;
@@ -397,6 +399,7 @@ void initBoardForDiceRoll(GameBoard* gb) {
     gb->die2.animation = DICE_MOVE;
     gb->confirm.visible = false;
     gb->undo.visible = false;
+    gb->nomoves.visible = false;
 
     gb->roll.visible = false;
     // if (gb->activePlayer == gb->aiPlayer) {
@@ -563,6 +566,7 @@ void gameboard_init(void) {
     FSM.gb.dialog = (Dialog){false, false, 0, 0, 0};
     FSM.gb.activePlayer = LIGHT;
     FSM.gb.aiPlayer = DARK;
+    FSM.gb.aiMoves = SDL_calloc(MAX_AI_SEQUENCES, sizeof(GameMoveSequence));
     initCheckerSetup();
     createBoardSprites();
     createDiceSprites(&FSM.gb.die1, &FSM.gb.die2);

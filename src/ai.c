@@ -143,14 +143,13 @@ Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mov
 }
 
 void findBestMoveSequence(GameBoard* gb, Color player, GameMoveSequence* result) {
-    GameMoveSequence moveSequences[MAX_SEQUENCES] = {0};
 
-    Sint32 numOptions = generateMovesSequences(gb, player, moveSequences, MAX_SEQUENCES);
+    Sint32 numOptions = generateMovesSequences(gb, player, gb->aiMoves, MAX_AI_SEQUENCES);
 
     Sint32 bestScore = 999;
     GameMoveSequence best = {0};
     for (Sint32 i = 0; i < numOptions; i++) {
-        GameMoveSequence gms = moveSequences[i];
+        GameMoveSequence gms = gb->aiMoves[i];
         if (gms.resultScore < bestScore) {
             bestScore = gms.resultScore;
             best = gms;

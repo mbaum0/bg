@@ -1,7 +1,7 @@
 /**
  * @file score.h
  * @author Michael Baumgarten (you@domain.com)
- * @brief 
+ * @brief
  */
 #pragma once
 
