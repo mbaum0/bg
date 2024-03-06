@@ -44,8 +44,6 @@ void clickDub(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint
     (void)sprite;
     (void)object;
     (void)code;
-    // FSMEvent e = {ROLL_DICE_EVENT, 0, NULL};
-    // fsm_enqueue_event(e);
 }
 
 void updateConfirmBtn(ViewManager* vm, Sprite* sprite, void* object, void* context) {
@@ -106,7 +104,6 @@ void updateNomovesBtn(ViewManager* vm, Sprite* sprite, void* object, void* conte
 
 void createButtonSprites(GameButton* undo, GameButton* confirm, GameButton* roll, GameButton* dub,
                          GameButton* nomoves) {
-    // SDL_Texture* btnTexture = Sage_loadSVGTexture("assets/buttons.svg", BTN_W * 2, BTN_W);
     SDL_Texture* btnTexture = Sage_loadTexture("assets/buttons2x.png");
 
     Sint32 x = (confirm->location == BTN_LEFT) ? GAME_BTN_LEFT_X : GAME_BTN_RIGHT_X;

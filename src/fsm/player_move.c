@@ -20,24 +20,6 @@ struct GameBoardMove {
     GameMove move;
 };
 
-// Uint32 timerEndPlayerTurnIfNoMoves(Uint32 interval, void* ctx) {
-//     (void)interval;
-//     GameBoard* gb = (GameBoard*)ctx;
-
-//     // if (gb->activePlayer == gb->aiPlayer){
-//     //     // this function may get called after a player has finished their turn and incidentially
-//     //     // run while the ai has just begun their turn. This timer does not apply to the AI, as
-//     //     // their code handles the zero-move scenario.
-//     //     return 0;
-//     // }
-
-//     if (!playerHasMoves(gb)) {
-//         FSMEvent e = {PLAYER_HAS_NO_MOVES_EVENT, 0, NULL};
-//         fsm_enqueue_event(e);
-//     }
-//     return 0;
-// }
-
 Uint32 timerPipClickFade(Uint32 interval, void* ctx) {
     Pip* pip = (Pip*)ctx;
     if (pip->alpha == 0) {
@@ -76,38 +58,6 @@ void doAiMove(GameBoard* gb, GameMove gm) {
         log_error("AI picked an invalid move.");
     }
 }
-
-// Uint32 timerDoAiMove(Uint32 interval, void* ctx) {
-//     (void)interval;
-//     GameBoardMove* gbm = (GameBoardMove*)ctx;
-//     doAiMove(gbm->gb, gbm->move);
-//     SDL_free(gbm);
-//     return 0;
-// }
-
-// Uint32 timerEndAiTurn(Uint32 interval, void* ctx) {
-//     (void)interval;
-//     (void)ctx;
-//     FSMEvent e = {AI_END_TURN_EVENT, 0, NULL};
-//     fsm_enqueue_event(e);
-//     return 0;
-// }
-
-// Uint32 timerSetNoMovesVisible(Uint32 interval, void* ctx){
-//     (void)interval;
-//     (void)ctx;
-//     FSMEvent e = {SHOW_NO_MOVES_ICON_EVENT, 0, NULL};
-//     fsm_enqueue_event(e);
-//     return 0;
-// }
-
-// Uint32 timerDoAiSwapDice(Uint32 interval, void* ctx) {
-//     (void)interval;
-//     (void)ctx;
-//     FSMEvent e = {AI_SWAP_DICE_EVENT, 0, NULL};
-//     fsm_enqueue_event(e);
-//     return 0;
-// }
 
 void doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
     Sint32 movesLeft = 0;
@@ -282,34 +232,4 @@ void player_move_init_state(FiniteStateMachine* fsm) {
             fsm_enqueue_event_delay(1000, e);
         }
     }
-    // if (gb->activePlayer == gb->aiPlayer) {
-    //     // queue up moves
-    //     GameMoveSequence gms;
-    //     findBestMoveSequence(gb, gb->aiPlayer, &gms);
-    //     Sint32 i = 0;
-    //     Sint32 delay = 500;
-
-    //     if (gms.numMoves > 0) {
-    //         if (gms.swapDice) {
-    //             SDL_AddTimer(delay, timerDoAiSwapDice, gb);
-    //             delay += 500;
-    //         }
-    //         for (i = 0; i < gms.numMoves; i++) {
-    //             GameBoardMove* gbm = SDL_malloc(sizeof(GameBoardMove));
-    //             gbm->gb = gb;
-    //             gbm->move = gms.moves[i];
-    //             SDL_AddTimer(delay, timerDoAiMove, gbm);
-    //             delay += 500;
-    //         }
-    //     } else {
-    //         // end the ai turn after showing the noMoves symbol.
-    //         SDL_AddTimer(delay, timerSetNoMovesVisible, gb);
-    //         delay += 1000;
-    //     }
-    //     // end ai turn
-    //     SDL_AddTimer(delay, timerEndAiMove, gb);
-    // } else {
-    //     // timeout the player if no moves.
-    //     SDL_AddTimer(500, timerEndPlayerTurnIfNoMoves, gb);
-    // }
 }
