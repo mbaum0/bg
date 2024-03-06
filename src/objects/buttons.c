@@ -34,7 +34,7 @@ void clickRoll(ViewManager* vm, Sprite* sprite, void* object, void* context, Sin
     (void)sprite;
     (void)object;
     (void)code;
-    FSMEvent e = {ROLL_DICE_EVENT, 0, NULL};
+    FSMEvent e = {ROLL_BUTTON_CLICKED_EVENT, 0, NULL};
     fsm_enqueue_event(e);
 }
 

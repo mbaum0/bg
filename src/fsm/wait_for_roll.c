@@ -7,35 +7,61 @@
 #include "game.h"
 #include <stdio.h>
 
+bool handleEnteredWaitForRollEvent(GameBoard* gb) {
+    if (gb->activePlayer == gb->aiPlayer) {
+        // auto roll for the ai
+        rollDice(gb);
+        FSMEvent e = {DICE_ROLLED_EVENT, 0, NULL};
+        fsm_enqueue_event_delay(500, e);
+    } else {
+        gb->roll.visible = true;
+    }
+    return false;
+}
+
+bool handleDiceRolledEvent(GameBoard* gb) {
+    (void)gb;
+    gb->roll.visible = false;
+    FSMEvent e = {FINISH_WAIT_FOR_ROLL_EVENT, 0, NULL};
+    fsm_enqueue_event_delay(500, e);
+    return false;
+}
+
+bool handleRollButtonClickedEvent(GameBoard* gb) {
+    // player can't roll for ai
+    if (gb->activePlayer != gb->aiPlayer) {
+        rollDice(gb);
+        FSMEvent e = {DICE_ROLLED_EVENT, 0, NULL};
+        fsm_enqueue_event_delay(500, e);
+    }
+    return false;
+}
+
+bool handleFinishWaitForRollEvent(GameBoard* gb) {
+    (void)gb;
+    fsm_transition(PLAYER_MOVE_STATE);
+    return true;
+}
+
 void wait_for_roll_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     FSMEvent event;
-    while (fsm_dequeue_event(&event)) {
-        if (event.etype == ROLL_DICE_EVENT) {
-            // player can't roll for the ai
-            if (gb->activePlayer != gb->aiPlayer) {
-                rollDice(gb);
-                fsm_transition(PLAYER_MOVE_STATE);
-                break;
-            }
-        }
-
-        if (event.etype == AI_ROLL_DICE_EVENT) {
-            // ai shouldn't cheat ;)
-            if (gb->activePlayer == gb->aiPlayer) {
-                rollDice(gb);
-                FSMEvent e = {AI_END_ROLL_EVENT, 0, NULL};
-                fsm_enqueue_event_delay(500, e);
-            }
-        }
-
-        if (event.etype == AI_END_ROLL_EVENT) {
-            fsm_transition(PLAYER_MOVE_STATE);
+    bool quit = false;
+    while (fsm_dequeue_event(&event) && !quit) {
+        switch (event.etype) {
+        case ENTERED_WAIT_FOR_ROLL_STATE_EVENT:
+            quit = handleEnteredWaitForRollEvent(gb);
             break;
-        }
-
-        if (event.etype == SHOW_ROLL_BTN_EVENT) {
-            gb->roll.visible = true;
+        case ROLL_BUTTON_CLICKED_EVENT:
+            quit = handleRollButtonClickedEvent(gb);
+            break;
+        case DICE_ROLLED_EVENT:
+            quit = handleDiceRolledEvent(gb);
+            break;
+        case FINISH_WAIT_FOR_ROLL_EVENT:
+            quit = handleFinishWaitForRollEvent(gb);
+        default:
+            break;
         }
     }
 }
@@ -44,13 +70,6 @@ void wait_for_roll_init_state(FiniteStateMachine* fsm) {
     log_debug("Entered state: WAIT_FOR_ROLL");
     initBoardForDiceRoll(gb);
 
-    // auto-roll for the ai
-    if (gb->activePlayer == gb->aiPlayer) {
-        FSMEvent e = {AI_ROLL_DICE_EVENT, 0, NULL};
-        fsm_enqueue_event_delay(500, e);
-    } else {
-        // only players need the roll btn. delay for aesthetics
-        FSMEvent e = {SHOW_ROLL_BTN_EVENT, 0, NULL};
-        fsm_enqueue_event_delay(300, e);
-    }
+    FSMEvent e = {ENTERED_WAIT_FOR_ROLL_STATE_EVENT, 0, NULL};
+    fsm_enqueue_event_delay(300, e);
 }

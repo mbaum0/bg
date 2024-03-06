@@ -52,7 +52,7 @@ bool handleGotFirstPlayerEvent(GameBoard* gb) {
         gb->die1.side = 0;
         gb->die2.side = 0;
     }
-    FSMEvent e = {FINISH_ROLL_FOR_FIRST_EVENT, 0, NULL};
+    FSMEvent e = {FINISHED_ROLL_FOR_FIRST_EVENT, 0, NULL};
     fsm_enqueue_event_delay(500, e);
     return false;
 }
@@ -83,7 +83,7 @@ void roll_for_first_state(FiniteStateMachine* fsm) {
         case GOT_FIRST_PLAYER_EVENT:
             quit = handleGotFirstPlayerEvent(gb);
             break;
-        case FINISH_ROLL_FOR_FIRST_EVENT:
+        case FINISHED_ROLL_FOR_FIRST_EVENT:
             quit = handleFinishRollForFirstEvent(gb);
             break;
         default:
