@@ -14,7 +14,7 @@ void clickUndo(ViewManager* vm, Sprite* sprite, void* object, void* context, Sin
     (void)sprite;
     (void)object;
     (void)code;
-    FSMEvent e = {UNDO_MOVE_EVENT, 0, NULL};
+    FSMEvent e = {UNDO_BUTTON_CLICKED_EVENT, 0, NULL};
     fsm_enqueue_event(e);
 }
 
@@ -24,7 +24,7 @@ void clickConfirm(ViewManager* vm, Sprite* sprite, void* object, void* context, 
     (void)sprite;
     (void)object;
     (void)code;
-    FSMEvent e = {CONFIRMED_MOVE_EVENT, 0, NULL};
+    FSMEvent e = {CONFIRM_BUTTON_CLICKED_EVENT, 0, NULL};
     fsm_enqueue_event(e);
 }
 

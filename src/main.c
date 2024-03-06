@@ -18,7 +18,7 @@ int SDL_AppInit(int argc, char** argv) {
     srand(7);
     fsm_init();
     gameboard_init();
-    DStats_create();
+    // DStats_create();
     return 0;
 }
 

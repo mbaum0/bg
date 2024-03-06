@@ -28,6 +28,7 @@ typedef enum {
     UNDO_BUTTON_CLICKED_EVENT,
     PIP_CLICKED_EVENT,
     DICE_CLICKED_EVENT,
+    CONFIRM_BUTTON_CLICKED_EVENT,
 
     /** Events for roll_for_first state */
     ENTERED_ROLL_FOR_FIRST_STATE_EVENT,
@@ -40,6 +41,13 @@ typedef enum {
     ENTERED_WAIT_FOR_ROLL_STATE_EVENT,
     DICE_ROLLED_EVENT,
     FINISH_WAIT_FOR_ROLL_EVENT,
+
+    /** Events for player_move state */
+    ENTERED_PLAYER_MOVE_STATE_EVENT,
+    AI_MOVE_EVENT,
+    AI_SWAP_DICE_EVENT,
+    FINISHED_PLAYER_MOVE_EVENT,
+
 } FSMEventType;
 
 typedef struct {

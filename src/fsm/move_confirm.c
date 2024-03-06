@@ -14,12 +14,12 @@ void move_confirm_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     FSMEvent event;
     while (fsm_dequeue_event(&event)) {
-        if (event.etype == CONFIRMED_MOVE_EVENT) {
+        if (event.etype == CONFIRM_BUTTON_CLICKED_EVENT) {
             doConfirmMove(gb);
             fsm_transition(WAIT_FOR_ROLL_STATE);
             break;
         }
-        if (event.etype == UNDO_MOVE_EVENT) {
+        if (event.etype == UNDO_BUTTON_CLICKED_EVENT) {
             loadCheckerState(gb);
             fsm_transition(PLAYER_MOVE_STATE);
             break;

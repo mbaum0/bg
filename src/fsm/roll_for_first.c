@@ -68,7 +68,7 @@ void roll_for_first_state(FiniteStateMachine* fsm) {
     (void)gb;
     FSMEvent event;
     bool quit = false;
-    while (fsm_dequeue_event(&event) && !quit) {
+    while (!quit && fsm_dequeue_event(&event)) {
 
         switch (event.etype) {
         case ENTERED_ROLL_FOR_FIRST_STATE_EVENT:

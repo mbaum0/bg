@@ -32,7 +32,7 @@ bool handleRollButtonClickedEvent(GameBoard* gb) {
     if (gb->activePlayer != gb->aiPlayer) {
         rollDice(gb);
         FSMEvent e = {DICE_ROLLED_EVENT, 0, NULL};
-        fsm_enqueue_event_delay(500, e);
+        fsm_enqueue_event(e);
     }
     return false;
 }
@@ -47,7 +47,7 @@ void wait_for_roll_state(FiniteStateMachine* fsm) {
     GameBoard* gb = &fsm->gb;
     FSMEvent event;
     bool quit = false;
-    while (fsm_dequeue_event(&event) && !quit) {
+    while (!quit && fsm_dequeue_event(&event)) {
         switch (event.etype) {
         case ENTERED_WAIT_FOR_ROLL_STATE_EVENT:
             quit = handleEnteredWaitForRollEvent(gb);
