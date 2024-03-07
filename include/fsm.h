@@ -49,8 +49,9 @@ typedef enum {
     /** Events for the wait_for_roll state */                                                                          \
     EVENT(DICE_ROLLED_EVENT)                                                                                           \
     EVENT(AI_DELAYED_DICE_ROLL_EVENT)                                                                                  \
-    EVENT(FINISH_WAIT_FOR_ROLL_EVENT)                                                                                  \
-    /** Events for player_move state */                                                                                \
+    EVENT(CHECK_FOR_DICE_DONE_MOVING_EVENT)                                                                            \
+    EVENT(DICE_DONE_MOVING_EVENT)                                                                                      \
+    EVENT(FINISH_WAIT_FOR_ROLL_EVENT) /** Events for player_move state */                                              \
     EVENT(AI_MOVE_EVENT)                                                                                               \
     EVENT(AI_SWAP_DICE_EVENT)                                                                                          \
     EVENT(FINISHED_PLAYER_MOVE_EVENT)

@@ -210,3 +210,8 @@ bool matchHasWinner(GameBoard* gb);
  * it into dst.
  */
 void deepCopy(GameBoard* dst, GameBoard* src);
+
+/**
+ * @brief Returns true if either die has been used;
+ */
+bool haveDiceBeenUsed(GameBoard* gb);

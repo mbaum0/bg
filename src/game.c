@@ -250,8 +250,12 @@ void rollDice(GameBoard* gb) {
     gb->die2.value = generateRandomNumber(1, 6);
 }
 
+bool haveDiceBeenUsed(GameBoard* gb) {
+    return (gb->die1.uses != 0 || gb->die2.uses != 0);
+}
+
 void swapDiceIfAllowed(GameBoard* gb) {
-    if (gb->die1.uses == 0 && gb->die2.uses == 0) {
+    if (!haveDiceBeenUsed(gb) && playerHasMoves(gb)) {
         Sint32 index1 = gb->die1.index;
         gb->die1.index = gb->die2.index;
         gb->die2.index = index1;
@@ -473,8 +477,8 @@ void initCheckerSetup(void) {
 }
 
 void gameboard_init(void) {
-    FSM.gb.die1 = (GameDie){1, 0, 0, 0, DICE_NONE};
-    FSM.gb.die2 = (GameDie){2, 1, 0, 0, DICE_NONE};
+    FSM.gb.die1 = (GameDie){1, 0, 0, 0, DICE_NONE, false};
+    FSM.gb.die2 = (GameDie){2, 1, 0, 0, DICE_NONE, false};
     FSM.gb.confirm = (GameButton){CONFIRM_BTN, false, BTN_RIGHT};
     FSM.gb.undo = (GameButton){UNDO_BTN, false, BTN_CENTER};
     FSM.gb.roll = (GameButton){ROLL_BTN, false, BTN_RIGHT};

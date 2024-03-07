@@ -53,11 +53,15 @@ void updateDice(ViewManager* vm, Sprite* sprite, void* object, void* context) {
             Sprite_setLocation(sprite, nextX, nextY);
 
         } else if (die->animation == DICE_MOVE) {
+            die->moving = true;
             float xVel = getHorizontalVelocity(CHECKER_VELOCITY, dst.x, dst.y, newX, newY);
             float yVel = getVerticalVelocity(CHECKER_VELOCITY, dst.x, dst.y, newX, newY);
             Sprite_setLocation(sprite, dst.x + xVel, dst.y + yVel);
         }
     } else {
+        if (die->moving) {
+            die->moving = false;
+        }
         Sprite_setLocation(sprite, newX, newY);
     }
 }

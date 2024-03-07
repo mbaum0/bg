@@ -166,7 +166,7 @@ bool handleFinishedPlayerMoveEvent(GameBoard* gb) {
     if (gb->activePlayer == gb->aiPlayer) {
         gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
         fsm_transition(WAIT_FOR_ROLL_STATE);
-    } else if (!playerHasMoves(gb)) {
+    } else if (!playerHasMoves(gb) && !haveDiceBeenUsed(gb)) {
         gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
         fsm_transition(WAIT_FOR_ROLL_STATE);
     } else {
