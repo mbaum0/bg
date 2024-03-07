@@ -18,7 +18,7 @@
 #define SETUP_MODE_ALL_AI_HOME 4
 #define SETUP_1_MOVE_FROM_WINNING 5
 
-#define SETUP_MODE SETUP_MODE_NORMAL
+#define SETUP_MODE SETUP_1_MOVE_FROM_WINNING
 #if SETUP_MODE == SETUP_MODE_ALL_HOME
 Sint32 DARKSETUP[] = {19, 19, 19, 20, 20, 20, 21, 21, 21, 22, 22, 23, 23, 24, 24};
 Sint32 LIGHTSETUP[] = {1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 5, 5, 6, 6};
@@ -484,7 +484,7 @@ void gameboard_init(void) {
     FSM.gb.roll = (GameButton){ROLL_BTN, false, BTN_RIGHT};
     FSM.gb.dub = (GameButton){DUB_BTN, true, BTN_TOP};
     FSM.gb.nomoves = (GameButton){NM_BTN, false, BTN_RIGHT};
-    FSM.gb.dialog = (Dialog){false, false, 0, 0, 0};
+    FSM.gb.dialog = (Dialog){false, 0, false, 0, 0, 0};
     FSM.gb.activePlayer = LIGHT;
     FSM.gb.aiPlayer = DARK;
     FSM.gb.aiMoves = SDL_calloc(MAX_AI_SEQUENCES, sizeof(GameMoveSequence));

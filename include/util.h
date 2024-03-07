@@ -21,8 +21,9 @@
 #define Z_DICE 700
 #define Z_BUTTONS 800
 #define Z_MOVING_CHECKERS 900
-#define Z_DIALOG 1000
-#define Z_DEBUG 1100
+#define Z_DIALOG_OVERLAY 1000
+#define Z_DIALOG 1100
+#define Z_DEBUG 1200
 
 #define X(x) (Sage_convertHighDPI(x))
 
@@ -110,12 +111,20 @@
 
 #define GAME_BTN_SRC_OFFSET GAME_BTN_SRC_W
 
+#define OVERLAY_SHADE_SRC_W X(430)
+#define OVERLAY_SHADE_SRC_H X(932)
+#define OVERLAY_SHADE_W OVERLAY_SHADE_SRC_W
+#define OVERLAY_SHADE_H OVERLAY_SHADE_SRC_H
+#define OVERLAY_SHADE_X X(0)
+#define OVERLAY_SHADE_Y X(0)
+
 #define DIALOG_SRC_W X(420)
 #define DIALOG_SRC_H X(250)
 #define DIALOG_W DIALOG_SRC_W
 #define DIALOG_H DIALOG_SRC_H
-#define DIALOG_X X(426)
-#define DIALOG_Y X(568)
+#define DIALOG_X X(6)
+#define DIALOG_Y X(318)
+#define DIALOG_START_Y OVERLAY_SHADE_H
 
 #define CHECKER_VELOCITY X(20)
 #define DICE_VELOCITY X(5)

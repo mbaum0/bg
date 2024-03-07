@@ -11,6 +11,7 @@ typedef struct Dialog Dialog;
 
 struct Dialog {
     bool visible;
+    Uint32 alpha;
     bool playerWon;
     Uint32 maxGames;
     Uint32 matchesWon;

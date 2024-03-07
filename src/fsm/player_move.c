@@ -163,12 +163,23 @@ bool handleAiSwapDiceEvent(GameBoard* gb) {
 
 bool handleFinishedPlayerMoveEvent(GameBoard* gb) {
     gb->nomoves.visible = false;
+
+    if (matchHasWinner(gb)) {
+        fsm_transition(MATCH_OVER_STATE);
+        return true;
+    }
+
+    // ai will always go to next turn
     if (gb->activePlayer == gb->aiPlayer) {
         gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
         fsm_transition(WAIT_FOR_ROLL_STATE);
+
+        // if player had no moves after dice roll, go right into next player's turn
     } else if (!playerHasMoves(gb) && !haveDiceBeenUsed(gb)) {
         gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
         fsm_transition(WAIT_FOR_ROLL_STATE);
+
+        // let player confirm their move
     } else {
         fsm_transition(MOVE_CONFIRM_STATE);
     }
