@@ -52,10 +52,16 @@ struct Snippet {
  * @return Snippet*
  */
 Snippet* Snippet_create(SageFont* font, SDL_Color color, Sint32 x, Sint32 y, Sint32 z, bool visible);
+
 /**
  * @brief Set the location of the Snippet. Only used in SnippetUpdate_fn callbacks
  */
 void Snippet_setLocation(Snippet* snippet, Sint32 x, Sint32 y);
+
+/**
+ * @brief Set the visiblity of the Snippet. Only used in SnippetUpdate_fn callbacks
+ */
+void Snippet_setVisible(Snippet* snippet, bool visible);
 
 /**
  * @brief Set the text of the Snippet. Only used in SnippetUpdate_fn callbacks

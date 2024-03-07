@@ -27,12 +27,12 @@
      showborder="false"
      shape-rendering="auto"
      borderlayer="true"
-     inkscape:zoom="1"
-     inkscape:cx="400.49999"
-     inkscape:cy="387.49999"
+     inkscape:zoom="1.4142136"
+     inkscape:cx="62.57895"
+     inkscape:cy="409.76838"
      inkscape:window-width="2560"
      inkscape:window-height="1302"
-     inkscape:window-x="2560"
+     inkscape:window-x="0"
      inkscape:window-y="25"
      inkscape:window-maximized="0"
      inkscape:current-layer="layer2" /><defs
@@ -4694,7 +4694,7 @@
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:17.6851px;font-family:Geneva;-inkscape-font-specification:Geneva;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:1px;word-spacing:0px;white-space:pre;shape-inside:url(#rect1374);display:inline;opacity:0.778261;fill:#60371a;fill-opacity:0.448328;fill-rule:evenodd;stroke-width:0.2;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.2"><tspan
          x="167.34961"
          y="179.3277"
-         id="tspan2">1/2</tspan></text></g><g
+         id="tspan1">1/2</tspan></text></g><g
      id="g5"
      inkscape:label="trim"
      style="display:inline"
@@ -5821,7 +5821,7 @@
            transform="translate(58.360001,26.015299)"><tspan
              x="-353.5"
              y="555.21613"
-             id="tspan3">2</tspan></text></g><g
+             id="tspan2">2</tspan></text></g><g
          id="g8-2"
          inkscape:label="c4"
          transform="matrix(0.41353383,0,0,0.41353383,-146.57134,335.78956)"
@@ -5840,7 +5840,7 @@
            transform="translate(58.647219,25.837224)"><tspan
              x="-353.5"
              y="555.21613"
-             id="tspan4">4</tspan></text></g><g
+             id="tspan3">4</tspan></text></g><g
          id="g10"
          inkscape:label="c8"
          transform="matrix(0.41353383,0,0,0.41353383,-124.57134,335.78956)"
@@ -5859,7 +5859,7 @@
            transform="translate(58.520843,25.837224)"><tspan
              x="-353.5"
              y="555.21613"
-             id="tspan5">8</tspan></text></g><g
+             id="tspan4">8</tspan></text></g><g
          id="g12"
          inkscape:label="c16"
          transform="matrix(0.41353383,0,0,0.41353383,-102.57134,335.78956)"
@@ -5878,7 +5878,7 @@
            transform="translate(49.582377,25.819991)"><tspan
              x="-353.5"
              y="555.21613"
-             id="tspan6">16</tspan></text></g><g
+             id="tspan5">16</tspan></text></g><g
          id="g15"
          inkscape:label="c32"
          transform="matrix(0.41353383,0,0,0.41353383,-80.571339,335.78956)"
@@ -5897,7 +5897,7 @@
            transform="translate(50.996591,25.819991)"><tspan
              x="-353.5"
              y="555.21613"
-             id="tspan7">32</tspan></text></g><g
+             id="tspan6">32</tspan></text></g><g
          id="g17"
          inkscape:label="c64"
          transform="matrix(0.41353383,0,0,0.41353383,-58.571339,335.78956)"
@@ -5919,7 +5919,7 @@
            transform="translate(50.3234,25.837224)"><tspan
              x="-353.5"
              y="555.21613"
-             id="tspan8">64</tspan></text></g><g
+             id="tspan7">64</tspan></text></g><g
          id="g373"
          inkscape:label="c2"
          style="display:none;filter:url(#filter1501)"
@@ -5939,7 +5939,7 @@
            transform="matrix(0.71703309,0,0,0.71703309,299.41206,-131.04715)"><tspan
              x="-353.5"
              y="555.21613"
-             id="tspan9">2</tspan></text></g><g
+             id="tspan8">2</tspan></text></g><g
          id="g1501"
          inkscape:label="c2"
          style="display:none;filter:url(#filter1501)"
@@ -5959,7 +5959,7 @@
            transform="matrix(0.71703309,0,0,0.71703309,619.63849,-131.4495)"><tspan
              x="-353.5"
              y="555.21613"
-             id="tspan10">2</tspan></text></g></g><g
+             id="tspan9">2</tspan></text></g></g><g
        id="g105"
        inkscape:label="dice_positions"><g
          id="g1504"
@@ -6728,7 +6728,7 @@
      sodipodi:insensitive="true"><tspan
        x="-9.1933594"
        y="93.553247"
-       id="tspan11">110</tspan></text><text
+       id="tspan10">110</tspan></text><text
      xml:space="preserve"
      transform="matrix(0.80730581,0,0,0.80730581,74.082366,9.8256943)"
      id="text368-6"
@@ -6736,7 +6736,7 @@
      sodipodi:insensitive="true"><tspan
        x="-9.1933594"
        y="93.553247"
-       id="tspan12">1/5</tspan></text><text
+       id="tspan11">1/5</tspan></text><text
      xml:space="preserve"
      transform="matrix(0.95860263,0,0,0.95860263,337.18349,-26.12893)"
      id="text1376"
@@ -6744,7 +6744,7 @@
      sodipodi:insensitive="true"><tspan
        x="-9.1933594"
        y="93.553247"
-       id="tspan13">192</tspan></text><text
+       id="tspan12">192</tspan></text><text
      xml:space="preserve"
      transform="matrix(0.80730581,0,0,0.80730581,340.45024,9.8256943)"
      id="text1377"
@@ -6752,7 +6752,7 @@
      sodipodi:insensitive="true"><tspan
        x="-9.1933594"
        y="93.553247"
-       id="tspan14">3/5</tspan></text><g
+       id="tspan13">3/5</tspan></text><g
      id="g1378"
      inkscape:label="score"
      transform="matrix(0.84441942,0,0,0.84441942,103.14194,-131.7586)"><path
@@ -6810,30 +6810,33 @@
        transform="matrix(3.3649929,0,0,3.3649929,-259.1496,-895.70427)"><tspan
          x="115.0918"
          y="382.3504"
-         id="tspan16"><tspan
+         id="tspan26"><tspan
            style="font-family:Courier;-inkscape-font-specification:Courier;fill:#ffffff"
-           id="tspan15">You Lost</tspan></tspan></text><text
+           id="tspan14">You Lost</tspan></tspan></text><text
        xml:space="preserve"
        id="text74"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:9.33333px;font-family:Courier;-inkscape-font-specification:'Courier, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;text-align:justify;letter-spacing:1px;word-spacing:0px;white-space:pre;shape-inside:url(#rect75);opacity:0.897436;fill:#ffffff;fill-opacity:0.96745;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.2;stroke-dasharray:none;stroke-opacity:1"
        transform="matrix(1.9606951,0,0,1.9606951,-4.7243718,-393.01639)"><tspan
          x="62.626953"
          y="417.05664"
-         id="tspan17">   Game to 5
+         id="tspan27">   Game to 5
 </tspan><tspan
          x="62.626953"
          y="428.72329"
-         id="tspan18">Matches Won:   1
+         id="tspan28">Matches Won:   1
 </tspan><tspan
          x="62.626953"
          y="440.38995"
-         id="tspan19">Matches Lost:  2
+         id="tspan29">Matches Lost:  2
 </tspan></text><g
        id="g75"
-       inkscape:label="btns"><g
+       inkscape:label="btns"
+       inkscape:export-filename="../assets/dialogbtns2x.png"
+       inkscape:export-xdpi="192"
+       inkscape:export-ydpi="192"><g
          id="g83"
          inkscape:label="newgame"
-         transform="translate(-46.202157,3.0549833)"><rect
+         transform="translate(-46.600067,2.3890686)"><rect
            style="opacity:0.897436;fill:#ffffff;fill-opacity:0.96745;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.2;stroke-dasharray:none;stroke-opacity:1"
            id="rect76"
            width="80"
@@ -6849,14 +6852,14 @@
            y="0"><tspan
              x="203.95218"
              y="495.1445"
-             id="tspan20">New
+             id="tspan30">New
 </tspan><tspan
              x="199.45154"
              y="511.81113"
-             id="tspan21">Game</tspan></text></g><g
+             id="tspan31">Game</tspan></text></g><g
          id="g86"
          inkscape:label="nextmatch"
-         transform="translate(43.797843,3.0549833)"><rect
+         transform="translate(43.399933,2.3890686)"><rect
            style="opacity:0.897436;fill:#ffffff;fill-opacity:0.96745;fill-rule:evenodd;stroke:none;stroke-width:1;stroke-linecap:square;stroke-linejoin:bevel;stroke-miterlimit:3.2;stroke-dasharray:none;stroke-opacity:1"
            id="rect86"
            width="80"
@@ -6872,12 +6875,12 @@
            y="0"><tspan
              x="199.45154"
              y="495.1445"
-             id="tspan23"><tspan
+             id="tspan33"><tspan
                style="text-align:center;text-anchor:middle"
-               id="tspan22">Next
+               id="tspan32">Next
 </tspan></tspan><tspan
              x="194.9509"
              y="511.81113"
-             id="tspan25"><tspan
+             id="tspan35"><tspan
                style="text-align:center;text-anchor:middle"
-               id="tspan24">Match</tspan></tspan></text></g></g></g></svg>
+               id="tspan34">Match</tspan></tspan></text></g></g></g></svg>

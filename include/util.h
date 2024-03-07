@@ -126,6 +126,23 @@
 #define DIALOG_Y X(318)
 #define DIALOG_START_Y OVERLAY_SHADE_H
 
+#define DIALOG_BTN_SRC_W X(80)
+#define DIALOG_BTN_SRC_H X(35)
+#define DIALOG_BTN_W DIALOG_BTN_SRC_W
+#define DIALOG_BTN_H DIALOG_BTN_SRC_H
+#define DIALOG_BTN_LEFT_X X(125)  // relative to dialog box
+#define DIALOG_BTN_RIGHT_X X(215) // relative to dialog box
+#define DIALOG_BTN_Y X(168)       // relative to dialog box
+
+#define DIALOG_TITLE_X X(124)
+#define DIALOG_TITLE_Y X(54)
+#define DIALOG_GAMETO_X X(112)
+#define DIALOG_GAMETO_Y X(95)
+#define DIALOG_WON_X X(112)
+#define DIALOG_WON_Y X(114)
+#define DIALOG_LOST_X X(112)
+#define DIALOG_LOST_Y X(133)
+
 #define CHECKER_VELOCITY X(20)
 #define DICE_VELOCITY X(5)
 

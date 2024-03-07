@@ -11,11 +11,14 @@ typedef struct Dialog Dialog;
 
 struct Dialog {
     bool visible;
+    bool moving;
     Uint32 alpha;
     bool playerWon;
     Uint32 maxGames;
     Uint32 matchesWon;
     Uint32 matchesLost;
+    float x;
+    float y;
 };
 
 void createDialogSprite(Dialog* d);

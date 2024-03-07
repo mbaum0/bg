@@ -484,7 +484,7 @@ void gameboard_init(void) {
     FSM.gb.roll = (GameButton){ROLL_BTN, false, BTN_RIGHT};
     FSM.gb.dub = (GameButton){DUB_BTN, true, BTN_TOP};
     FSM.gb.nomoves = (GameButton){NM_BTN, false, BTN_RIGHT};
-    FSM.gb.dialog = (Dialog){false, 0, false, 0, 0, 0};
+    FSM.gb.dialog = (Dialog){false, false, 0, false, 0, 0, 0, 0, 0};
     FSM.gb.activePlayer = LIGHT;
     FSM.gb.aiPlayer = DARK;
     FSM.gb.aiMoves = SDL_calloc(MAX_AI_SEQUENCES, sizeof(GameMoveSequence));

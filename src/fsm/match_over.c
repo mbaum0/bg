@@ -4,6 +4,7 @@
 bool handleEnteredMatchOverStateEvent(GameBoard* gb) {
     gb->dialog.visible = true;
     gb->dialog.alpha = 0;
+    gb->dialog.moving = true;
     return false;
 }
 void match_over_state(FiniteStateMachine* fsm) {
