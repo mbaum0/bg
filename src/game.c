@@ -421,7 +421,6 @@ void moveChecker(GameBoard* gb, GameMove gm) {
     c->pipOffset = getNumCheckersOnPip(gb, nextPip);
     c->pipIndex = nextPip;
     updateCheckerNeighbors(gb);
-    log_debug("moved checker from pip %d to pip %d", pipIndex, nextPip);
 }
 
 Sint32 getPlayerScore(GameBoard* gb, Color player) {

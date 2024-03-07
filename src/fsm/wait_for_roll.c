@@ -8,14 +8,23 @@
 #include <stdio.h>
 
 bool handleEnteredWaitForRollEvent(GameBoard* gb) {
+    initBoardForDiceRoll(gb);
+
     if (gb->activePlayer == gb->aiPlayer) {
         // auto roll for the ai
         rollDice(gb);
-        FSMEvent e = {DICE_ROLLED_EVENT, 0, NULL};
+        FSMEvent e = {AI_DELAYED_DICE_ROLL_EVENT, 0, NULL};
         fsm_enqueue_event_delay(500, e);
     } else {
         gb->roll.visible = true;
     }
+    return false;
+}
+
+bool handleAiDelayedDiceRollEvent(GameBoard* gb) {
+    rollDice(gb);
+    FSMEvent e = {DICE_ROLLED_EVENT, 0, NULL};
+    fsm_enqueue_event(e);
     return false;
 }
 
@@ -52,6 +61,9 @@ void wait_for_roll_state(FiniteStateMachine* fsm) {
         case ENTERED_WAIT_FOR_ROLL_STATE_EVENT:
             quit = handleEnteredWaitForRollEvent(gb);
             break;
+        case AI_DELAYED_DICE_ROLL_EVENT:
+            quit = handleAiDelayedDiceRollEvent(gb);
+            break;
         case ROLL_BUTTON_CLICKED_EVENT:
             quit = handleRollButtonClickedEvent(gb);
             break;
@@ -64,12 +76,4 @@ void wait_for_roll_state(FiniteStateMachine* fsm) {
             break;
         }
     }
-}
-void wait_for_roll_init_state(FiniteStateMachine* fsm) {
-    GameBoard* gb = &fsm->gb;
-    log_debug("Entered state: WAIT_FOR_ROLL");
-    initBoardForDiceRoll(gb);
-
-    FSMEvent e = {ENTERED_WAIT_FOR_ROLL_STATE_EVENT, 0, NULL};
-    fsm_enqueue_event_delay(300, e);
 }

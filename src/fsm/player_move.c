@@ -24,6 +24,7 @@ bool doAiMove(GameBoard* gb, GameMove gm) {
 
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
+        log_debug("moved checker from pip %d to pip %d", gm.srcPip, gm.srcPip + gm.amount);
         incrementMoveCount(gb);
     } else {
         log_error("AI picked an invalid move.");
@@ -45,6 +46,7 @@ bool doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
 
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
+        log_debug("moved checker from pip %d to pip %d", gm.srcPip, gm.srcPip - gm.amount);
         movesLeft = incrementMoveCount(gb);
         success = true;
     } else {
@@ -112,6 +114,9 @@ void doAiTurn(GameBoard* gb) {
 }
 
 bool handleEnteredPlayerMoveEvent(GameBoard* gb) {
+    initBoardForPlayerMove(gb);
+    saveCheckerState(gb);
+
     if (gb->activePlayer == gb->aiPlayer) {
         doAiTurn(gb);
     } else {
@@ -203,14 +208,4 @@ void player_move_state(FiniteStateMachine* fsm) {
             break;
         }
     }
-}
-
-void player_move_init_state(FiniteStateMachine* fsm) {
-    GameBoard* gb = &fsm->gb;
-    log_debug("Entered state: PLAYER_MOVE");
-    initBoardForPlayerMove(gb);
-    saveCheckerState(gb);
-
-    FSMEvent e = {ENTERED_PLAYER_MOVE_STATE_EVENT, 0, NULL};
-    fsm_enqueue_event(e);
 }

@@ -3,51 +3,63 @@
 #include "game.h"
 #include <stdbool.h>
 
-// events should be past-tense
+// typedef enum {
+//     INIT_STATE,
+//     ROLL_FOR_FIRST_STATE,
+//     WAIT_FOR_ROLL_STATE,
+//     PLAYER_MOVE_STATE,
+//     MOVE_CONFIRM_STATE,
+//     MATCH_OVER_STATE,
+//     NUM_STATES
+// } State;
+
+#define FOREACH_STATE(STATE)                                                                                           \
+    STATE(INIT_STATE)                                                                                                  \
+    STATE(ROLL_FOR_FIRST_STATE)                                                                                        \
+    STATE(WAIT_FOR_ROLL_STATE)                                                                                         \
+    STATE(PLAYER_MOVE_STATE)                                                                                           \
+    STATE(MOVE_CONFIRM_STATE)                                                                                          \
+    STATE(MATCH_OVER_STATE)
+
 typedef enum {
-    // CONFIRMED_MOVE_EVENT,
-    // UNDO_MOVE_EVENT,
-    // ROLL_DICE_EVENT,
-    // AI_ROLL_DICE_EVENT,
-    // DICE_CLICKED_EVENT,
-    // PIP_CLICKED_EVENT,
-    // ROLLED_FOR_FIRST_EVENT,
-    // GET_FIRST_PLAYER_EVENT,
-    // GOT_FIRST_PLAYER_EVENT,
-    // PLAYER_HAS_NO_MOVES_EVENT,
-    // AI_START_TURN_EVENT,
-    // AI_END_ROLL_EVENT,
-    // AI_END_TURN_EVENT,
-    // AI_SWAP_DICE_EVENT,
-    // AI_MOVE_EVENT,
-    // SHOW_NO_MOVES_ICON_EVENT,
-    // SHOW_ROLL_BTN_EVENT,
+#define GENERATE_ENUM(ENUM) ENUM,
+    FOREACH_STATE(GENERATE_ENUM)
+#undef GENERATE_ENUM
+        NUM_STATES
+} State;
 
-    /** Button-related events */
-    ROLL_BUTTON_CLICKED_EVENT,
-    UNDO_BUTTON_CLICKED_EVENT,
-    PIP_CLICKED_EVENT,
-    DICE_CLICKED_EVENT,
-    CONFIRM_BUTTON_CLICKED_EVENT,
+#define FOREACH_EVENT(EVENT)                                                                                           \
+    EVENT(ENTERED_INIT_STATE_EVENT)                                                                                    \
+    EVENT(ENTERED_ROLL_FOR_FIRST_STATE_EVENT)                                                                          \
+    EVENT(ENTERED_WAIT_FOR_ROLL_STATE_EVENT)                                                                           \
+    EVENT(ENTERED_PLAYER_MOVE_STATE_EVENT)                                                                             \
+    EVENT(ENTERED_MOVE_CONFIRM_STATE_EVENT)                                                                            \
+    EVENT(ENTERED_MATCH_OVER_STATE_EVENT)                                                                              \
+    /** Button-related events */                                                                                       \
+    EVENT(ROLL_BUTTON_CLICKED_EVENT)                                                                                   \
+    EVENT(UNDO_BUTTON_CLICKED_EVENT)                                                                                   \
+    EVENT(PIP_CLICKED_EVENT)                                                                                           \
+    EVENT(DICE_CLICKED_EVENT)                                                                                          \
+    EVENT(CONFIRM_BUTTON_CLICKED_EVENT)                                                                                \
+    /** Events for roll_for_first state */                                                                             \
+    EVENT(ROLLED_FOR_FIRST_EVENT)                                                                                      \
+    EVENT(GOT_FIRST_PLAYER_EVENT)                                                                                      \
+    EVENT(TIED_ROLL_EVENT)                                                                                             \
+    EVENT(FINISHED_ROLL_FOR_FIRST_EVENT)                                                                               \
+    /** Events for the wait_for_roll state */                                                                          \
+    EVENT(DICE_ROLLED_EVENT)                                                                                           \
+    EVENT(AI_DELAYED_DICE_ROLL_EVENT)                                                                                  \
+    EVENT(FINISH_WAIT_FOR_ROLL_EVENT)                                                                                  \
+    /** Events for player_move state */                                                                                \
+    EVENT(AI_MOVE_EVENT)                                                                                               \
+    EVENT(AI_SWAP_DICE_EVENT)                                                                                          \
+    EVENT(FINISHED_PLAYER_MOVE_EVENT)
 
-    /** Events for roll_for_first state */
-    ENTERED_ROLL_FOR_FIRST_STATE_EVENT,
-    ROLLED_FOR_FIRST_EVENT,
-    GOT_FIRST_PLAYER_EVENT,
-    TIED_ROLL_EVENT,
-    FINISHED_ROLL_FOR_FIRST_EVENT,
-
-    /** Events for the wait_for_roll state */
-    ENTERED_WAIT_FOR_ROLL_STATE_EVENT,
-    DICE_ROLLED_EVENT,
-    FINISH_WAIT_FOR_ROLL_EVENT,
-
-    /** Events for player_move state */
-    ENTERED_PLAYER_MOVE_STATE_EVENT,
-    AI_MOVE_EVENT,
-    AI_SWAP_DICE_EVENT,
-    FINISHED_PLAYER_MOVE_EVENT,
-
+typedef enum {
+#define GENERATE_ENUM(ENUM) ENUM,
+    FOREACH_EVENT(GENERATE_ENUM)
+#undef GENERATE_ENUM
+        NUM_EVENTS
 } FSMEventType;
 
 typedef struct {
@@ -55,16 +67,6 @@ typedef struct {
     Sint32 code;
     void* ctx;
 } FSMEvent;
-
-typedef enum {
-    INIT_STATE,
-    ROLL_FOR_FIRST_STATE,
-    WAIT_FOR_ROLL_STATE,
-    PLAYER_MOVE_STATE,
-    MOVE_CONFIRM_STATE,
-    MATCH_OVER_STATE,
-    NUM_STATES
-} State;
 
 // Define event queue
 #define MAX_EVENTS 10
@@ -78,7 +80,6 @@ typedef struct FiniteStateMachine {
     EventQueue eventQueue;
     GameBoard gb;
     void (*state_functions[NUM_STATES])(struct FiniteStateMachine*);
-    void (*state_init_functions[NUM_STATES])(struct FiniteStateMachine*);
 } FiniteStateMachine;
 
 void fsm_init(void);
@@ -91,17 +92,11 @@ void fsm_step(void);
 void fsm_transition(State next_state);
 
 void init_state(FiniteStateMachine* fsm);
-void init_init_state(FiniteStateMachine* fsm);
 void roll_for_first_state(FiniteStateMachine* fsm);
-void roll_for_first_init_state(FiniteStateMachine* fsm);
 void wait_for_roll_state(FiniteStateMachine* fsm);
-void wait_for_roll_init_state(FiniteStateMachine* fsm);
 void player_move_state(FiniteStateMachine* fsm);
-void player_move_init_state(FiniteStateMachine* fsm);
 void move_confirm_state(FiniteStateMachine* fsm);
-void move_confirm_init_state(FiniteStateMachine* fsm);
 void match_over_state(FiniteStateMachine* fsm);
-void match_over_init_state(FiniteStateMachine* fsm);
 
 void save_state(FiniteStateMachine* fsm);
 void load_state(FiniteStateMachine* fsm);

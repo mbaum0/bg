@@ -5,19 +5,37 @@
 
 FiniteStateMachine FSM = {0};
 
+const char* getStateName(State state) {
+    static const char* stateNames[] = {
+#define GENERATE_STRING(STRING) #STRING,
+        FOREACH_STATE(GENERATE_STRING)
+#undef GENERATE_STRING
+    };
+
+    if (state >= 0 && state < NUM_STATES)
+        return stateNames[state];
+    return "Unknown";
+}
+
+const char* getFsmEventName(FSMEventType event) {
+    static const char* eventNames[] = {
+#define GENERATE_STRING(STRING) #STRING,
+        FOREACH_EVENT(GENERATE_STRING)
+#undef GENERATE_STRING
+    };
+
+    if (event >= 0 && event < NUM_EVENTS)
+        return eventNames[event];
+    return "Unknown";
+}
+
 void fsm_init(void) {
     FSM.state_functions[INIT_STATE] = init_state;
-    FSM.state_init_functions[INIT_STATE] = init_init_state;
-    FSM.state_init_functions[ROLL_FOR_FIRST_STATE] = roll_for_first_init_state;
     FSM.state_functions[ROLL_FOR_FIRST_STATE] = roll_for_first_state;
     FSM.state_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_state;
-    FSM.state_init_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_init_state;
     FSM.state_functions[PLAYER_MOVE_STATE] = player_move_state;
-    FSM.state_init_functions[PLAYER_MOVE_STATE] = player_move_init_state;
     FSM.state_functions[MOVE_CONFIRM_STATE] = move_confirm_state;
-    FSM.state_init_functions[MOVE_CONFIRM_STATE] = move_confirm_init_state;
     FSM.state_functions[MATCH_OVER_STATE] = match_over_state;
-    FSM.state_init_functions[MATCH_OVER_STATE] = match_over_init_state;
     FSM.current_state = INIT_STATE;
     FSM.eventQueue.front = 0;
     FSM.eventQueue.rear = 0;
@@ -52,6 +70,7 @@ bool fsm_dequeue_event(FSMEvent* event) {
     }
     *event = FSM.eventQueue.events[FSM.eventQueue.front];
     FSM.eventQueue.front = (FSM.eventQueue.front + 1) % MAX_EVENTS;
+    log_debug("Got event: %s", getFsmEventName(event->etype));
     return true;
 }
 
@@ -65,8 +84,12 @@ void fsm_transition(State next_state) {
     while (fsm_dequeue_event(&e))
         ;
 
-    FSM.state_init_functions[next_state](&FSM);
+    // we can cast next_state -> FSMEventType here because
+    // they align in enum values.
+    e = (FSMEvent){(FSMEventType)next_state, 0, NULL};
+    fsm_enqueue_event(e);
     FSM.current_state = next_state;
+    log_debug("Entered state: %s", getStateName(next_state));
 }
 
 void save_state(FiniteStateMachine* fsm) {

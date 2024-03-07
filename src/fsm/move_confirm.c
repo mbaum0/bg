@@ -7,6 +7,11 @@
 #include "game.h"
 #include <stdio.h>
 
+bool handleEnteredMoveConfirmEvent(GameBoard* gb) {
+    initBoardForConfirm(gb);
+    return false;
+}
+
 bool handleConfirmButtonClickedEvent(GameBoard* gb) {
     gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
     fsm_transition(WAIT_FOR_ROLL_STATE);
@@ -25,6 +30,9 @@ void move_confirm_state(FiniteStateMachine* fsm) {
     bool quit = false;
     while (!quit && fsm_dequeue_event(&event)) {
         switch (event.etype) {
+        case ENTERED_MOVE_CONFIRM_STATE_EVENT:
+            quit = handleEnteredMoveConfirmEvent(gb);
+            break;
         case CONFIRM_BUTTON_CLICKED_EVENT:
             quit = handleConfirmButtonClickedEvent(gb);
             break;
@@ -35,9 +43,4 @@ void move_confirm_state(FiniteStateMachine* fsm) {
             break;
         }
     }
-}
-void move_confirm_init_state(FiniteStateMachine* fsm) {
-    GameBoard* gb = &fsm->gb;
-    log_debug("Entered state: CONFIRM");
-    initBoardForConfirm(gb);
 }

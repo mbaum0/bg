@@ -16,6 +16,8 @@ Color getFirstPlayer(GameBoard* gb) {
 }
 
 bool handleEnteredRollForFirstEvent(GameBoard* gb) {
+    initBoardForRollForFirst(gb);
+
     rollDice(gb);
     FSMEvent e = {ROLLED_FOR_FIRST_EVENT, 0, NULL};
     fsm_enqueue_event_delay(500, e);
@@ -90,13 +92,4 @@ void roll_for_first_state(FiniteStateMachine* fsm) {
             break;
         }
     }
-}
-void roll_for_first_init_state(FiniteStateMachine* fsm) {
-    GameBoard* gb = &fsm->gb;
-    log_debug("Entered state: ROLL_FOR_FIRST");
-    initBoardForRollForFirst(gb);
-
-    // roll the dice
-    FSMEvent e = {ENTERED_ROLL_FOR_FIRST_STATE_EVENT, 0, NULL};
-    fsm_enqueue_event_delay(500, e);
 }
