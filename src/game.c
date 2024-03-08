@@ -39,6 +39,9 @@ Sint32 DARKSETUP[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
 Sint32 LIGHTSETUP[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
 #endif
 
+Sint32 DARKSETUPNORMAL[] = {1, 1, 12, 12, 12, 12, 12, 17, 17, 17, 19, 19, 19, 19, 19};
+Sint32 LIGHTSETUPNORMAL[] = {24, 24, 13, 13, 13, 13, 13, 8, 8, 8, 6, 6, 6, 6, 6};
+
 extern FiniteStateMachine FSM;
 
 void saveCheckerState(GameBoard* gb) {
@@ -62,14 +65,16 @@ bool isPipOpponentBlot(GameBoard* gb, Sint32 pipIndex) {
     return false;
 }
 
-bool matchHasWinner(GameBoard* gb) {
+Color getMatchWinner(GameBoard* gb) {
     Uint32 lightScore = getPlayerScore(gb, LIGHT);
     Uint32 darkScore = getPlayerScore(gb, DARK);
 
-    if (lightScore == 0 || darkScore == 0) {
-        return true;
+    if (lightScore == 0) {
+        return LIGHT;
+    } else if (darkScore == 0) {
+        return DARK;
     }
-    return false;
+    return NONE;
 }
 
 bool playerHasCheckersOnBar(GameBoard* gb) {
@@ -120,29 +125,6 @@ bool playerHasClosedBoard(GameBoard* gb, Color player) {
     }
     return true;
 }
-
-// void checkForWinner(GameBoard* gb){
-//     Sint32 numLightHome = 0;
-//     Sint32 numDarkHome = 0;
-//     for (Sint32 i = 0; i < 15; i++){
-//         if (gb->lightCheckers[i].pipIndex == LIGHT_HOME){
-//             numLightHome++;
-//         }
-//         if (gb->darkCheckers[i].pipIndex == DARK_HOME){
-//             numDarkHome++;
-//         }
-//     }
-//     if (numLightHome == 15){
-//         gb->winner = LIGHT;
-//         updateGameState(gb, GAME_OVER);
-//         return;
-//     }
-//     if (numDarkHome == 15){
-//         gb->winner = DARK;
-//         updateGameState(gb, GAME_OVER);
-//         return;
-//     }
-// }
 
 Sint32 getNumCheckersOnPip(GameBoard* gb, Sint32 pipIndex) {
     Sint32 count = 0;
@@ -459,21 +441,35 @@ void deepCopy(GameBoard* dst, GameBoard* src) {
     memcpy(dst, src, sizeof(GameBoard));
 }
 
-void initCheckerSetup(void) {
+void initCheckerSetup(Sint32* lightSetup, Sint32* darkSetup) {
     Sint32 pipIndex;
     for (Sint32 i = 0; i < 15; i++) {
-        pipIndex = LIGHTSETUP[i];
+        pipIndex = lightSetup[i];
         FSM.gb.lightCheckers[i].pipOffset = getNumCheckersOnPip(&FSM.gb, pipIndex);
         FSM.gb.lightCheckers[i].pipIndex = pipIndex;
         FSM.gb.lightCheckers[i].color = LIGHT;
     }
 
     for (Sint32 i = 0; i < 15; i++) {
-        pipIndex = DARKSETUP[i];
+        pipIndex = darkSetup[i];
         FSM.gb.darkCheckers[i].pipOffset = getNumCheckersOnPip(&FSM.gb, pipIndex);
         FSM.gb.darkCheckers[i].pipIndex = pipIndex;
         FSM.gb.darkCheckers[i].color = DARK;
     }
+}
+
+void gameboard_reset(GameBoard* gb) {
+    (void)gb;
+    FSM.gb.die1 = (GameDie){1, 0, 0, 0, DICE_NONE, false};
+    FSM.gb.die2 = (GameDie){2, 1, 0, 0, DICE_NONE, false};
+    FSM.gb.confirm = (GameButton){CONFIRM_BTN, false, BTN_RIGHT};
+    FSM.gb.undo = (GameButton){UNDO_BTN, false, BTN_CENTER};
+    FSM.gb.roll = (GameButton){ROLL_BTN, false, BTN_RIGHT};
+    FSM.gb.dub = (GameButton){DUB_BTN, true, BTN_TOP};
+    FSM.gb.nomoves = (GameButton){NM_BTN, false, BTN_RIGHT};
+    FSM.gb.dialog = (Dialog){false, false, 0, false, 0, 0, 0, 0, 0};
+    initCheckerSetup(LIGHTSETUPNORMAL, DARKSETUPNORMAL);
+    updateCheckerNeighbors(gb);
 }
 
 void gameboard_init(void) {
@@ -488,7 +484,7 @@ void gameboard_init(void) {
     FSM.gb.activePlayer = LIGHT;
     FSM.gb.aiPlayer = DARK;
     FSM.gb.aiMoves = SDL_calloc(MAX_AI_SEQUENCES, sizeof(GameMoveSequence));
-    initCheckerSetup();
+    initCheckerSetup(LIGHTSETUP, DARKSETUP);
     createBoardSprites();
     createDiceSprites(&FSM.gb.die1, &FSM.gb.die2);
     createButtonSprites(&FSM.gb.undo, &FSM.gb.confirm, &FSM.gb.roll, &FSM.gb.dub, &FSM.gb.nomoves);

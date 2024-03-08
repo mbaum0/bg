@@ -4,6 +4,7 @@
  * @brief
  */
 #include "dialog.h"
+#include "fsm.h"
 #include "sage.h"
 #include "util.h"
 #include "vector.h"
@@ -33,6 +34,16 @@ void updateDialog(ViewManager* vm, Sprite* sprite, void* object, void* context) 
         d->y = yDst;
         d->moving = false;
     }
+}
+
+void clickNextMatch(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
+    (void)code;
+    (void)vm;
+    (void)context;
+    (void)sprite;
+    (void)object;
+    FSMEvent e = {NEXT_MATCH_BUTTON_CLICKED_EVENT, 0, NULL};
+    fsm_enqueue_event(e);
 }
 
 void updateOverlay(ViewManager* vm, Sprite* sprite, void* object, void* context) {
@@ -180,6 +191,7 @@ void createDialogSprite(Dialog* d) {
     dst = (SDL_FRect){DIALOG_BTN_LEFT_X, DIALOG_BTN_Y, DIALOG_BTN_W, DIALOG_BTN_H};
     Sprite* nmBtnSprite = Sprite_createEx(buttonTexture, src, dst, Z_DIALOG + 1);
     Sprite_registerUpdateFn(nmBtnSprite, updateDialogBtnNextMatch, d, NULL);
+    Sprite_registerClickFn(nmBtnSprite, clickNextMatch, NULL, NULL, 0);
     Sage_registerSprite(nmBtnSprite);
 
     createDialogText(d);

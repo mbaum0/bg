@@ -41,6 +41,7 @@ typedef enum {
     EVENT(PIP_CLICKED_EVENT)                                                                                           \
     EVENT(DICE_CLICKED_EVENT)                                                                                          \
     EVENT(CONFIRM_BUTTON_CLICKED_EVENT)                                                                                \
+    EVENT(NEXT_MATCH_BUTTON_CLICKED_EVENT)                                                                             \
     /** Events for roll_for_first state */                                                                             \
     EVENT(ROLLED_FOR_FIRST_EVENT)                                                                                      \
     EVENT(GOT_FIRST_PLAYER_EVENT)                                                                                      \
@@ -54,7 +55,8 @@ typedef enum {
     EVENT(FINISH_WAIT_FOR_ROLL_EVENT) /** Events for player_move state */                                              \
     EVENT(AI_MOVE_EVENT)                                                                                               \
     EVENT(AI_SWAP_DICE_EVENT)                                                                                          \
-    EVENT(FINISHED_PLAYER_MOVE_EVENT)
+    EVENT(FINISHED_PLAYER_MOVE_EVENT)                                                                                  \
+    /** Events for match_over state */
 
 typedef enum {
 #define GENERATE_ENUM(ENUM) ENUM,

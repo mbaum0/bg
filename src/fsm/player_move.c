@@ -164,7 +164,7 @@ bool handleAiSwapDiceEvent(GameBoard* gb) {
 bool handleFinishedPlayerMoveEvent(GameBoard* gb) {
     gb->nomoves.visible = false;
 
-    if (matchHasWinner(gb)) {
+    if (getMatchWinner(gb) != NONE) {
         fsm_transition(MATCH_OVER_STATE);
         return true;
     }

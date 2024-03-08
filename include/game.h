@@ -200,10 +200,9 @@ bool playerHasMoves(GameBoard* gb);
 Sint32 getPlayerScore(GameBoard* gb, Color player);
 
 /**
- * @brief Returns true if the match has a winner
- * ie someone's score is zero
+ * @brief Returns Light/Dark if there is a winner, else None.
  */
-bool matchHasWinner(GameBoard* gb);
+Color getMatchWinner(GameBoard* gb);
 
 /**
  * @brief Creates a deep copy of the src GameBoard and places
@@ -215,3 +214,8 @@ void deepCopy(GameBoard* dst, GameBoard* src);
  * @brief Returns true if either die has been used;
  */
 bool haveDiceBeenUsed(GameBoard* gb);
+
+/**
+ * @brief Reset the gameboard for the next match
+ */
+void gameboard_reset(GameBoard* gb);
