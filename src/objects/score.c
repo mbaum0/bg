@@ -32,6 +32,24 @@ void darkScoreUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     Snippet_setText(snippet, text);
 }
 
+void lightWonRoundUpdate(ViewManager* vm, Snippet* snippet, void* data) {
+    (void)vm;
+    (void)data;
+    GameBoard gb = FSM.gb;
+    char text[200];
+    sprintf(text, "%d / %d", gb.dialog.roundsWon, gb.dialog.maxGames);
+    Snippet_setText(snippet, text);
+}
+
+void darkWonRoundUpdate(ViewManager* vm, Snippet* snippet, void* data) {
+    (void)vm;
+    (void)data;
+    GameBoard gb = FSM.gb;
+    char text[200];
+    sprintf(text, "%d / %d", gb.dialog.roundsLost, gb.dialog.maxGames);
+    Snippet_setText(snippet, text);
+}
+
 void createScore(void) {
     char darkScore[100];
     char lightScore[100];
@@ -41,14 +59,25 @@ void createScore(void) {
                                        SCORE_FONT_SRC_SIZE, SCORE_FONT_SIZE);
 
     SDL_Color fontColor = {0, 0, 0, 255};
-    Snippet* lightSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);
-    Snippet* darkSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, SCORE_Y, Z_DEBUG, true);
-    lightSnippet->useViewport = true;
-    darkSnippet->useViewport = true;
-    Sage_registerSnippet(lightSnippet);
-    Sage_registerSnippet(darkSnippet);
-    Snippet_setText(lightSnippet, lightScore);
-    Snippet_setText(darkSnippet, darkScore);
-    Snippet_registerUpdateFn(lightSnippet, lightScoreUpdate, NULL);
-    Snippet_registerUpdateFn(darkSnippet, darkScoreUpdate, NULL);
+    Snippet* lightScoreSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);
+    Snippet* darkScoreSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, SCORE_Y, Z_DEBUG, true);
+    Snippet* lightWonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, MATCH_SCORE_Y, Z_DEBUG, true);
+    Snippet* darkWonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, MATCH_SCORE_Y, Z_DEBUG, true);
+
+    lightScoreSnippet->useViewport = true;
+    darkScoreSnippet->useViewport = true;
+    lightWonRoundsSnippet->useViewport = true;
+    darkWonRoundsSnippet->useViewport = true;
+    Sage_registerSnippet(lightScoreSnippet);
+    Sage_registerSnippet(darkScoreSnippet);
+    Sage_registerSnippet(lightWonRoundsSnippet);
+    Sage_registerSnippet(darkWonRoundsSnippet);
+    Snippet_setText(lightScoreSnippet, lightScore);
+    Snippet_setText(darkScoreSnippet, darkScore);
+    Snippet_setText(lightWonRoundsSnippet, lightScore);
+    Snippet_setText(darkWonRoundsSnippet, darkScore);
+    Snippet_registerUpdateFn(lightScoreSnippet, lightScoreUpdate, NULL);
+    Snippet_registerUpdateFn(darkScoreSnippet, darkScoreUpdate, NULL);
+    Snippet_registerUpdateFn(lightWonRoundsSnippet, lightWonRoundUpdate, NULL);
+    Snippet_registerUpdateFn(darkWonRoundsSnippet, darkWonRoundUpdate, NULL);
 }

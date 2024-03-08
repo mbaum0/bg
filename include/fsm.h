@@ -3,23 +3,13 @@
 #include "game.h"
 #include <stdbool.h>
 
-// typedef enum {
-//     INIT_STATE,
-//     ROLL_FOR_FIRST_STATE,
-//     WAIT_FOR_ROLL_STATE,
-//     PLAYER_MOVE_STATE,
-//     MOVE_CONFIRM_STATE,
-//     MATCH_OVER_STATE,
-//     NUM_STATES
-// } State;
-
 #define FOREACH_STATE(STATE)                                                                                           \
     STATE(INIT_STATE)                                                                                                  \
     STATE(ROLL_FOR_FIRST_STATE)                                                                                        \
     STATE(WAIT_FOR_ROLL_STATE)                                                                                         \
     STATE(PLAYER_MOVE_STATE)                                                                                           \
     STATE(MOVE_CONFIRM_STATE)                                                                                          \
-    STATE(MATCH_OVER_STATE)
+    STATE(ROUND_OVER_STATE)
 
 typedef enum {
 #define GENERATE_ENUM(ENUM) ENUM,
@@ -34,14 +24,14 @@ typedef enum {
     EVENT(ENTERED_WAIT_FOR_ROLL_STATE_EVENT)                                                                           \
     EVENT(ENTERED_PLAYER_MOVE_STATE_EVENT)                                                                             \
     EVENT(ENTERED_MOVE_CONFIRM_STATE_EVENT)                                                                            \
-    EVENT(ENTERED_MATCH_OVER_STATE_EVENT)                                                                              \
+    EVENT(ENTERED_ROUND_OVER_STATE_EVENT)                                                                              \
     /** Button-related events */                                                                                       \
     EVENT(ROLL_BUTTON_CLICKED_EVENT)                                                                                   \
     EVENT(UNDO_BUTTON_CLICKED_EVENT)                                                                                   \
     EVENT(PIP_CLICKED_EVENT)                                                                                           \
     EVENT(DICE_CLICKED_EVENT)                                                                                          \
     EVENT(CONFIRM_BUTTON_CLICKED_EVENT)                                                                                \
-    EVENT(NEXT_MATCH_BUTTON_CLICKED_EVENT)                                                                             \
+    EVENT(NEXT_ROUND_BUTTON_CLICKED_EVENT)                                                                             \
     /** Events for roll_for_first state */                                                                             \
     EVENT(ROLLED_FOR_FIRST_EVENT)                                                                                      \
     EVENT(GOT_FIRST_PLAYER_EVENT)                                                                                      \
@@ -56,7 +46,7 @@ typedef enum {
     EVENT(AI_MOVE_EVENT)                                                                                               \
     EVENT(AI_SWAP_DICE_EVENT)                                                                                          \
     EVENT(FINISHED_PLAYER_MOVE_EVENT)                                                                                  \
-    /** Events for match_over state */
+    /** Events for round_over state */
 
 typedef enum {
 #define GENERATE_ENUM(ENUM) ENUM,
@@ -99,7 +89,7 @@ void roll_for_first_state(FiniteStateMachine* fsm);
 void wait_for_roll_state(FiniteStateMachine* fsm);
 void player_move_state(FiniteStateMachine* fsm);
 void move_confirm_state(FiniteStateMachine* fsm);
-void match_over_state(FiniteStateMachine* fsm);
+void round_over_state(FiniteStateMachine* fsm);
 
 void save_state(FiniteStateMachine* fsm);
 void load_state(FiniteStateMachine* fsm);

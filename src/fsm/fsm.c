@@ -35,7 +35,7 @@ void fsm_init(void) {
     FSM.state_functions[WAIT_FOR_ROLL_STATE] = wait_for_roll_state;
     FSM.state_functions[PLAYER_MOVE_STATE] = player_move_state;
     FSM.state_functions[MOVE_CONFIRM_STATE] = move_confirm_state;
-    FSM.state_functions[MATCH_OVER_STATE] = match_over_state;
+    FSM.state_functions[ROUND_OVER_STATE] = round_over_state;
     FSM.current_state = INIT_STATE;
     FSM.eventQueue.front = 0;
     FSM.eventQueue.rear = 0;

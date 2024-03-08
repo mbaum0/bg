@@ -136,8 +136,8 @@
 
 #define DIALOG_TITLE_X X(124)
 #define DIALOG_TITLE_Y X(54)
-#define DIALOG_GAMETO_X X(112)
-#define DIALOG_GAMETO_Y X(95)
+#define DIALOG_MATCHTO_X X(112)
+#define DIALOG_MATCHTO_Y X(95)
 #define DIALOG_WON_X X(112)
 #define DIALOG_WON_Y X(114)
 #define DIALOG_LOST_X X(112)
@@ -149,6 +149,7 @@
 #define SCORE_LEFT_X X(65)
 #define SCORE_RIGHT_X X(331)
 #define SCORE_Y X(43)
+#define MATCH_SCORE_Y X(67)
 
 #define SCORE_FONT_SRC_SIZE (30)
 #define SCORE_FONT_SIZE X(15)

@@ -202,7 +202,7 @@ Sint32 getPlayerScore(GameBoard* gb, Color player);
 /**
  * @brief Returns Light/Dark if there is a winner, else None.
  */
-Color getMatchWinner(GameBoard* gb);
+Color getRoundWinner(GameBoard* gb);
 
 /**
  * @brief Creates a deep copy of the src GameBoard and places
@@ -216,6 +216,6 @@ void deepCopy(GameBoard* dst, GameBoard* src);
 bool haveDiceBeenUsed(GameBoard* gb);
 
 /**
- * @brief Reset the gameboard for the next match
+ * @brief Reset the gameboard for the next round
  */
 void gameboard_reset(GameBoard* gb);

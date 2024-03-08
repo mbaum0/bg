@@ -36,13 +36,13 @@ void updateDialog(ViewManager* vm, Sprite* sprite, void* object, void* context) 
     }
 }
 
-void clickNextMatch(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
+void clickNextRound(ViewManager* vm, Sprite* sprite, void* object, void* context, Sint32 code) {
     (void)code;
     (void)vm;
     (void)context;
     (void)sprite;
     (void)object;
-    FSMEvent e = {NEXT_MATCH_BUTTON_CLICKED_EVENT, 0, NULL};
+    FSMEvent e = {NEXT_ROUND_BUTTON_CLICKED_EVENT, 0, NULL};
     fsm_enqueue_event(e);
 }
 
@@ -68,7 +68,7 @@ void updateDialogBtnNewGame(ViewManager* vm, Sprite* sprite, void* object, void*
     Sprite_setVisible(sprite, d->visible);
 }
 
-void updateDialogBtnNextMatch(ViewManager* vm, Sprite* sprite, void* object, void* context) {
+void updateDialogBtnNextRound(ViewManager* vm, Sprite* sprite, void* object, void* context) {
     (void)vm;
     (void)context;
     Dialog* d = (Dialog*)object;
@@ -92,16 +92,16 @@ void titleUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     Snippet_setText(snippet, title);
 }
 
-void gameToUpdate(ViewManager* vm, Snippet* snippet, void* data) {
+void matchToUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
     Dialog* d = (Dialog*)data;
 
-    char gameTo[30];
-    sprintf(gameTo, "Game to %d", d->maxGames);
-    Snippet_setLocation(snippet, d->x + DIALOG_GAMETO_X, d->y + DIALOG_GAMETO_Y);
+    char matchTo[30];
+    sprintf(matchTo, "Match to %d points", d->maxGames);
+    Snippet_setLocation(snippet, d->x + DIALOG_MATCHTO_X, d->y + DIALOG_MATCHTO_Y);
     Snippet_setVisible(snippet, d->visible);
-    Snippet_setText(snippet, gameTo);
+    Snippet_setText(snippet, matchTo);
 }
 
 void wonUpdate(ViewManager* vm, Snippet* snippet, void* data) {
@@ -110,7 +110,7 @@ void wonUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     Dialog* d = (Dialog*)data;
 
     char won[50];
-    sprintf(won, "Matches Won:\t%d", d->matchesWon);
+    sprintf(won, "Games Won:\t%d", d->roundsWon);
     Snippet_setLocation(snippet, d->x + DIALOG_WON_X, d->y + DIALOG_WON_Y);
     Snippet_setVisible(snippet, d->visible);
     Snippet_setText(snippet, won);
@@ -122,7 +122,7 @@ void lostUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     Dialog* d = (Dialog*)data;
 
     char lost[50];
-    sprintf(lost, "Matches Lost:\t%d", d->matchesLost);
+    sprintf(lost, "Games Lost:\t%d", d->roundsLost);
     Snippet_setLocation(snippet, d->x + DIALOG_LOST_X, d->y + DIALOG_LOST_Y);
     Snippet_setVisible(snippet, d->visible);
     Snippet_setText(snippet, lost);
@@ -130,12 +130,12 @@ void lostUpdate(ViewManager* vm, Snippet* snippet, void* data) {
 
 void createDialogText(Dialog* d) {
     char title[30];
-    char gameTo[30];
+    char matchTo[30];
     char won[50];
     char lost[50];
 
     sprintf(title, "");
-    sprintf(gameTo, "");
+    sprintf(matchTo, "");
     sprintf(won, "");
     sprintf(lost, "");
 
@@ -144,22 +144,22 @@ void createDialogText(Dialog* d) {
 
     SDL_Color fontColor = {255, 255, 255, 255};
     Snippet* titleSnippet = Snippet_create(sf, fontColor, DIALOG_TITLE_X, DIALOG_TITLE_Y, Z_DEBUG, false);
-    Snippet* gameToSnippet = Snippet_create(sf, fontColor, DIALOG_GAMETO_X, DIALOG_GAMETO_Y, Z_DEBUG, false);
+    Snippet* matchToSnippet = Snippet_create(sf, fontColor, DIALOG_MATCHTO_X, DIALOG_MATCHTO_Y, Z_DEBUG, false);
     Snippet* wonSnippet = Snippet_create(sf, fontColor, DIALOG_WON_X, DIALOG_WON_Y, Z_DEBUG, false);
     Snippet* lostSnippet = Snippet_create(sf, fontColor, DIALOG_LOST_X, DIALOG_LOST_Y, Z_DEBUG, false);
 
     Sage_registerSnippet(titleSnippet);
-    Sage_registerSnippet(gameToSnippet);
+    Sage_registerSnippet(matchToSnippet);
     Sage_registerSnippet(wonSnippet);
     Sage_registerSnippet(lostSnippet);
 
     Snippet_setText(titleSnippet, title);
-    Snippet_setText(gameToSnippet, gameTo);
+    Snippet_setText(matchToSnippet, matchTo);
     Snippet_setText(wonSnippet, won);
     Snippet_setText(lostSnippet, lost);
 
     Snippet_registerUpdateFn(titleSnippet, titleUpdate, d);
-    Snippet_registerUpdateFn(gameToSnippet, gameToUpdate, d);
+    Snippet_registerUpdateFn(matchToSnippet, matchToUpdate, d);
     Snippet_registerUpdateFn(wonSnippet, wonUpdate, d);
     Snippet_registerUpdateFn(lostSnippet, lostUpdate, d);
 }
@@ -190,8 +190,8 @@ void createDialogSprite(Dialog* d) {
     src = (SDL_FRect){DIALOG_BTN_SRC_W * 2, 0, DIALOG_BTN_SRC_W * 2, DIALOG_BTN_SRC_H * 2};
     dst = (SDL_FRect){DIALOG_BTN_LEFT_X, DIALOG_BTN_Y, DIALOG_BTN_W, DIALOG_BTN_H};
     Sprite* nmBtnSprite = Sprite_createEx(buttonTexture, src, dst, Z_DIALOG + 1);
-    Sprite_registerUpdateFn(nmBtnSprite, updateDialogBtnNextMatch, d, NULL);
-    Sprite_registerClickFn(nmBtnSprite, clickNextMatch, NULL, NULL, 0);
+    Sprite_registerUpdateFn(nmBtnSprite, updateDialogBtnNextRound, d, NULL);
+    Sprite_registerClickFn(nmBtnSprite, clickNextRound, NULL, NULL, 0);
     Sage_registerSprite(nmBtnSprite);
 
     createDialogText(d);

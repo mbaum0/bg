@@ -15,8 +15,8 @@ struct Dialog {
     Uint32 alpha;
     bool playerWon;
     Uint32 maxGames;
-    Uint32 matchesWon;
-    Uint32 matchesLost;
+    Uint32 roundsWon;
+    Uint32 roundsLost;
     float x;
     float y;
 };
