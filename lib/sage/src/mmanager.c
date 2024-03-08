@@ -25,26 +25,26 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
     }
     log_debug("Set pixel scaling to: %f", mm->pixelScale);
 
-    int numDisplays = SDL_GetNumVideoDrivers();
-    SDL_assert(numDisplays >= 1);
-    SDL_Rect vidRect0;
-    SDL_Rect vidRect1;
-    SDL_Rect vidRect2;
-    SDL_GetDisplayBounds(0, &vidRect0);
-    SDL_GetDisplayBounds(1, &vidRect1);
-    SDL_GetDisplayBounds(2, &vidRect2);
+    // int numDisplays = SDL_GetNumVideoDrivers();
+    // SDL_assert(numDisplays >= 1);
+    // SDL_Rect vidRect0;
+    // SDL_Rect vidRect1;
+    // SDL_Rect vidRect2;
+    // SDL_GetDisplayBounds(0, &vidRect0);
+    // SDL_GetDisplayBounds(1, &vidRect1);
+    // SDL_GetDisplayBounds(2, &vidRect2);
 
-    SDL_PropertiesID props = SDL_CreateProperties();
-    SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, title);
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, (vidRect1.x - vidRect2.x) + (vidRect2.w / 2));
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, (vidRect1.y - vidRect2.y) + (vidRect2.h / 2));
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, w);
-    SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, h);
-    SDL_SetNumberProperty(props, "flags", SDL_WINDOW_HIGH_PIXEL_DENSITY);
-    mm->window = SDL_CreateWindowWithProperties(props);
-    SDL_DestroyProperties(props);
+    // SDL_PropertiesID props = SDL_CreateProperties();
+    // SDL_SetStringProperty(props, SDL_PROP_WINDOW_CREATE_TITLE_STRING, title);
+    // SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_X_NUMBER, (vidRect1.x - vidRect2.x) + (vidRect2.w / 2));
+    // SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_Y_NUMBER, (vidRect1.y - vidRect2.y) + (vidRect2.h / 2));
+    // SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_WIDTH_NUMBER, w);
+    // SDL_SetNumberProperty(props, SDL_PROP_WINDOW_CREATE_HEIGHT_NUMBER, h);
+    // SDL_SetNumberProperty(props, "flags", SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    // mm->window = SDL_CreateWindowWithProperties(props);
+    // SDL_DestroyProperties(props);
 
-    // mm->window = SDL_CreateWindow(title, w, h, SDL_WINDOW_HIGH_PIXEL_DENSITY);
+    mm->window = SDL_CreateWindow(title, w, h, SDL_WINDOW_HIGH_PIXEL_DENSITY);
     if (!mm->window) {
         log_error("Failed to open %d x %d window: %s", w, h, SDL_GetError());
         return false;
