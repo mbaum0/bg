@@ -177,11 +177,19 @@ Sint32 getNextPip(Sint32 pipIndex, Color player, Sint32 amount) {
 
 // // returns true if a move is valid
 bool isValidMove(GameBoard* gb, GameMove gm) {
+    Checker* topChecker;
     Color player = gm.player;
     Sint32 oldPip = gm.srcPip;
     Sint32 newPip = getNextPip(oldPip, player, gm.amount);
 
+    // player must be active
     if (player != gb->activePlayer) {
+        return false;
+    }
+
+    // not valid if the src pip isn't owned by the player
+    topChecker = getTopCheckerOnPip(gb, oldPip);
+    if (topChecker == NULL || topChecker->color != player) {
         return false;
     }
 
@@ -208,7 +216,7 @@ bool isValidMove(GameBoard* gb, GameMove gm) {
     Sint32 numCheckers = getNumCheckersOnPip(gb, newPip);
     // not valid move if moving checker to opponent owned-pip
     if (numCheckers > 1) {
-        Checker* topChecker = getTopCheckerOnPip(gb, newPip);
+        topChecker = getTopCheckerOnPip(gb, newPip);
         if (topChecker->color == OPPONENT_COLOR(gm.player)) {
             return false;
         }

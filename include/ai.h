@@ -19,8 +19,11 @@ Sint32 evaluateBoard(GameBoard* gb, Color player);
  * @brief Generates all possible move sequences for the player from
  * a given state and stores them in the provided array. Returns the number
  * of generated sequences.
+ *
+ * The maximum possible moves is stored in maxMoves
  */
-Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* moveSequences, Sint32 max);
+Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* moveSequences, Sint32 max,
+                              Sint32* maxMoves);
 
 /**
  * @brief Generates a list of possible next moves. Returns the number of moves found. There

@@ -14,12 +14,10 @@ Sint32 evaluateBoard(GameBoard* gb, Color player) {
 Sint32 getPossibleMoves(GameBoard* gb, Color player, Sint32 dieValue, GameMove* moves) {
     GameMove gm;
     Sint32 numMoves = 0;
-
-    Checker* checkers = PLAYER_CHECKERS(gb, player);
     gm.player = player;
     gm.amount = dieValue;
-    for (Sint32 i = 0; i < 15; i++) {
-        gm.srcPip = checkers[i].pipIndex;
+    for (Sint32 i = 0; i <= DARK_BAR; i++) {
+        gm.srcPip = i;
         if (isValidMove(gb, gm)) {
             moves[numMoves] = gm;
             numMoves++;
@@ -28,7 +26,9 @@ Sint32 getPossibleMoves(GameBoard* gb, Color player, Sint32 dieValue, GameMove* 
     return numMoves;
 }
 
-Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* moveSequences, Sint32 max) {
+Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* moveSequences, Sint32 max,
+                              Sint32* maxMoves) {
+    *maxMoves = 0;
     Sint32 numSequences = 0;
 
     GameBoard gb0;
@@ -93,6 +93,9 @@ Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mov
                             moveSequences[numSequences].swapDice = swapDice;
                             moveSequences[numSequences].resultScore = evaluateBoard(&gb4, player);
                             numSequences++;
+                            if (4 > *maxMoves) {
+                                *maxMoves = 4;
+                            }
                             if (numSequences >= max) {
                                 return numSequences;
                             }
@@ -105,6 +108,9 @@ Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mov
                         moveSequences[numSequences].swapDice = swapDice;
                         moveSequences[numSequences].resultScore = evaluateBoard(&gb3, player);
                         numSequences++;
+                        if (3 > *maxMoves) {
+                            *maxMoves = 3;
+                        }
                         if (numSequences >= max) {
                             return numSequences;
                         }
@@ -118,6 +124,9 @@ Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mov
                 moveSequences[numSequences].swapDice = swapDice;
                 moveSequences[numSequences].resultScore = evaluateBoard(&gb2, player);
                 numSequences++;
+                if (2 > *maxMoves) {
+                    *maxMoves = 2;
+                }
                 if (numSequences >= max) {
                     return numSequences;
                 }
@@ -129,6 +138,9 @@ Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mov
             moveSequences[numSequences].swapDice = swapDice;
             moveSequences[numSequences].resultScore = evaluateBoard(&gb1, player);
             numSequences++;
+            if (1 > *maxMoves) {
+                *maxMoves = 1;
+            }
             if (numSequences >= max) {
                 break;
             }
@@ -144,12 +156,17 @@ Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mov
 
 void findBestMoveSequence(GameBoard* gb, Color player, GameMoveSequence* result) {
 
-    Sint32 numOptions = generateMovesSequences(gb, player, gb->aiMoves, MAX_AI_SEQUENCES);
+    Sint32 maxMoves = 0;
+    Sint32 numOptions = generateMovesSequences(gb, player, gb->aiMoves, MAX_AI_SEQUENCES, &maxMoves);
 
     Sint32 bestScore = 999;
     GameMoveSequence best = {0};
     for (Sint32 i = 0; i < numOptions; i++) {
         GameMoveSequence gms = gb->aiMoves[i];
+        if (gms.numMoves < maxMoves) {
+            // backgammon rules require player to use maximum number of dice possible;
+            continue;
+        }
         if (gms.resultScore < bestScore) {
             bestScore = gms.resultScore;
             best = gms;
