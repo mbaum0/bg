@@ -19,9 +19,9 @@ void Snippet_setText(Snippet* snippet, char* text) {
     (void)text;
 
     // exit early if strings are equals
-    // if (snippet->text != NULL && strcmp(snippet->text, text) == 0){
-    //     return;
-    // }
+    if (snippet->text != NULL && strcmp(snippet->text, text) == 0) {
+        return;
+    }
     snippet->textLen = strlen(text);
 
     snippet->text = SDL_realloc(snippet->text, snippet->textLen + 1);
