@@ -5,9 +5,41 @@
  */
 #include "ai.h"
 
+Sint32 getWeightedPlayerScore(GameBoard* gb, Color player) {
+    Sint32 score = 0;
+    Checker* checkers;
+    if (player == LIGHT) {
+        checkers = gb->lightCheckers;
+    } else {
+        checkers = gb->darkCheckers;
+    }
+    for (Sint32 i = 0; i < 15; i++) {
+        Sint32 pipIndex = checkers[i].pipIndex;
+        if (pipIndex == LIGHT_HOME || pipIndex == DARK_HOME) {
+            // add nothing here because checker is home
+            continue;
+        }
+
+        if (pipIndex == LIGHT_BAR || pipIndex == DARK_BAR) {
+            score += 25;
+        }
+
+        if (player == DARK) {
+            score += (DARK_HOME - pipIndex);
+        } else {
+            score += pipIndex;
+        }
+
+        if (checkers[i].numNeighbors == 0) {
+            score += 100;
+        }
+    }
+    return score;
+}
+
 Sint32 evaluateBoard(GameBoard* gb, Color player) {
-    Sint32 score = getPlayerScore(gb, player);
-    Sint32 opponent = getPlayerScore(gb, OPPONENT_COLOR(player));
+    Sint32 score = getWeightedPlayerScore(gb, player);
+    Sint32 opponent = getWeightedPlayerScore(gb, OPPONENT_COLOR(player));
     return score - opponent;
 }
 
