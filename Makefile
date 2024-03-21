@@ -38,4 +38,4 @@ run: $(BUILD_TARGET)
 	./$(BUILD_TARGET)
 
 font:
-	fontbm --font-file $(FONT_FILE) --font-size 40 --output $(FONT_TARGET) --data-format bin
+	fontbm --font-file $(FONT_FILE) --font-size 20 --spacing-vert 1 --spacing-horiz 1 --output $(FONT_TARGET) --data-format bin
