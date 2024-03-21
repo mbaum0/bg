@@ -28,6 +28,8 @@ struct Snippet {
     Sint32 z;
     bool visible;
     char* text;
+    bool centerAlign;
+    Sint32 pxLen;
     SnippetChar* chars;
     Sint32 textLen;
     SDL_FRect boundBox;

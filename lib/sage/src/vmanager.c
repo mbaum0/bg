@@ -137,6 +137,12 @@ void VM_draw(ViewManager* vm) {
             SnippetUpdate_fn fptr = (SnippetUpdate_fn)snippet->update_fn;
             fptr(vm, snippet, snippet->update_data);
         }
+
+        Sint32 alignOffset = 0;
+        if (snippet->centerAlign) {
+            alignOffset -= (snippet->pxLen / 2);
+        }
+
         if (snippet->visible) {
             for (Sint32 i = 0; i < snippet->textLen; i++) {
                 SnippetChar sc = snippet->chars[i];
@@ -145,6 +151,9 @@ void VM_draw(ViewManager* vm) {
                     newDst.x += vm->viewport.x;
                     newDst.y += vm->viewport.y;
                 }
+
+                newDst.x += alignOffset;
+
                 SDL_SetTextureColorMod(snippet->font->texture, snippet->color.r, snippet->color.g, snippet->color.b);
                 SDL_RenderTexture(vm->renderer, snippet->font->texture, &sc.src, &newDst);
             }

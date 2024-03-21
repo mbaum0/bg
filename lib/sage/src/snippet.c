@@ -36,6 +36,7 @@ void Snippet_setText(Snippet* snippet, char* text) {
     Uint32 fontSrcSize = snippet->font->srcSize;
     Uint32 fontDstSize = snippet->font->dstSize;
     Sint32 cOffset = 0;
+    snippet->pxLen = 0;
     for (Sint32 i = 0; i < snippet->textLen; i++) {
         c = text[i];
         bmchar = snippet->font->layout.chars.chars[c - 32];
@@ -51,6 +52,7 @@ void Snippet_setText(Snippet* snippet, char* text) {
         snippet->chars[i].src = src;
         snippet->chars[i].dst = dst;
         cOffset += bmchar.xadvance;
+        snippet->pxLen += bmchar.xadvance;
     }
     snippet->boundBox.w = bmchar.width * snippet->textLen * fontScale;
     snippet->boundBox.h = bmchar.height * fontScale;
@@ -78,5 +80,7 @@ Snippet* Snippet_create(SageFont* font, SDL_Color color, Sint32 x, Sint32 y, Sin
     snippet->useViewport = false;
     snippet->textLen = 0;
     snippet->color = color;
+    snippet->centerAlign = false;
+    snippet->pxLen = 0;
     return snippet;
 }

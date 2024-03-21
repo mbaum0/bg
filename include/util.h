@@ -134,14 +134,14 @@
 #define DIALOG_BTN_RIGHT_X X(215) // relative to dialog box
 #define DIALOG_BTN_Y X(168)       // relative to dialog box
 
-#define DIALOG_TITLE_X X(124)
-#define DIALOG_TITLE_Y X(54)
-#define DIALOG_MATCHTO_X X(112)
-#define DIALOG_MATCHTO_Y X(95)
-#define DIALOG_WON_X X(112)
-#define DIALOG_WON_Y X(114)
-#define DIALOG_LOST_X X(112)
-#define DIALOG_LOST_Y X(133)
+#define DIALOG_TITLE_X (DIALOG_W / 2)
+#define DIALOG_TITLE_Y X(30)
+#define DIALOG_MATCHTO_X (DIALOG_W / 2)
+#define DIALOG_MATCHTO_Y X(70)
+#define DIALOG_WON_X (DIALOG_W / 2)
+#define DIALOG_WON_Y X(90)
+#define DIALOG_LOST_X (DIALOG_W / 2)
+#define DIALOG_LOST_Y X(110)
 
 #define CHECKER_VELOCITY X(20)
 #define DICE_VELOCITY X(5)

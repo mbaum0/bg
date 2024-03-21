@@ -148,6 +148,11 @@ void createDialogText(Dialog* d) {
     Snippet* wonSnippet = Snippet_create(sf, fontColor, DIALOG_WON_X, DIALOG_WON_Y, Z_DEBUG, false);
     Snippet* lostSnippet = Snippet_create(sf, fontColor, DIALOG_LOST_X, DIALOG_LOST_Y, Z_DEBUG, false);
 
+    titleSnippet->centerAlign = true;
+    matchToSnippet->centerAlign = true;
+    wonSnippet->centerAlign = true;
+    lostSnippet->centerAlign = true;
+
     Sage_registerSnippet(titleSnippet);
     Sage_registerSnippet(matchToSnippet);
     Sage_registerSnippet(wonSnippet);
