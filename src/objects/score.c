@@ -26,9 +26,9 @@ void darkScoreUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
     GameBoard gb = FSM.gb;
-    Sint32 lightScore = getPlayerScore(&gb, DARK);
+    Sint32 darkScore = getPlayerScore(&gb, DARK);
     char text[200];
-    sprintf(text, "%d", lightScore);
+    sprintf(text, "%d", darkScore);
     Snippet_setText(snippet, text);
 }
 
@@ -61,13 +61,17 @@ void createScore(void) {
     SDL_Color fontColor = {0, 0, 0, 255};
     Snippet* lightScoreSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);
     Snippet* darkScoreSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, SCORE_Y, Z_DEBUG, true);
-    Snippet* lightWonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, MATCH_SCORE_Y, Z_DEBUG, true);
-    Snippet* darkWonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, MATCH_SCORE_Y, Z_DEBUG, true);
+    Snippet* lightWonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, MATCH_SCORE_Y, Z_DEBUG, true);
+    Snippet* darkWonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, MATCH_SCORE_Y, Z_DEBUG, true);
 
     lightScoreSnippet->useViewport = true;
+    lightScoreSnippet->centerAlign = true;
     darkScoreSnippet->useViewport = true;
+    darkScoreSnippet->centerAlign = true;
     lightWonRoundsSnippet->useViewport = true;
+    lightWonRoundsSnippet->centerAlign = true;
     darkWonRoundsSnippet->useViewport = true;
+    darkWonRoundsSnippet->centerAlign = true;
     Sage_registerSnippet(lightScoreSnippet);
     Sage_registerSnippet(darkScoreSnippet);
     Sage_registerSnippet(lightWonRoundsSnippet);

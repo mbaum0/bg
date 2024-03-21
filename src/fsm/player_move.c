@@ -33,6 +33,9 @@ bool doAiMove(GameBoard* gb, GameMove gm) {
 }
 
 bool doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
+    if (allMovesTaken(gb)) {
+        return false;
+    }
     Sint32 movesLeft = 0;
     Checker* c = getTopCheckerOnPip(gb, pipIndex);
     bool success = true;

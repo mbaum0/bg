@@ -39,7 +39,6 @@ void fsm_init(void) {
     FSM.current_state = INIT_STATE;
     FSM.eventQueue.front = 0;
     FSM.eventQueue.rear = 0;
-    fsm_transition(ROUND_OVER_STATE);
 }
 
 Uint32 delay_enqueue_event(Uint32 interval, void* ctx) {

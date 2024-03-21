@@ -219,3 +219,8 @@ bool haveDiceBeenUsed(GameBoard* gb);
  * @brief Reset the gameboard for the next round
  */
 void gameboard_reset(GameBoard* gb);
+
+/**
+ * @brief Returns true if the active player has used all of their moves
+ */
+Sint32 allMovesTaken(GameBoard* gb);

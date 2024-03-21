@@ -252,6 +252,14 @@ void swapDiceIfAllowed(GameBoard* gb) {
     }
 }
 
+// returns true if the player has used all of their moves
+Sint32 allMovesTaken(GameBoard* gb) {
+    if (DOUBLES_ROLLED(gb)) {
+        return (gb->die1.uses + gb->die2.uses) == 4;
+    }
+    return (gb->die1.uses + gb->die2.uses) == 2;
+}
+
 Sint32 incrementMoveCount(GameBoard* gb) {
     GameDie* die1 = FIRST_DIE(gb);
     GameDie* die2 = SECOND_DIE(gb);
@@ -451,8 +459,8 @@ void deepCopy(GameBoard* dst, GameBoard* src) {
 
 void initCheckerSetup(Sint32* lightSetup, Sint32* darkSetup) {
     for (Sint32 i = 0; i < 15; i++) {
-        FSM.gb.lightCheckers[i].pipOffset = LIGHT_HOME;
-        FSM.gb.darkCheckers[i].pipOffset = DARK_HOME;
+        FSM.gb.lightCheckers[i].pipIndex = LIGHT_HOME;
+        FSM.gb.darkCheckers[i].pipIndex = DARK_HOME;
     }
 
     Sint32 pipIndex;
@@ -482,7 +490,7 @@ void gameboard_reset(GameBoard* gb) {
     FSM.gb.nomoves = (GameButton){NM_BTN, false, BTN_RIGHT};
     FSM.gb.dialog.visible = false;
     FSM.gb.dialog.alpha = 0;
-    initCheckerSetup(LIGHTSETUPNORMAL, DARKSETUPNORMAL);
+    initCheckerSetup(LIGHTSETUP, DARKSETUP);
     updateCheckerNeighbors(gb);
 }
 
