@@ -146,8 +146,8 @@
 #define CHECKER_VELOCITY X(20)
 #define DICE_VELOCITY X(5)
 
-#define SCORE_LEFT_X X(81)
-#define SCORE_RIGHT_X X(348)
+#define SCORE_LEFT_X X(73)
+#define SCORE_RIGHT_X X(340)
 #define SCORE_Y X(43)
 #define MATCH_SCORE_Y X(66)
 
