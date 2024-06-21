@@ -10,9 +10,10 @@
 #include "sage.h"
 #include "util.h"
 
-int SDL_AppInit(int argc, char** argv) {
+int SDL_AppInit(void** appstate, int argc, char** argv) {
     (void)argc;
     (void)argv;
+    (void)appstate;
     extern Sage sage;
     Sage_init("Backgammon!", WINDOW_W, WINDOW_H, false);
     srand(7);
@@ -22,17 +23,20 @@ int SDL_AppInit(int argc, char** argv) {
     return 0;
 }
 
-int SDL_AppIterate(void) {
+int SDL_AppIterate(void* appstate) {
+    (void)appstate;
     Sage_step();
     fsm_step();
     return 0;
 }
 
-int SDL_AppEvent(const SDL_Event* event) {
+int SDL_AppEvent(void* appstate, const SDL_Event* event) {
+    (void)appstate;
     SDL_Event e = *event;
     return Sage_handleEvent(&e);
 }
 
-void SDL_AppQuit(void) {
+void SDL_AppQuit(void* appstate) {
+    (void)appstate;
     Sage_destroy();
 }

@@ -50,7 +50,8 @@ bool initSDL(MediaManager* mm, char* title, int winWidth, int winHeight, bool fi
         return false;
     }
 
-    mm->renderer = SDL_CreateRenderer(mm->window, NULL, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    mm->renderer = SDL_CreateRenderer(mm->window, NULL);
+    SDL_SetRenderVSync(mm->renderer, 1);
 
     if (!mm->renderer) {
         log_error("Failed to create renderer: %s", SDL_GetError());
@@ -127,9 +128,9 @@ SDL_Texture* MM_loadTexture(MediaManager* mm, char* path) {
 }
 
 SDL_Texture* MM_loadSVGTexture(MediaManager* mm, char* path, Sint32 width, Sint32 height) {
-    SDL_RWops* f = SDL_RWFromFile(path, "rb");
-    SDL_Surface* s = IMG_LoadSizedSVG_RW(f, width, height);
-    SDL_RWclose(f);
+    SDL_IOStream* f = SDL_IOFromFile(path, "rb");
+    SDL_Surface* s = IMG_LoadSizedSVG_IO(f, width, height);
+    SDL_CloseIO(f);
     SDL_Texture* t = SDL_CreateTextureFromSurface(mm->renderer, s);
     SDL_SetTextureBlendMode(t, SDL_BLENDMODE_BLEND);
     SDL_DestroySurface(s);

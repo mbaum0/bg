@@ -41,9 +41,10 @@ void fsm_init(void) {
     FSM.eventQueue.rear = 0;
 }
 
-Uint32 delay_enqueue_event(Uint32 interval, void* ctx) {
+Uint32 delay_enqueue_event(void* userdata, SDL_TimerID timerID, Uint32 interval) {
     (void)interval;
-    FSMEvent* e = (FSMEvent*)ctx;
+    (void)timerID;
+    FSMEvent* e = (FSMEvent*)userdata;
     fsm_enqueue_event(*e);
     SDL_free(e);
     return 0;
