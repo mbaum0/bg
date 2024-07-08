@@ -8,8 +8,8 @@
 
 Sage sage = {0};
 
-void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay) {
-    sage.mm = MM_init(title, winWidth, winHeight, fillDisplay);
+void Sage_init(char* title, int winWidth, int winHeight) {
+    sage.mm = MM_init(title, winWidth, winHeight);
     sage.vm = VM_init(sage.mm->renderer);
     sage.em = EM_init();
     sage.ticks = 0;

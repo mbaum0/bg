@@ -24,9 +24,8 @@ struct Sage {
  * @param title The title of the game
  * @param winWidth The width of the window
  * @param winHeight The height of the window
- * @param fillDisplay Whether size the window to size of the display
  */
-void Sage_init(char* title, int winWidth, int winHeight, bool fillDisplay);
+void Sage_init(char* title, int winWidth, int winHeight);
 
 /**
  * @brief Destroy the SAGE engine and free all resources
