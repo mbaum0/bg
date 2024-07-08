@@ -13,7 +13,7 @@ bool handleEnteredMoveConfirmEvent(GameBoard* gb) {
 }
 
 bool handleConfirmButtonClickedEvent(GameBoard* gb) {
-    gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
+    toggleActivePlayer(gb);
     fsm_transition(WAIT_FOR_ROLL_STATE);
     return true;
 }

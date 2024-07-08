@@ -17,16 +17,20 @@ Sint32 getCheckerX(Checker* checker) {
     Sint32 pipOffset;
     Sint32 checkerX;
 
-    if (pipIndex == DARK_HOME) {
-        return CHECKER_TOP_HOME_X + (checker->pipOffset * CHECKER_GAP);
-    }
-
-    if (pipIndex == LIGHT_HOME) {
-        return CHECKER_BOT_HOME_X + (checker->pipOffset * CHECKER_GAP);
-    }
-
-    if (pipIndex == LIGHT_BAR || pipIndex == DARK_BAR) {
-        return CHECKER_BAR_X;
+    if (checker->player == PLAYER_ONE) {
+        if (pipIndex == PLAYER_ONE_HOME) {
+            return CHECKER_BOT_HOME_X + (checker->pipOffset * CHECKER_GAP);
+        }
+        if (pipIndex == PLAYER_ONE_BAR) {
+            return CHECKER_BAR_X;
+        }
+    } else if (checker->player == PLAYER_TWO) {
+        if (pipIndex == PLAYER_TWO_HOME) {
+            return CHECKER_TOP_HOME_X + (checker->pipOffset * CHECKER_GAP);
+        }
+        if (pipIndex == PLAYER_TWO_BAR) {
+            return CHECKER_BAR_X;
+        }
     }
 
     if (isBetween(pipIndex, 1, 6)) {
@@ -49,17 +53,20 @@ Sint32 getCheckerY(Checker* checker) {
     Sint32 offset;
     Sint32 pipIndex = checker->pipIndex;
 
-    if (pipIndex == DARK_HOME) {
-        return CHECKER_TOP_HOME_Y;
-    }
-    if (pipIndex == LIGHT_HOME) {
-        return CHECKER_BOT_HOME_Y;
-    }
-    if (pipIndex == LIGHT_BAR) {
-        return CHECKER_BAR_TOP_Y;
-    }
-    if (pipIndex == DARK_BAR) {
-        return CHECKER_BAR_BOT_Y;
+    if (checker->player == PLAYER_ONE) {
+        if (pipIndex == PLAYER_ONE_HOME) {
+            return CHECKER_BOT_HOME_Y;
+        }
+        if (pipIndex == PLAYER_ONE_BAR) {
+            return CHECKER_BAR_BOT_Y;
+        }
+    } else if (checker->player == PLAYER_TWO) {
+        if (pipIndex == PLAYER_TWO_HOME) {
+            return CHECKER_TOP_HOME_Y;
+        }
+        if (pipIndex == PLAYER_TWO_BAR) {
+            return CHECKER_BAR_TOP_Y;
+        }
     }
 
     Uint32 checkerGap = CHECKER_GAP;
@@ -102,7 +109,7 @@ void updateChecker(ViewManager* vm, Sprite* sprite, void* object, void* context)
         Sprite_setZ(sprite, Z_MOVING_CHECKERS);
         Sprite_setLocation(sprite, x + xVel, y + yVel);
     } else {
-        if (c->pipIndex == LIGHT_BAR || c->pipIndex == DARK_BAR) {
+        if (IS_CHECKER_BARRED(c)) {
             Sprite_setZ(sprite, Z_BAR_CHECKERS);
         } else {
             // add the pip offset so the overlap properly if compressed
@@ -122,7 +129,7 @@ void createCheckerSprite(Checker* c) {
 
     SDL_FRect dst = {x, y, CHECKER_W, CHECKER_W};
     Sprite* s;
-    if (c->color == LIGHT) {
+    if (c->player == PLAYER_ONE) { // player one defaults to light
         s = Sprite_createEx(texture, s_lightRect, dst, Z_CHECKERS);
     } else {
         s = Sprite_createEx(texture, s_darkRect, dst, Z_CHECKERS);

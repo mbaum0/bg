@@ -6,13 +6,13 @@
 #include "fsm.h"
 #include "game.h"
 
-Color getFirstPlayer(GameBoard* gb) {
+Player getFirstPlayer(GameBoard* gb) {
     if (gb->die1.value > gb->die2.value) {
-        return DARK;
+        return PLAYER_TWO;
     } else if (gb->die2.value > gb->die1.value) {
-        return LIGHT;
+        return PLAYER_ONE;
     }
-    return NONE;
+    return PLAYER_NONE;
 }
 
 bool handleEnteredRollForFirstEvent(GameBoard* gb) {
@@ -25,7 +25,7 @@ bool handleEnteredRollForFirstEvent(GameBoard* gb) {
 }
 
 bool handleRollForFirstEvent(GameBoard* gb) {
-    Color fp = getFirstPlayer(gb);
+    Player fp = getFirstPlayer(gb);
     if (fp == NONE) {
         FSMEvent e = {TIED_ROLL_EVENT, 0, NULL};
         fsm_enqueue_event_delay(500, e);
@@ -44,13 +44,13 @@ bool handleTiedRollEvent(GameBoard* gb) {
 }
 
 bool handleGotFirstPlayerEvent(GameBoard* gb) {
-    Color fp = getFirstPlayer(gb);
-    if (fp == LIGHT) {
-        gb->activePlayer = LIGHT;
+    Player fp = getFirstPlayer(gb);
+    if (fp == PLAYER_ONE) {
+        gb->activePlayer = PLAYER_ONE;
         gb->die1.side = 1;
         gb->die2.side = 1;
     } else {
-        gb->activePlayer = DARK;
+        gb->activePlayer = PLAYER_TWO;
         gb->die1.side = 0;
         gb->die2.side = 0;
     }

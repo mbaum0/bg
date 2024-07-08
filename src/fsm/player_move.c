@@ -45,7 +45,7 @@ bool doPlayerMove(GameBoard* gb, Uint32 pipIndex) {
     }
 
     Sint32 dieValue = getNextDieValue(gb);
-    GameMove gm = {c->color, c->pipIndex, dieValue};
+    GameMove gm = {c->player, c->pipIndex, dieValue};
 
     if (isValidMove(gb, gm)) {
         moveChecker(gb, gm);
@@ -174,12 +174,12 @@ bool handleFinishedPlayerMoveEvent(GameBoard* gb) {
 
     // ai will always go to next turn
     if (gb->activePlayer == gb->aiPlayer) {
-        gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
+        toggleActivePlayer(gb);
         fsm_transition(WAIT_FOR_ROLL_STATE);
 
         // if player had no moves after dice roll, go right into next player's turn
     } else if (!playerHasMoves(gb) && !haveDiceBeenUsed(gb)) {
-        gb->activePlayer = OPPONENT_COLOR(gb->activePlayer);
+        toggleActivePlayer(gb);
         fsm_transition(WAIT_FOR_ROLL_STATE);
 
         // let player confirm their move

@@ -15,17 +15,12 @@
 #define SECOND_DIE(gb) ((gb->die2.index == 1) ? &gb->die2 : &gb->die1)
 #define DOUBLES_ROLLED(gb) ((gb->die1.value == gb->die2.value))
 #define NUM_MOVES_MADE(gb) ((gb->die1.uses + gb->die2.uses))
-#define PLAYER_CHECKERS(gb, color) ((color == LIGHT) ? gb->lightCheckers : gb->darkCheckers)
-#define SET_PIP_COLOR(gb, pipIndex, pcolor)                                                                            \
-    if ((pipIndex) > 0 && (pipIndex) < 25) {                                                                           \
-        (gb)->pips[(pipIndex - 1)].color = (pcolor);                                                                   \
-    }
 
 #define MAX_AI_SEQUENCES (15 * 15)
 
 typedef struct GameMove GameMove;
 struct GameMove {
-    Color player;
+    Player player;
     Sint32 srcPip;
     Sint32 amount;
 };
@@ -46,10 +41,10 @@ struct GameMoveSequence {
 typedef struct GameBoard GameBoard;
 
 struct GameBoard {
-    Checker lightCheckers[15];
-    Checker darkCheckers[15];
-    Checker lightCheckersSave[15];
-    Checker darkCheckersSave[15];
+    Checker p1Checkers[15];
+    Checker p2Checkers[15];
+    Checker p1CheckersSave[15];
+    Checker p2CheckersSave[15];
     Pip pips[24];
     GameDie die1;
     GameDie die2;
@@ -59,8 +54,8 @@ struct GameBoard {
     GameButton dub;
     GameButton nomoves;
     Dialog dialog;
-    Color activePlayer;
-    Color aiPlayer;
+    Player activePlayer;
+    Player aiPlayer;
     GameMoveSequence* aiMoves;
 };
 
@@ -90,7 +85,7 @@ Checker* getTopCheckerOnPip(GameBoard* gb, Sint32 pipIndex);
  * @brief Returns true if all of the player's checkers are within
  * their inner table.
  */
-bool playerHasClosedBoard(GameBoard* gb, Color player);
+bool playerHasClosedBoard(GameBoard* gb, Player player);
 
 /**
  * @brief Get the number of checkers on a given pip.
@@ -98,10 +93,15 @@ bool playerHasClosedBoard(GameBoard* gb, Color player);
 Sint32 getNumCheckersOnPip(GameBoard* gb, Sint32 pipIndex);
 
 /**
+ * @brief Get the number of checkers on the bar for the given player.
+ */
+Sint32 getNumCheckersOnBar(GameBoard* gb, Player player);
+
+/**
  * @brief Returns the index of the destination pip if a checker
  * if moved from the source pip the given amount.
  */
-Sint32 getNextPip(Sint32 pipIndex, Color player, Sint32 amount);
+Sint32 getNextPip(Sint32 pipIndex, Player player, Sint32 amount);
 
 /**
  * @brief Returns the value of the next available die. Returns -1
@@ -171,11 +171,6 @@ void barChecker(GameBoard* gb, Checker* c);
 void rollDice(GameBoard* gb);
 
 /**
- * @brief Returns true if the active player has barred checkers
- */
-bool playerHasCheckersOnBar(GameBoard* gb);
-
-/**
  * @brief Copies the state of the checkers into
  * the save buffer
  */
@@ -197,12 +192,12 @@ bool playerHasMoves(GameBoard* gb);
  * weighted value based on the distance of all of their checkers
  * to their home. Less is better
  */
-Sint32 getPlayerScore(GameBoard* gb, Color player);
+Sint32 getPlayerScore(GameBoard* gb, Player player);
 
 /**
- * @brief Returns Light/Dark if there is a winner, else None.
+ * @brief Returns PLAYER_ONE/PLAYER_TWO if there is a winner, else None.
  */
-Color getRoundWinner(GameBoard* gb);
+Player getRoundWinner(GameBoard* gb);
 
 /**
  * @brief Creates a deep copy of the src GameBoard and places
@@ -224,3 +219,8 @@ void gameboard_reset(GameBoard* gb);
  * @brief Returns true if the active player has used all of their moves
  */
 Sint32 allMovesTaken(GameBoard* gb);
+
+/**
+ * @brief Toggle the active player between PLAYER_ONE and PLAYER_TWO
+ */
+void toggleActivePlayer(GameBoard* gb);

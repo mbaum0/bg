@@ -9,24 +9,28 @@
 
 typedef struct Checker Checker;
 typedef enum { LIGHT, DARK, NONE } Color;
+typedef enum { PLAYER_ONE, PLAYER_TWO, PLAYER_NONE } Player;
 
-#define DARK_HOME_START 19
-#define DARK_HOME_END 25
-#define DARK_HOME 25
-#define LIGHT_HOME_START 0
-#define LIGHT_HOME_END 6
-#define LIGHT_HOME 0
-#define LIGHT_BAR 26
-#define DARK_BAR 27
+#define PLAYER_ONE_HOME (0)
+#define PLAYER_TWO_BAR (PLAYER_ONE_HOME)
 
-#define OPPONENT_COLOR(c) (c == LIGHT ? DARK : LIGHT)
-#define CHECKER_IS_BARRED(c)                                                                                           \
-    ((c->color == DARK && c->pipIndex == DARK_BAR) || (c->color == LIGHT && c->pipIndex == LIGHT_BAR))
+#define PLAYER_ONE_BAR (25)
+#define PLAYER_TWO_HOME (PLAYER_ONE_BAR)
+
+#define IS_PLAYERS_HOME(player, pipIndex)                                                                              \
+    ((player == PLAYER_ONE && pipIndex == PLAYER_ONE_HOME) || (player == PLAYER_TWO && pipIndex == PLAYER_TWO_HOME))
+
+#define IS_CHECKER_BARRED(c)                                                                                           \
+    ((c->player == PLAYER_ONE && c->pipIndex == PLAYER_ONE_BAR) ||                                                     \
+     (c->player == PLAYER_TWO && c->pipIndex == PLAYER_TWO_BAR))
+
+#define IS_PLAYERS_BAR(player, pipIndex)                                                                               \
+    ((player == PLAYER_ONE && pipIndex == PLAYER_ONE_BAR) || (player == PLAYER_TWO && pipIndex == PLAYER_TWO_BAR))
 
 struct Checker {
-    Sint32 pipIndex;  // pip the checker is on
-    Sint32 pipOffset; // position of this checker on the pip
-    Color color;
+    Sint32 pipIndex;     // pip the checker is on
+    Sint32 pipOffset;    // position of this checker on the pip
+    Player player;       // player that owns the checker
     Uint32 numNeighbors; // number of checkers on the same pip
 };
 

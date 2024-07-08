@@ -2,11 +2,11 @@
 #include <stdio.h>
 
 bool handleEnteredRoundOverStateEvent(GameBoard* gb) {
-    Color winner = getRoundWinner(gb);
-    if (winner == LIGHT) {
+    Player winner = getRoundWinner(gb);
+    if (winner == PLAYER_ONE) {
         gb->dialog.roundsWon++;
         gb->dialog.playerWon = true;
-    } else if (winner == DARK) {
+    } else if (winner == PLAYER_TWO) {
         gb->dialog.roundsLost++;
         gb->dialog.playerWon = false;
     } else {

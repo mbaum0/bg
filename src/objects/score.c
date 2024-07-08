@@ -12,27 +12,27 @@
 
 extern FiniteStateMachine FSM;
 
-void lightScoreUpdate(ViewManager* vm, Snippet* snippet, void* data) {
+void p1ScoreUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
     GameBoard gb = FSM.gb;
-    Sint32 lightScore = getPlayerScore(&gb, LIGHT);
+    Sint32 p1Score = getPlayerScore(&gb, PLAYER_ONE);
     char text[200];
-    sprintf(text, "%d", lightScore);
+    sprintf(text, "%d", p1Score);
     Snippet_setText(snippet, text);
 }
 
-void darkScoreUpdate(ViewManager* vm, Snippet* snippet, void* data) {
+void p2ScoreUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
     GameBoard gb = FSM.gb;
-    Sint32 darkScore = getPlayerScore(&gb, DARK);
+    Sint32 p2Score = getPlayerScore(&gb, PLAYER_TWO);
     char text[200];
-    sprintf(text, "%d", darkScore);
+    sprintf(text, "%d", p2Score);
     Snippet_setText(snippet, text);
 }
 
-void lightWonRoundUpdate(ViewManager* vm, Snippet* snippet, void* data) {
+void p1WonRoundUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
     GameBoard gb = FSM.gb;
@@ -41,7 +41,7 @@ void lightWonRoundUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     Snippet_setText(snippet, text);
 }
 
-void darkWonRoundUpdate(ViewManager* vm, Snippet* snippet, void* data) {
+void p2WonRoundUpdate(ViewManager* vm, Snippet* snippet, void* data) {
     (void)vm;
     (void)data;
     GameBoard gb = FSM.gb;
@@ -51,37 +51,37 @@ void darkWonRoundUpdate(ViewManager* vm, Snippet* snippet, void* data) {
 }
 
 void createScore(void) {
-    char darkScore[100];
-    char lightScore[100];
-    sprintf(darkScore, " ");
-    sprintf(lightScore, " ");
+    char p1Score[100];
+    char p2Score[100];
+    sprintf(p1Score, " ");
+    sprintf(p2Score, " ");
     SageFont* sf = Sage_loadBitmapFont("assets/NotoSans-Medium_0.png", "assets/NotoSans-Medium.fnt",
                                        SCORE_FONT_SRC_SIZE, SCORE_FONT_SIZE);
 
     SDL_Color fontColor = {0, 0, 0, 255};
-    Snippet* lightScoreSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);
-    Snippet* darkScoreSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, SCORE_Y, Z_DEBUG, true);
-    Snippet* lightWonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, MATCH_SCORE_Y, Z_DEBUG, true);
-    Snippet* darkWonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, MATCH_SCORE_Y, Z_DEBUG, true);
+    Snippet* p1ScoreSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, SCORE_Y, Z_DEBUG, true);
+    Snippet* p2ScoreSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, SCORE_Y, Z_DEBUG, true);
+    Snippet* p1WonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_RIGHT_X, MATCH_SCORE_Y, Z_DEBUG, true);
+    Snippet* p2WonRoundsSnippet = Snippet_create(sf, fontColor, SCORE_LEFT_X, MATCH_SCORE_Y, Z_DEBUG, true);
 
-    lightScoreSnippet->useViewport = true;
-    lightScoreSnippet->centerAlign = true;
-    darkScoreSnippet->useViewport = true;
-    darkScoreSnippet->centerAlign = true;
-    lightWonRoundsSnippet->useViewport = true;
-    lightWonRoundsSnippet->centerAlign = true;
-    darkWonRoundsSnippet->useViewport = true;
-    darkWonRoundsSnippet->centerAlign = true;
-    Sage_registerSnippet(lightScoreSnippet);
-    Sage_registerSnippet(darkScoreSnippet);
-    Sage_registerSnippet(lightWonRoundsSnippet);
-    Sage_registerSnippet(darkWonRoundsSnippet);
-    Snippet_setText(lightScoreSnippet, lightScore);
-    Snippet_setText(darkScoreSnippet, darkScore);
-    Snippet_setText(lightWonRoundsSnippet, lightScore);
-    Snippet_setText(darkWonRoundsSnippet, darkScore);
-    Snippet_registerUpdateFn(lightScoreSnippet, lightScoreUpdate, NULL);
-    Snippet_registerUpdateFn(darkScoreSnippet, darkScoreUpdate, NULL);
-    Snippet_registerUpdateFn(lightWonRoundsSnippet, lightWonRoundUpdate, NULL);
-    Snippet_registerUpdateFn(darkWonRoundsSnippet, darkWonRoundUpdate, NULL);
+    p1ScoreSnippet->useViewport = true;
+    p1ScoreSnippet->centerAlign = true;
+    p2ScoreSnippet->useViewport = true;
+    p2ScoreSnippet->centerAlign = true;
+    p1WonRoundsSnippet->useViewport = true;
+    p1WonRoundsSnippet->centerAlign = true;
+    p2WonRoundsSnippet->useViewport = true;
+    p2WonRoundsSnippet->centerAlign = true;
+    Sage_registerSnippet(p1ScoreSnippet);
+    Sage_registerSnippet(p2ScoreSnippet);
+    Sage_registerSnippet(p1WonRoundsSnippet);
+    Sage_registerSnippet(p2WonRoundsSnippet);
+    Snippet_setText(p1ScoreSnippet, p1Score);
+    Snippet_setText(p2ScoreSnippet, p2Score);
+    Snippet_setText(p1WonRoundsSnippet, p1Score);
+    Snippet_setText(p2WonRoundsSnippet, p2Score);
+    Snippet_registerUpdateFn(p1ScoreSnippet, p1ScoreUpdate, NULL);
+    Snippet_registerUpdateFn(p2ScoreSnippet, p2ScoreUpdate, NULL);
+    Snippet_registerUpdateFn(p1WonRoundsSnippet, p1WonRoundUpdate, NULL);
+    Snippet_registerUpdateFn(p2WonRoundsSnippet, p2WonRoundUpdate, NULL);
 }
