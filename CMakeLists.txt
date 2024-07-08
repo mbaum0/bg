@@ -24,6 +24,9 @@ add_subdirectory(lib/sage)
 # Link the sage engine library
 target_link_libraries(${PROJECT_NAME} sage)
 
+# Link wildbg library
+target_link_libraries(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/external/libwildbg.a)
+
 # Add compiler errors/warnings flags
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
 target_compile_options(${PROJECT_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror -std=c11 -O0 -g -gdwarf-4>)

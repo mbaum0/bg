@@ -4,6 +4,7 @@
  * @brief
  */
 #include "ai.h"
+#include "wildbg.h"
 
 Sint32 getWeightedPlayerScore(GameBoard* gb, Color player) {
     Sint32 score = 0;
@@ -188,25 +189,99 @@ Sint32 generateMovesSequences(GameBoard* gb, Color player, GameMoveSequence* mov
 
 void findBestMoveSequence(GameBoard* gb, Color player, GameMoveSequence* result) {
 
-    Sint32 maxMoves = 0;
-    Sint32 numOptions = generateMovesSequences(gb, player, gb->aiMoves, MAX_AI_SEQUENCES, &maxMoves);
+    // Sint32 maxMoves = 0;
+    // Sint32 numOptions = generateMovesSequences(gb, player, gb->aiMoves, MAX_AI_SEQUENCES, &maxMoves);
 
-    Sint32 bestScore = 999;
+    // Sint32 bestScore = 999;
+    // GameMoveSequence best = {0};
+    // for (Sint32 i = 0; i < numOptions; i++) {
+    //     GameMoveSequence gms = gb->aiMoves[i];
+    //     if (gms.numMoves < maxMoves) {
+    //         // backgammon rules require player to use maximum number of dice possible;
+    //         continue;
+    //     }
+    //     if (gms.resultScore < bestScore) {
+    //         bestScore = gms.resultScore;
+    //         best = gms;
+    //     }
+    // }
+    // Sint32 currentScore = evaluateBoard(gb, player);
+    // Sint32 scoreDelta = (numOptions == 0) ? 0 : (currentScore - best.resultScore);
+    // log_debug("AI found %d move options. Best option will alter game by %d points", numOptions, scoreDelta);
+    // *result = best;
+
     GameMoveSequence best = {0};
-    for (Sint32 i = 0; i < numOptions; i++) {
-        GameMoveSequence gms = gb->aiMoves[i];
-        if (gms.numMoves < maxMoves) {
-            // backgammon rules require player to use maximum number of dice possible;
-            continue;
+
+    Wildbg* wildbg = wildbg_new();
+    if (wildbg == NULL) {
+        log_error("Failed to load neural nets");
+        return;
+    }
+    // ai is dark
+    int pips[26] = {0};
+    for (Sint32 i = 0; i < 15; i++) {
+        Checker* c = &gb->lightCheckers[i];
+        if (c->pipIndex == LIGHT_BAR) {
+            pips[0] -= 1;
+        } else if (c->pipIndex != LIGHT_HOME) {
+            pips[25 - c->pipIndex] -= 1;
         }
-        if (gms.resultScore < bestScore) {
-            bestScore = gms.resultScore;
-            best = gms;
+
+        c = &gb->darkCheckers[i];
+        if (c->pipIndex == DARK_BAR) {
+            pips[25] += 1;
+        } else if (c->pipIndex != DARK_HOME) {
+            pips[25 - c->pipIndex] += 1;
         }
     }
-    Sint32 currentScore = evaluateBoard(gb, player);
-    Sint32 scoreDelta = (numOptions == 0) ? 0 : (currentScore - best.resultScore);
-    log_debug("AI found %d move options. Best option will alter game by %d points", numOptions, scoreDelta);
+
+    BgConfig config = {.x_away = 1, .o_away = 1};
+    CMove move = best_move(wildbg, &pips, FIRST_DIE(gb)->value, SECOND_DIE(gb)->value, &config);
+    log_debug("WildBG would move from %d to %d and from %d to %d.", 25 - move.detail1.from, 25 - move.detail1.to,
+              25 - move.detail2.from, 25 - move.detail2.to);
+    wildbg_free(wildbg);
+
+    if (move.detail1.from != -1) {
+        int dist = abs(move.detail1.from - move.detail1.to);
+        if (dist != FIRST_DIE(gb)->value) {
+            best.swapDice = true;
+        }
+        if (move.detail1.from == 25) {
+            move.detail1.from = 25 - DARK_BAR;
+        }
+        GameMove gm1 = {.player = player, .srcPip = 25 - move.detail1.from, .amount = dist};
+        best.moves[0] = gm1;
+        best.numMoves = 1;
+    }
+
+    if (move.detail2.from != -1) {
+        int dist = abs(move.detail2.from - move.detail2.to);
+        if (move.detail2.from == 25) {
+            move.detail2.from = 25 - DARK_BAR;
+        }
+        GameMove gm2 = {.player = player, .srcPip = 25 - move.detail2.from, .amount = dist};
+        best.moves[1] = gm2;
+        best.numMoves = 2;
+    }
+
+    if (move.detail3.from != -1) {
+        int dist = abs(move.detail3.from - move.detail3.to);
+        if (move.detail3.from == 25) {
+            move.detail3.from = 25 - DARK_BAR;
+        }
+        GameMove gm3 = {.player = player, .srcPip = 25 - move.detail3.from, .amount = dist};
+        best.moves[2] = gm3;
+        best.numMoves = 3;
+    }
+    if (move.detail4.from != -1) {
+        int dist = abs(move.detail4.from - move.detail4.to);
+        if (move.detail4.from == 25) {
+            move.detail4.from = 25 - DARK_BAR;
+        }
+        GameMove gm4 = {.player = player, .srcPip = 25 - move.detail4.from, .amount = dist};
+        best.moves[3] = gm4;
+        best.numMoves = 4;
+    }
     *result = best;
 }
 

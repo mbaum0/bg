@@ -17,7 +17,7 @@ bool doAiMove(GameBoard* gb, GameMove gm) {
 
     Sint32 dieValue = getNextDieValue(gb);
 
-    if (dieValue != gm.amount) {
+    if (dieValue != gm.amount && (dieValue < gm.amount)) {
         log_error("AI picked invalid die value.");
         return false;
     }
