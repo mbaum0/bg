@@ -8,7 +8,7 @@ project(bg)
 # list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/lib/sage/cmake/sdl2)
 
 # Add all c source files under the src directory
-file(GLOB SOURCES "src/*.c" "src/fsm/*.c" "src/objects/*.c")
+file(GLOB SOURCES "src/*.c" "src/fsm/*.c" "src/view/*.c")
 add_executable(${PROJECT_NAME} ${SOURCES})
 
 # Add all c source files under the lib/engine/src directory
