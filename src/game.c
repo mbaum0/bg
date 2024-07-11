@@ -212,28 +212,33 @@ bool isValidMove(GameBoard* gb, GameMove gm) {
 
     // player must be active
     if (player != gb->activePlayer) {
+        log_debug("Invalid move: player is not active.");
         return false;
     }
 
     // not valid if the src pip isn't owned by the player
     if (!isPlayersPip(player, gb, oldPip)) {
+        log_debug("Invalid move: player does not own source pip.");
         return false;
     }
 
     // not valid if moving home piece that is already home
     if (IS_PLAYERS_HOME(player, oldPip)) {
+        log_debug("Invalid move: player is moving a piece that is already home.");
         return false;
     }
 
     // not valid if any checkers are barred and moving a non-barred checker
     if (getNumCheckersOnBar(gb, player) > 0) {
         if (!IS_PLAYERS_BAR(player, oldPip)) {
+            log_debug("Invalid move: player has checkers on the bar.");
             return false;
         }
     }
 
     // not valid if bearing off but not all checkers are home
     if (IS_PLAYERS_HOME(player, newPip) && !playerHasClosedBoard(gb, player)) {
+        log_debug("Invalid move: player is bearing off but not all checkers are home.");
         return false;
     }
 
@@ -242,6 +247,7 @@ bool isValidMove(GameBoard* gb, GameMove gm) {
     if (numCheckers > 1) {
         topChecker = getTopCheckerOnPip(gb, newPip);
         if (topChecker->player != player) {
+            log_debug("Invalid move: player is moving to an opponent's pip.");
             return false;
         }
     }
